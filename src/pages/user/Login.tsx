@@ -1,7 +1,32 @@
-console.log('hi');
+import { GoogleLogin } from '@react-oauth/google';
+import {jwtDecode} from 'jwt-decode'
 
 
 const Login =()=>{
+// facebooke auth 
+   
+
+    
+// facebooke auth 
+
+    //   google auth 
+    const responseMessage:any= (response:any) => {
+        console.log(response);
+        const decode:any=jwtDecode(response.credential)
+        console.log(decode);
+        
+
+    };
+    const errorMessage:any = (error:any) => {
+        console.log(error);
+    };
+
+//google auth
+
+
+
+
+
     return (
         <>
         {/* main div  */}
@@ -86,20 +111,21 @@ const Login =()=>{
 
 
                     {/* continue with google or facebook */}
-                        <div className="col-start-2 row-start-10  mt-6 w-[80px] h-[50px]  justify-center align-middle  ">
-                            <img className="w-[40px] ml-5 mt-1" src="/fonts/google.png" alt="" />
+                        <div className="col-start-2 row-start-10  mt-6 w-[80px] h-[50px]  justify-center align-middle">
+                            {/* <img className="w-[40px] ml-5 mt-1" src="/fonts/google.png" alt="" /> */}
+                        {<div>   <GoogleLogin   onSuccess={responseMessage} onError={errorMessage} useOneTap  />  </div>}
+                        
                         </div>
-
-
-
+       
+                       
+        
 
                         <div className="col-start-4 row-start-10 mt-5 w-[80px]  h-[50px]   justify-center align-middle  ">
                             <img className="w-[40px] ml-5 mt-1" src="/fonts/facebook.png" alt="" />
+                          
                         </div>
-
-
-
-
+                       
+                
 
 
 
