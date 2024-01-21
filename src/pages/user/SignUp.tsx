@@ -47,13 +47,13 @@ const SignUp = () => {
           <p>or continue with</p>
           </div>
           <div className="col-start-3 row-start-9 p-2">
-            <img src="/fonts/google.png" alt="" />
+            <img src="/fonts/google.png" alt="G" />
           </div>
           <div className="col-start-6 row-start-9 p-2">
-            <img src="/fonts/facebook.png" alt="" />
+            <img src="/fonts/facebook.png" alt="F" />
           </div>
-          <div className="col-span-8 col-start-1 row-start-10 p-2 bg-amber-200">
-            9
+          <div className="col-span-8 col-start-1 row-start-10">
+            <p>Dont have an account yet? <span className="text-bold">Register for free</span> </p>
           </div>
         </div>
       </div>
