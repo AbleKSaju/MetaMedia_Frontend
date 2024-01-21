@@ -31,7 +31,7 @@ const Login =()=>{
                             </label>
                             <input
                                 name="email"
-                                className="  lg:w-[24vw] lg:h-[5vh] border  border-amber-100 rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
+                                className=" pl-5 lg:w-[24vw] lg:h-[5vh] border outline-none border-amber-100 rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                                 placeholder="abc@gmai.com"
                                 type="text"
                             />
@@ -50,7 +50,7 @@ const Login =()=>{
                                 </label>
                                 <input
                                     name="password"
-                                    className="  lg:w-[24vw] lg:h-[5vh] border  border-amber-100 rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm "
+                                    className="  lg:w-[24vw] lg:h-[5vh] border pl-5 outline-none border-amber-100 rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm "
                                     placeholder="********"
                                     type="password"
                                 />
@@ -77,7 +77,7 @@ const Login =()=>{
 
 
                         {/* or continue with  */}
-                        <div className="col-span-3 col-start-2 row-start-9 ml-[80px] mt-5 ">
+                        <div className="col-span-3 col-start-2 row-start-9 ml-[80px] mt-8 ">
 
                             <p className="font-roboto font-light text-sm text-teal-800 ">or continue with</p>
 
@@ -86,14 +86,16 @@ const Login =()=>{
 
 
                     {/* continue with google or facebook */}
-                        <div className="col-start-2 row-start-11">
-                            <img src="" alt="" />
+                        <div className="col-start-2 row-start-10  mt-6 w-[80px] h-[50px]  justify-center align-middle  ">
+                            <img className="w-[40px] ml-5 mt-1" src="/fonts/google.png" alt="" />
                         </div>
 
 
 
 
-                        <div className="col-start-4 row-start-11">10</div>
+                        <div className="col-start-4 row-start-10 mt-5 w-[80px]  h-[50px]   justify-center align-middle  ">
+                            <img className="w-[40px] ml-5 mt-1" src="/fonts/facebook.png" alt="" />
+                        </div>
 
 
 
@@ -101,7 +103,9 @@ const Login =()=>{
 
 
 
-                        <div className="col-span-3 col-start-2 row-start-12">11</div>
+                        <div className="col-span-3 col-start-1 row-start-12 flex whitespace-nowrap ml-[97px] ">
+                            <p className="text-teal-800 font-roboto font-light text-sm ">Don't have an account ? <span className="whitespace-nowrap font-medium"> Register free </span></p>
+                        </div>
                     </div>
     
 
