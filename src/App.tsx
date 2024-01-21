@@ -1,5 +1,5 @@
 
-import { Routes,Route } from 'react-router-dom'
+import {BrowserRouter as Router, Routes,Route } from 'react-router-dom'
 import { Toaster } from 'sonner';
 
 import AdminRouter from './Routes/AdminRouter';
@@ -10,6 +10,8 @@ function App() {
   return (
     <>
     <Toaster/>
+    <Router>
+
     <Routes>
 
     <Route path='/admin/*' element={<AdminRouter/>}/>
@@ -17,6 +19,7 @@ function App() {
 
     </Routes>
       
+    </Router>
     </>
   )
 }
