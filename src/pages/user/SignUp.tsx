@@ -144,15 +144,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-{
-  /* <div class="grid grid-cols-5 grid-rows-7 gap-4">
-        <div class="col-span-3 col-start-2">2</div>
-    <div class="col-span-3 col-start-2 row-start-2">3</div>
-    <div class="col-span-3 col-start-2 row-start-3">4</div>
-    <div class="col-span-3 col-start-2 row-start-4">5</div>
-    <div class="col-span-3 col-start-2 row-start-5">6</div>
-    <div class="col-span-3 col-start-2 row-start-6">7</div>
-</div>
-     */
-}
