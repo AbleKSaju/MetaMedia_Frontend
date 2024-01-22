@@ -11,7 +11,7 @@ const Login =()=>{
 
     //   google auth 
     const responseMessage:any= (response:any) => {
-        console.log(response);
+       
         const decode:any=jwtDecode(response.credential)
         console.log(decode);
         
