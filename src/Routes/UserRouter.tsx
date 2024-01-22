@@ -11,6 +11,7 @@ const UserRouter=()=>{
    <Routes>
 
      <Route path='/signup' element={<SignUp/>}/>
+     <Route path='/verifyOtp' element={<SignUp/>}/>
 
 
  <Route path="/login" element={<Login/>}/>
