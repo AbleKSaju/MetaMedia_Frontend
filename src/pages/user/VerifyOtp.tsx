@@ -5,12 +5,16 @@ import React, {
   KeyboardEvent,
   useEffect,
 } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { verifyOtpFunction } from "../../utils/api/metords/post";
 
 const VerifyOtp: React.FC = () => {
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otpNumber, setOtp] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(60); // Initial timer value in seconds
   const [showResendMessage, setShowResendMessage] = useState(false);
   const [focusedInput, setFocusedInput] = useState<number>(0);
+  const Navigate=useNavigate()
   const inputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -37,11 +41,9 @@ const VerifyOtp: React.FC = () => {
   };
 
   const handleInputChange = (index: number, value: string) => {
-    const newOtp = [...otp];
+    const newOtp = [...otpNumber];
     newOtp[index] = value;
     setOtp(newOtp);
-
-    // Move to the next input field
     if (value !== "" && index < 3) {
       setFocusedInput(index + 1);
       if (inputRefs[index + 1]?.current) {
@@ -54,17 +56,37 @@ const VerifyOtp: React.FC = () => {
     index: number,
     event: KeyboardEvent<HTMLInputElement>
   ) => {
-    if (event.key === "Backspace" && index > 0 && otp[index] === "") {
+    if (event.key === "Backspace" && index > 0 && otpNumber[index] === "") {
       setFocusedInput(index - 1);
       if (inputRefs[index - 1]?.current) {
         inputRefs[index - 1]?.current?.focus();
       }
     }
   };
+
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("Entt");
+
+    e.preventDefault();
+    const otp: any = otpNumber.join('');    
+    const response: any = await verifyOtpFunction({otp:otp});
+    console.log('GOT');
+    console.log(response.data,"resssss");
+    
+    
+    if (response?.data == "user created sucessfull") {
+      toast.success("Otp verified");
+      Navigate('/login')
+    }
+    toast.error(response?.data?.message);
+  };
+
+  
   return (
     <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-0 sm:py-12">
       <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
-        <div className="grid grid-cols-6 grid-rows-12 gap-8">
+        <form className="grid grid-cols-6 grid-rows-12 gap-8" onSubmit={handleSubmit}>
           <div className="col-span-7  col-start-1 row-start-2 bg-red-30  text-teal-800 text-3xl">
             <h1 className="font-roboto text-4xl lg:text-5xl">
               Verification Code
@@ -75,7 +97,7 @@ const VerifyOtp: React.FC = () => {
           </div>
           <div className="col-start-1 row-start-7">
             <div id="otp" className="w-6 h-6 flex flex-row">
-              {otp.map((digit, index) => (
+              {otpNumber.map((digit, index) => (
                 <div key={index} className=" ml-7 md:ml-10 lg:ml-12">
                   <input
                     ref={inputRefs[index]}
@@ -91,7 +113,7 @@ const VerifyOtp: React.FC = () => {
             </div>
           </div>
           <div className="col-start-2 col-span-4 row-start-9">
-            <button className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-teal-800 border-none text-white text-sm shadow-sm">
+            <button type="submit" className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-teal-800 border-none text-white text-sm shadow-sm">
               Verify Account
             </button>
           </div>
@@ -106,7 +128,7 @@ const VerifyOtp: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

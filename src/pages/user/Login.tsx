@@ -95,7 +95,6 @@ const Login = () => {
       if(responce.data.message){
        toast.error(responce?.data?.message)
       }else{
-        
         toast.success(responce?.data?.name)
         
       }
