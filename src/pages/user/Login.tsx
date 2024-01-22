@@ -1,13 +1,13 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { LoginFuntion } from '../../utils/api/metords/post';
 import {addUser,clearUser} from '../../utils/ReduxStore/Slice/userSlice'
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { toast } from 'sonner';
-
+import mongoose from 'mongoose'
 
 interface FacebookLoginButtonProps {
   onLoginSuccess: (response: any) => void;
@@ -15,6 +15,16 @@ interface FacebookLoginButtonProps {
 }
 
 const Login = () => {
+
+
+  
+    const user= useSelector((state:any)=>state.user.userId)
+    
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+
+
   const [condition, setCondition] = useState(false);
 
   const facebookLoginButtonRef = useRef<any>(null);
@@ -81,7 +91,11 @@ const Login = () => {
         console.error("Login Error:", error);
     };
     
-
+    interface ResponseData {
+        email?: string;
+        name?: string; 
+        userId:mongoose.Schema.Types.ObjectId
+      }
 
     //form data set in 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
@@ -90,13 +104,24 @@ const Login = () => {
 
       const responce:any=await LoginFuntion(formData)
 
+      console.log(responce);
       
       
       if(responce.data.message){
        toast.error(responce?.data?.message)
       }else{
-        
+       const data:ResponseData={
+        email:responce.data.email,
+        name:responce.data.name,
+        userId:responce.data.userId
+
+       }
+
+       dispatch(clearUser())
+       dispatch(addUser(data))
+       navigate('/')
         toast.success(responce?.data?.name)
+
         
       }
       
