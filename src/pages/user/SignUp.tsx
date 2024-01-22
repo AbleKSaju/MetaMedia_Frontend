@@ -1,12 +1,30 @@
 import React, { useRef, useState } from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-
+import { GoogleLogin } from '@react-oauth/google';
+import {jwtDecode} from 'jwt-decode'
 interface FacebookLoginButtonProps {
   onLoginSuccess: (response: any) => void;
   onLoginFailure: (response: any) => void;
 }
 
 const SignUp = () => {
+
+
+
+
+  const responseMessage:any= (response:any) => {
+       
+    const decode:any=jwtDecode(response.credential)
+    console.log(decode);
+    
+
+};
+const errorMessage:any = (error:any) => {
+  console.log(error);
+};
+
+
+
   const [condition, setCondition] = useState(false);
 
   const facebookLoginButtonRef = useRef<any>(null);
@@ -110,8 +128,9 @@ const SignUp = () => {
             <div className="col-span-4 col-start-3 row-start-7 p-2">
               <p className="text-teal-800 font-light">or continue with</p>
             </div>
-            <button className="col-start-3 row-start-9">
-              <img src="/fonts/google.png" alt="G" />
+            <button className="col-start-2 ml-4 row-start-9">
+              {/* <img src="/fonts/google.png" alt="G" /> */}
+              {<div>   <GoogleLogin   onSuccess={responseMessage} onError={errorMessage} useOneTap  />  </div>}
             </button>
             <button
               type="button"
