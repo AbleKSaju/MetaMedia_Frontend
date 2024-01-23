@@ -1,6 +1,6 @@
 import axios from 'axios'
-
-import {Login_Api,SignUp_Api, VerifyOtp_Api} from '../endpoints/common'
+import {UserData} from '../../interface/userInterface'
+import {Login_Api,SignUp_Api, VerifyOtp_Api,LoginWithGoogle_Api} from '../endpoints/common'
 
 
 export const LoginFuntion=async(data:any)=>{
@@ -26,4 +26,13 @@ export const verifyOtpFunction=async(data:any)=>{
     } catch (error) {
         return error
     }
+}
+
+export const LoginWithGoogle=async(data:UserData)=>{
+
+ try {
+    return axios.create({withCredentials:true}).post(LoginWithGoogle_Api,data)
+ } catch (error) {
+    
+ }   
 }

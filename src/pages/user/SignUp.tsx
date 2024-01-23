@@ -28,7 +28,7 @@ const SignUp = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
     e.preventDefault();
-    const userData: any = { name, email, password };
+    const userData: any = { name, email, password,profile:'' ,isGoogle:false,isFacebook:false};
     const response: any = await SignUpFunction(userData);
     if (response?.data?.message) {
       toast.success("Register success");

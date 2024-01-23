@@ -2,7 +2,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useRef, useState } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import { LoginFuntion } from '../../utils/api/metords/post';
+import { LoginFuntion, LoginWithGoogle } from '../../utils/api/metords/post';
 import {addUser,clearUser} from '../../utils/ReduxStore/Slice/userSlice'
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
@@ -60,9 +60,41 @@ const Login = () => {
     );
   };
 
-  const responseMessage: any = (response: any) => {
+  const responseMessage: any = async(response: any) => {
     const decode: any = jwtDecode(response.credential);
     console.log(decode);
+     
+    if(decode.email_verified==true){
+     
+        const data={
+            profile:decode.picture,
+            email:decode.email,
+            name:decode.given_name,
+            isGoogle:true,
+            isFacebook:false
+        }
+
+        const responce:any = await LoginWithGoogle(data)
+ if(responce){
+console.log(responce);
+if(responce?.data?.status){
+    navigate('/')
+}else{
+    toast.error("user login fail")
+}
+
+     toast.success(responce?.data?.message)
+ }
+
+
+       
+
+
+    }else{
+        toast.error("Your google email is not veified ..")
+    }
+
+
   };
 
   const errorMessage: any = (error: any) => {
@@ -210,9 +242,11 @@ const Login = () => {
               />
             )}
             <div className="col-span-3 col-start-1 row-start-12 flex whitespace-nowrap ml-[97px] ">
+                <Link to={'/signUp'}>
               <p className="text-teal-800 font-roboto font-light text-sm ">
                 Don't have an account ? <span className="whitespace-nowrap font-medium"> Register free </span>
               </p>
+                </Link>
             </div>
           </div>
         </div>
