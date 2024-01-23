@@ -6,6 +6,7 @@ import Login from "../pages/user/Login"
 import VerifyOtp from "../pages/user/VerifyOtp"
 
 
+
 const UserRouter=()=>{
     return(
 
@@ -13,10 +14,8 @@ const UserRouter=()=>{
 
      <Route path='/signup' element={<SignUp/>}/>
      <Route path='/verifyOtp' element={<VerifyOtp/>}/>
-
-
- <Route path="/login" element={<Login/>}/>
-
+     <Route path="/login" element={<Login/>}/>
+     
 
    </Routes>
 
