@@ -1,6 +1,6 @@
 import { propsType } from "../../utils/types/types";
 
-const FormEror = (props: propsType) => {
+const FormError = (props: propsType) => {
   return (
     <>
     
@@ -41,4 +41,4 @@ const FormEror = (props: propsType) => {
   );
 };
 
-export default FormEror;
+export default FormError;

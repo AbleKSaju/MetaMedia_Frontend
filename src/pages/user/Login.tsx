@@ -9,22 +9,27 @@ import { useDispatch,useSelector } from "react-redux";
 import { toast } from 'sonner';
 import mongoose from 'mongoose'
 
+import { ErrorComponent } from '../../components/ErrorComponents/ErrorComponent';
+import { useValidate } from '../../utils/formValidation/common/login';
+
+
 // interface FacebookLoginButtonProps {
 //   onLoginSuccess: (response: any) => void;
 //   onLoginFailure: (response: any) => void;
 // }
 
 const Login = () => {
-  const Navigate=useNavigate()
+  const Navigate=useNavigate() 
+  const [error, setError] = useState(null);
+  const closeModal = () => setError(null);
 
 
-  
     const user= useSelector((state:any)=>state.user.userId)
     
 
     const dispatch = useDispatch()
 
-
+    const { errors, handleSubmit, register } = useValidate();
   // const [condition, setCondition] = useState(false);
 
   // const facebookLoginButtonRef = useRef<any>(null);
@@ -130,7 +135,7 @@ if(responce?.data?.status){
       }
 
     //form data set in 
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    const formSubmit = async(e: any) => {
       e.preventDefault();
       
 
@@ -150,9 +155,9 @@ if(responce?.data?.status){
 
        }
 
-      //  dispatch(clearUser())
-      //  dispatch(addUser(data))
-      //  navigate('/')
+       dispatch(clearUser())
+       dispatch(addUser(data))
+       Navigate('/')
 
         toast.success(responce?.data?.name)
 
@@ -164,10 +169,29 @@ if(responce?.data?.status){
 
   return (
     <>
+
+
+    {/* Display error messages */}
+    {error && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="relative bg-white p-4 rounded-lg shadow-md">
+            <ErrorComponent data={error} />
+            <button
+              className="absolute top-0 right-0 p-2 text-gray-600"
+              onClick={closeModal}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+   
       {/* main div  */}
       <div className="relative flex min-h-screen justify-center align-middle overflow-hidden bg-gray-50 py-6 sm:py-12">
         {/* wrapper div  */}
         <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl flex justify-center ring-1 w-[70vw] h-[80vh] mt-6 ring-gray-900/5 sm:mx-auto rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
+     
           <div className="grid grid-cols-5 grid-rows-12 gap-4">
             {/* login heading  */}
             <div className="col-span-1 col-start-1 row-start-2 ml-10">
@@ -175,7 +199,7 @@ if(responce?.data?.status){
             </div>
             {/* email input  */}
             <div className="col-span-3 col-start-1 row-start-4 ml-10">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(formSubmit)}>
                 <div className="absolute flex flex-col">
                   <label className="text-teal-800 font-light font-roboto" htmlFor="email">
                     Email
@@ -187,13 +211,17 @@ if(responce?.data?.status){
                     className="pl-5 lg:w-[24vw] lg:h-[5vh] border outline-none border-amber-100 rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                     placeholder="abc@gmai.com"
                     type="text"
+                 
                   />
+                  <p className="text-red-600">
+                {errors && errors.email && <p>{errors.email.message}</p>}
+              </p>
                 </div>
               </form>
             </div>
             {/* passowrd input filed */}
             <div className="col-span-3 col-start-1 row-start-5 mt-8 ml-10">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(formSubmit)}>
                 <div className="absolute flex flex-col">
                   <label className="text-teal-800 font-light font-roboto" htmlFor="password">
                     Password
@@ -206,6 +234,9 @@ if(responce?.data?.status){
                     placeholder="********"
                     type="password"
                   />
+                  <p className="text-red-600">
+                {errors && errors.password && <p>{errors.password.message}</p>}
+              </p>
                 </div>
               </form>
             </div>
@@ -215,7 +246,7 @@ if(responce?.data?.status){
             </div>
             {/* sign in butten  */}
             <div className="col-span-3 col-start-1 row-start-8 ml-16 mt-5">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(formSubmit)}>
                 <button
                   type="submit"
                   className="bg-teal-800 text-white font-roboto font-semibold lg:w-[20vw] lg:h-[4vh] rounded-md"
