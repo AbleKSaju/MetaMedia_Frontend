@@ -7,12 +7,11 @@ import {
   RegisterFormData,
   useRegisterValidate,
 } from "../../utils/formValidation/SignUpValidation";
-import { ErrorComponent } from "../../components/ErrorComponents/ErrorComponent";
-import { FieldErrors } from "react-hook-form";
+import { FacebookAuth } from "../../utils/firebase/firebase";
 
 const SignUp = () => {
-
   const Navigate = useNavigate();
+
   const responseMessage: any = (response: any) => {
     const decode: any = jwtDecode(response.credential);
     console.log(decode);
@@ -20,9 +19,12 @@ const SignUp = () => {
   const errorMessage: any = (error: any) => {
     console.log(error);
   };
-
   const { errors, handleSubmit, register } = useRegisterValidate();
 
+  const SignInWithFacebook=()=>{
+    const user:any=FacebookAuth()
+    console.log("user :",user); 
+  }
 
   const formSubmit = async (Data: RegisterFormData) => {
     const response: any = await SignUpFunction({ ...Data });
@@ -33,11 +35,9 @@ const SignUp = () => {
     toast.error(response?.data?.message);
   };
 
-
   return (
     <>
       <div className="relative flex justify-center align-middle bg-gray-50 mt-10">
-
 
         {/* wrapper div  */}
         <div className="relative bg-amber-50 px-6 pt-10 pb-16 shadow-xl flex justify-center ring-1 w-[70vw] h-[85vh] mt-6 ring-gray-900/5 sm:mx-auto rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
@@ -119,17 +119,11 @@ const SignUp = () => {
             </button>
             <button
               type="button"
-              // onClick={handleMainButtonClick}
+              onClick={SignInWithFacebook}
               className="col-start-6 row-start-9"
             >
               <img src="/fonts/facebook.png" alt="G" />
             </button>
-            {/* {condition && (
-            <FacebookLoginButton
-              onLoginSuccess={handleLoginSuccess}
-              onLoginFailure={handleLoginFailure}
-            />
-          )} */}
 
             {/* Create account */}
             <div className="col-span-4 col-start-3 row-start-10">
@@ -147,3 +141,27 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
+
+// Import the functions you need from the SDKs you need
+// import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
+// // TODO: Add SDKs for Firebase products that you want to use
+// // https://firebase.google.com/docs/web/setup#available-libraries
+
+// // Your web app's Firebase configuration
+// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCVUUteSxMeaVb8Y_KgZbqJDGHrqGdno2M",
+//   authDomain: "facebook-auth-b69a2.firebaseapp.com",
+//   projectId: "facebook-auth-b69a2",
+//   storageBucket: "facebook-auth-b69a2.appspot.com",
+//   messagingSenderId: "754761676497",
+//   appId: "1:754761676497:web:866a808dad28aa30a677f0",
+//   measurementId: "G-DH5J0B66WW"
+// };
+
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);

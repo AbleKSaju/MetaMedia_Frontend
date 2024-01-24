@@ -86,15 +86,9 @@ if(responce?.data?.status){
      toast.success(responce?.data?.message)
  }
 
-
-       
-
-
     }else{
         toast.error("Your google email is not veified ..")
     }
-
-
   };
 
   const errorMessage: any = (error: any) => {
