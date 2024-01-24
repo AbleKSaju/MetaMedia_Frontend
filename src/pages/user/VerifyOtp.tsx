@@ -5,9 +5,11 @@ import React, {
   KeyboardEvent,
   useEffect,
 } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { verifyOtpFunction } from "../../utils/api/metords/post";
+import { useRegisterValidate } from "../../utils/formValidation/SignUpValidation";
 
 const VerifyOtp: React.FC = () => {
   const [otpNumber, setOtp] = useState(["", "", "", ""]);
@@ -64,17 +66,16 @@ const VerifyOtp: React.FC = () => {
     }
   };
 
+  const { handleSubmit, register } = useForm<{otp:string}>();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+  const formSumbit = async (Data: {otp:string}) => {
     console.log("Entt");
-
-    e.preventDefault();
+    // e.preventDefault();
     const otp: any = otpNumber.join('');    
     const response: any = await verifyOtpFunction({otp:otp});
     console.log('GOT');
     console.log(response.data,"resssss");
-    
-    
     if (response?.data == "user created sucessfull") {
       toast.success("Otp verified");
       Navigate('/login')
@@ -84,7 +85,7 @@ const VerifyOtp: React.FC = () => {
   return (
     <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-0 sm:py-12">
       <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
-        <form className="grid grid-cols-6 grid-rows-12 gap-8" onSubmit={handleSubmit}>
+        <form className="grid grid-cols-6 grid-rows-12 gap-8" onSubmit={handleSubmit(formSumbit)}>
           <div className="col-span-7  col-start-1 row-start-2 bg-red-30  text-teal-800 text-3xl">
             <h1 className="font-roboto text-4xl lg:text-5xl">
               Verification Code
@@ -103,6 +104,17 @@ const VerifyOtp: React.FC = () => {
                     type="text"
                     maxLength={1}
                     value={digit}
+                    // {...register("otp", {
+                    //   required: "otp is required",
+                    //   maxLength: {
+                    //     value: 4,
+                    //     message: "OTP must be maximum 4 digits",
+                    //   },
+                    //   pattern: {
+                    //     value: /^[0-9]+$/,
+                    //     message: "OTP must contain only numbers",
+                    //   },
+                    // })}
                     onChange={(e) => handleInputChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                   />
