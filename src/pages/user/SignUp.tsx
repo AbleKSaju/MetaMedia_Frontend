@@ -42,29 +42,7 @@ const SignUp = () => {
       facebookLoginButtonRef.current?.click();
     }
   };
-  const FacebookLoginButton: React.FC<FacebookLoginButtonProps> = ({
-    onLoginSuccess,
-    onLoginFailure,
-  }) => {
-    const responseFacebook = async (response: any) => {
-      if (response.accessToken) {
-        onLoginSuccess(response);
-      } else {
-        onLoginFailure(response);
-      }
-    };
-    return (
-      <FacebookLogin
-        ref={facebookLoginButtonRef}
-        appId="789637846262329"
-        autoLoad={false}
-        fields="name,email,picture"
-        callback={responseFacebook}
-        render={(renderProps: any) => (
-          <button style={{ display: "none" }} onClick={renderProps.onClick} />
-        )}
-      />
-    );
+ 
   };
 
   const handleLoginSuccess = (response: any) => {
