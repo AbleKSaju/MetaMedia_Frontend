@@ -8,63 +8,29 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
 import { toast } from 'sonner';
 import mongoose from 'mongoose'
-
-import { ErrorComponent } from '../../components/ErrorComponents/ErrorComponent';
-import { useValidate } from '../../utils/formValidation/common/login';
+import { LoginFormData, useValidate } from '../../utils/formValidation/LoginValidation';
 
 
-// interface FacebookLoginButtonProps {
-//   onLoginSuccess: (response: any) => void;
-//   onLoginFailure: (response: any) => void;
-// }
 
 const Login = () => {
-  const Navigate=useNavigate() 
-  const [error, setError] = useState(null);
-  const closeModal = () => setError(null);
-
-
-    const user= useSelector((state:any)=>state.user.userId)
     
 
+    
+    const user= useSelector((state:any)=>state.user.userId)
     const dispatch = useDispatch()
+    const Navigate=useNavigate()
+    
 
-    const { errors, handleSubmit, register } = useValidate();
-  // const [condition, setCondition] = useState(false);
+//-------------
+const handleGoogle=()=>{
 
-  // const facebookLoginButtonRef = useRef<any>(null);
-  // const handleMainButtonClick = () => {
-  //   setCondition(true);
-  //   if (facebookLoginButtonRef.current) {
-  //     facebookLoginButtonRef.current.click();
-  //   }
-  // };
+}
+//-------------
 
-  // const FacebookLoginButton: React.FC<FacebookLoginButtonProps> = ({
-  //   onLoginSuccess,
-  //   onLoginFailure,
-  // }) => {
-  //   const responseFacebook = async (response: any) => {
-  //     if (response.accessToken) {
-  //       onLoginSuccess(response);
-  //     } else {
-  //       onLoginFailure(response);
-  //     }
-  //   };
-  //   return (
-  //     <FacebookLogin
-  //       ref={facebookLoginButtonRef}
-  //       appId="789637846262329"
-  //       autoLoad={false}
-  //       fields="name,email,picture"
-  //       callback={responseFacebook}
-  //       render={(renderProps: any) => (
-  //         <button style={{ display: 'none' }} onClick={renderProps.onClick} />
-  //       )}
-  //     />
-  //   );
-  // };
 
+const { errors, handleSubmit, register } = useValidate();
+
+//google sign up
   const responseMessage: any = async(response: any) => {
     const decode: any = jwtDecode(response.credential);
     console.log(decode);
@@ -87,47 +53,23 @@ if(responce?.data?.status){
 }else{
     toast.error("user login fail")
 }
-
      toast.success(responce?.data?.message)
  }
-
-
-       
-
-
     }else{
         toast.error("Your google email is not veified ..")
     }
-
-
   };
-
   const errorMessage: any = (error: any) => {
     console.log(error);
   };
 
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  //google end------
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+ 
 
+ 
   
-  // const handleLoginSuccess = (response: any) => {
-  //     console.log("Login Success:", response);
-  //   };
-    
-  //   const handleLoginFailure = (error: any) => {
-  //       console.error("Login Error:", error);
-  //   };
-    
+
     interface ResponseData {
         email?: string;
         name?: string; 
@@ -135,155 +77,144 @@ if(responce?.data?.status){
       }
 
     //form data set in 
-    const formSubmit = async(e: any) => {
-      e.preventDefault();
+    const formsubmit = async(Data: LoginFormData) => {
+     
       
+        const responce:any=await LoginFuntion({...Data})
+        if(responce.data.message){
+            toast.error(responce?.data?.message)
+           }else{
+     
+            const data:ResponseData={
+             email:responce.data.email,
+             name:responce.data.name,
+             userId:responce.data.userId
+     
+            }
+     
+            dispatch(clearUser())
+            dispatch(addUser(data))
+            Navigate('/')
+     
+             toast.success(responce?.data?.name)
 
-      const responce:any=await LoginFuntion(formData)
+    
 
-      console.log(responce);
-      
-      
-      if(responce.data.message){
-       toast.error(responce?.data?.message)
-      }else{
-
-       const data:ResponseData={
-        email:responce.data.email,
-        name:responce.data.name,
-        userId:responce.data.userId
-
-       }
-
-       dispatch(clearUser())
-       dispatch(addUser(data))
-       Navigate('/')
-
-        toast.success(responce?.data?.name)
-
-        
-      }
+  
     }
+}
       
-    // };
+   
 
   return (
+
+
     <>
+    <div className="relative flex justify-center align-middle bg-gray-50 mt-10">
 
 
-    {/* Display error messages */}
-    {error && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-          <div className="fixed inset-0 bg-black opacity-50"></div>
-          <div className="relative bg-white p-4 rounded-lg shadow-md">
-            <ErrorComponent data={error} />
+      {/* wrapper div  */}
+      <div className="relative bg-amber-50 px-6 pt-10 pb-16 shadow-xl flex justify-center ring-1 w-[70vw] h-[85vh] mt-6 ring-gray-900/5 sm:mx-auto rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
+        <form
+          className="grid grid-cols-8 grid-rows-14 gap-3 text-center"
+          onSubmit={handleSubmit(formsubmit)}
+        >
+          {/* header */}
+          <div className="col-span-4 col-start-2 row-start-2 mt-2">
+            <h1 className="text-3xl md:text-4xl lg:text-4xl font-roboto text-teal-800 text-start">
+              Login
+            </h1>
+          </div>
+         
+
+          {/* email input */}
+          <div className="col-span-8 col-start-2 col-end-8 row-start-4">
+            <p className="text-start text-teal-800 font-light">email</p>
+            <input
+              className="p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
+              placeholder="abc@gmai.com"
+              type="text"
+              {...register("email")}
+          
+            />
+            <p className="text-red-600">
+              {errors && errors.email && <p>{errors.email.message}</p>}
+            </p>
+          </div>
+
+          {/* password input */}
+          <div className="col-span-8 col-start-2 col-end-8 row-start-5 ">
+            <p className="text-start text-teal-800 font-light">Password</p>
+            <input
+              className=" p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
+              placeholder="********"
+              type="text"
+              {...register("password")}
+            />
+            <p className="text-red-600">
+              {errors && errors.password && <p>{errors.password.message}</p>}
+            </p>
+          </div>
+
+          {/* submit */}
+          <div className="col-span-8 col-start-2 col-end-8 row-start-7">
             <button
-              className="absolute top-0 right-0 p-2 text-gray-600"
-              onClick={closeModal}
+              type="submit"
+              className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md"
             >
-              Close
+             Sign in
             </button>
           </div>
-        </div>
-      )}
-   
-      {/* main div  */}
-      <div className="relative flex min-h-screen justify-center align-middle overflow-hidden bg-gray-50 py-6 sm:py-12">
-        {/* wrapper div  */}
-        <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl flex justify-center ring-1 w-[70vw] h-[80vh] mt-6 ring-gray-900/5 sm:mx-auto rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
-     
-          <div className="grid grid-cols-5 grid-rows-12 gap-4">
-            {/* login heading  */}
-            <div className="col-span-1 col-start-1 row-start-2 ml-10">
-              <h1 className="text-teal-800 font-roboto font-medium text-4xl ">Login</h1>
-            </div>
-            {/* email input  */}
-            <div className="col-span-3 col-start-1 row-start-4 ml-10">
-              <form onSubmit={handleSubmit(formSubmit)}>
-                <div className="absolute flex flex-col">
-                  <label className="text-teal-800 font-light font-roboto" htmlFor="email">
-                    Email
-                  </label>
-                  <input
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="pl-5 lg:w-[24vw] lg:h-[5vh] border outline-none border-amber-100 rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
-                    placeholder="abc@gmai.com"
-                    type="text"
-                 
-                  />
-                  <p className="text-red-600">
-                {errors && errors.email && <p>{errors.email.message}</p>}
-              </p>
-                </div>
-              </form>
-            </div>
-            {/* passowrd input filed */}
-            <div className="col-span-3 col-start-1 row-start-5 mt-8 ml-10">
-              <form onSubmit={handleSubmit(formSubmit)}>
-                <div className="absolute flex flex-col">
-                  <label className="text-teal-800 font-light font-roboto" htmlFor="password">
-                    Password
-                  </label>
-                  <input
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="lg:w-[24vw] lg:h-[5vh] border pl-5 outline-none border-amber-100 rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
-                    placeholder="********"
-                    type="password"
-                  />
-                  <p className="text-red-600">
-                {errors && errors.password && <p>{errors.password.message}</p>}
-              </p>
-                </div>
-              </form>
-            </div>
-            {/* forget password field  */}
-            <div className="col-span-2 col-start-3 row-start-7 ml-20">
-              <p className="text-teal-800 whitespace-nowrap font-roboto font-thin text-sm">forget password ?</p>
-            </div>
-            {/* sign in butten  */}
-            <div className="col-span-3 col-start-1 row-start-8 ml-16 mt-5">
-              <form onSubmit={handleSubmit(formSubmit)}>
-                <button
-                  type="submit"
-                  className="bg-teal-800 text-white font-roboto font-semibold lg:w-[20vw] lg:h-[4vh] rounded-md"
-                >
-                  Sign in
-                </button>
-              </form>
-            </div>
-            {/* or continue with  */}
-            <div className="col-span-3 col-start-2 row-start-9 ml-[80px] mt-8 ">
-              <p className="font-roboto font-light text-sm text-teal-800 ">or continue with</p>
-            </div>
-            {/* continue with google or facebook */}
-            <div className="col-start-2 row-start-10  mt-6 w-[80px] h-[50px]  justify-center align-middle">
-              <GoogleLogin onSuccess={responseMessage} onError={errorMessage} useOneTap />
-            </div>
-            <button type="button" className="col-start-4 row-start-10 ml-7 mt-5">
-              <img src="/fonts/facebook.png" alt="G" />
-            </button>
-            {/* {condition && (
-              <FacebookLoginButton
-                onLoginSuccess={handleLoginSuccess}
-                onLoginFailure={handleLoginFailure}
-              /> */}
-            {/* )} */}
-            <div className="col-span-3 col-start-1 row-start-12 flex whitespace-nowrap ml-[97px] ">
-                <Link to={'/signUp'}>
-              <p className="text-teal-800 font-roboto font-light text-sm ">
+          <div className="col-span-4 col-start-3 row-start-8 p-2">
+            <p className="text-teal-800 font-light">or continue with</p>
+          </div>
+          <button onClick={handleGoogle} className="col-start-2 ml-6  row-start-9">
+            {
+              <div>
+                 {/* <img src="/fonts/google.png" alt="G" /> */}
+               
+                <GoogleLogin
+                  onSuccess={responseMessage}
+                  onError={errorMessage}
+                  useOneTap
+                />
+              </div>
+            }
+          </button>
+          <button
+            type="button"
+            // onClick={handleMainButtonClick}
+            className="col-start-6 row-start-9 ml-2 "
+          >
+            <img className='w-[50px] h-[50px]' src="/fonts/facebook.png" alt="G" />
+          </button>
+          {/* {condition && (
+          <FacebookLoginButton
+            onLoginSuccess={handleLoginSuccess}
+            onLoginFailure={handleLoginFailure}
+          />
+        )} */}
+
+          {/* Create account */}
+          <div className="col-span-4 col-start-2 row-start-10">
+          <Link to={'/signUp'}>
+          <p className="text-teal-800 font-roboto font-light text-sm whitespace-nowrap ml-8 mt-5 ">
                 Don't have an account ? <span className="whitespace-nowrap font-medium"> Register free </span>
               </p>
-                </Link>
-            </div>
+            </Link>
           </div>
-        </div>
+        </form>
+
       </div>
-    </>
-  );
-};
+    </div>
+  </>
+
+
+
+  )
+
+    }
+
 
 export default Login;
+

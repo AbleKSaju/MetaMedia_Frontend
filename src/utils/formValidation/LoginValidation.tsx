@@ -8,8 +8,8 @@ export type LoginFormData = {
 };
 
 export const schema: ZodType<LoginFormData> = z.object({
-  email: z.string().email({ message: "Please provide a valid email " }),
-  password:z.string().min(8,{message:"Password atleast 8 character"})
+  email: z.string().email({ message: "Please provide a valid email address" }),
+  password:z.string().min(4,{message:"Please enter password"})
 });
 
 export const useValidate = () => {
@@ -20,4 +20,3 @@ export const useValidate = () => {
     errors
   }
 }
-

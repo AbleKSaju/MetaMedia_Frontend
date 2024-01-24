@@ -1,8 +1,9 @@
 import { FieldErrors } from "react-hook-form";
-import {RegisterFormData} from '../formValidation/common/register'
+import {RegisterFormData} from '../common/register'
 
 
 export interface propsType {
     errors: FieldErrors<RegisterFormData>;
   }
 
+  
