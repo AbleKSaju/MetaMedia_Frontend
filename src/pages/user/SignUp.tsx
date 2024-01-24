@@ -35,6 +35,7 @@ const SignUp = () => {
     toast.error(response?.data?.message);
   };
 
+
   return (
     <>
       <div className="relative flex justify-center align-middle bg-gray-50 mt-10">
