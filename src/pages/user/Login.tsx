@@ -1,64 +1,64 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useRef, useState } from 'react';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import { LoginFuntion, LoginWithGoogle } from '../../utils/api/metords/post';
+import { LoginFuntion } from '../../utils/api/metords/post';
 import {addUser,clearUser} from '../../utils/ReduxStore/Slice/userSlice'
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import {LoginWithGoogle} from '../../utils/api/metords/post'
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
 import { toast } from 'sonner';
 import mongoose from 'mongoose'
 
-interface FacebookLoginButtonProps {
-  onLoginSuccess: (response: any) => void;
-  onLoginFailure: (response: any) => void;
-}
+// interface FacebookLoginButtonProps {
+//   onLoginSuccess: (response: any) => void;
+//   onLoginFailure: (response: any) => void;
+// }
 
 const Login = () => {
+  const Navigate=useNavigate()
 
 
   
     const user= useSelector((state:any)=>state.user.userId)
     
 
-    const navigate = useNavigate();
     const dispatch = useDispatch()
 
 
-  const [condition, setCondition] = useState(false);
+  // const [condition, setCondition] = useState(false);
 
-  const facebookLoginButtonRef = useRef<any>(null);
-  const handleMainButtonClick = () => {
-    setCondition(true);
-    if (facebookLoginButtonRef.current) {
-      facebookLoginButtonRef.current.click();
-    }
-  };
+  // const facebookLoginButtonRef = useRef<any>(null);
+  // const handleMainButtonClick = () => {
+  //   setCondition(true);
+  //   if (facebookLoginButtonRef.current) {
+  //     facebookLoginButtonRef.current.click();
+  //   }
+  // };
 
-  const FacebookLoginButton: React.FC<FacebookLoginButtonProps> = ({
-    onLoginSuccess,
-    onLoginFailure,
-  }) => {
-    const responseFacebook = async (response: any) => {
-      if (response.accessToken) {
-        onLoginSuccess(response);
-      } else {
-        onLoginFailure(response);
-      }
-    };
-    return (
-      <FacebookLogin
-        ref={facebookLoginButtonRef}
-        appId="789637846262329"
-        autoLoad={false}
-        fields="name,email,picture"
-        callback={responseFacebook}
-        render={(renderProps: any) => (
-          <button style={{ display: 'none' }} onClick={renderProps.onClick} />
-        )}
-      />
-    );
-  };
+  // const FacebookLoginButton: React.FC<FacebookLoginButtonProps> = ({
+  //   onLoginSuccess,
+  //   onLoginFailure,
+  // }) => {
+  //   const responseFacebook = async (response: any) => {
+  //     if (response.accessToken) {
+  //       onLoginSuccess(response);
+  //     } else {
+  //       onLoginFailure(response);
+  //     }
+  //   };
+  //   return (
+  //     <FacebookLogin
+  //       ref={facebookLoginButtonRef}
+  //       appId="789637846262329"
+  //       autoLoad={false}
+  //       fields="name,email,picture"
+  //       callback={responseFacebook}
+  //       render={(renderProps: any) => (
+  //         <button style={{ display: 'none' }} onClick={renderProps.onClick} />
+  //       )}
+  //     />
+  //   );
+  // };
 
   const responseMessage: any = async(response: any) => {
     const decode: any = jwtDecode(response.credential);
@@ -78,7 +78,7 @@ const Login = () => {
  if(responce){
 console.log(responce);
 if(responce?.data?.status){
-    navigate('/')
+  Navigate('/')
 }else{
     toast.error("user login fail")
 }
@@ -115,13 +115,13 @@ if(responce?.data?.status){
   };
 
   
-  const handleLoginSuccess = (response: any) => {
-      console.log("Login Success:", response);
-    };
+  // const handleLoginSuccess = (response: any) => {
+  //     console.log("Login Success:", response);
+  //   };
     
-    const handleLoginFailure = (error: any) => {
-        console.error("Login Error:", error);
-    };
+  //   const handleLoginFailure = (error: any) => {
+  //       console.error("Login Error:", error);
+  //   };
     
     interface ResponseData {
         email?: string;
@@ -150,17 +150,17 @@ if(responce?.data?.status){
 
        }
 
-       dispatch(clearUser())
-       dispatch(addUser(data))
-       navigate('/')
+      //  dispatch(clearUser())
+      //  dispatch(addUser(data))
+      //  navigate('/')
 
         toast.success(responce?.data?.name)
 
         
       }
+    }
       
-      
-    };
+    // };
 
   return (
     <>
@@ -232,15 +232,15 @@ if(responce?.data?.status){
             <div className="col-start-2 row-start-10  mt-6 w-[80px] h-[50px]  justify-center align-middle">
               <GoogleLogin onSuccess={responseMessage} onError={errorMessage} useOneTap />
             </div>
-            <button type="button" onClick={handleMainButtonClick} className="col-start-4 row-start-10 ml-7 mt-5">
+            <button type="button" className="col-start-4 row-start-10 ml-7 mt-5">
               <img src="/fonts/facebook.png" alt="G" />
             </button>
-            {condition && (
+            {/* {condition && (
               <FacebookLoginButton
                 onLoginSuccess={handleLoginSuccess}
                 onLoginFailure={handleLoginFailure}
-              />
-            )}
+              /> */}
+            {/* )} */}
             <div className="col-span-3 col-start-1 row-start-12 flex whitespace-nowrap ml-[97px] ">
                 <Link to={'/signUp'}>
               <p className="text-teal-800 font-roboto font-light text-sm ">
