@@ -7,7 +7,7 @@ import {
   RegisterFormData,
   useRegisterValidate,
 } from "../../utils/formValidation/SignUpValidation";
-import { FacebookAuth } from "../../utils/firebase/firebase";
+import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
 
 const SignUp = () => {
   const Navigate = useNavigate();
@@ -61,7 +61,7 @@ const SignUp = () => {
                 type="text"
                 {...register("name")}
               />
-              <p className="text-red-600">
+              <p className="text-red-600 text-xs text-start">
                 {errors && errors.name && <p>{errors.name.message}</p>}
               </p>
             </div>
@@ -75,7 +75,7 @@ const SignUp = () => {
                 type="text"
                 {...register("email")}
               />
-              <p className="text-red-600">
+              <p className="text-red-600 text-xs text-start">
                 {errors && errors.email && <p>{errors.email.message}</p>}
               </p>
             </div>
@@ -89,7 +89,7 @@ const SignUp = () => {
                 type="text"
                 {...register("password")}
               />
-              <p className="text-red-600">
+              <p className="text-red-600 text-xs text-start">
                 {errors && errors.password && <p>{errors.password.message}</p>}
               </p>
             </div>

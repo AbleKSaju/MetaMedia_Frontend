@@ -6,6 +6,7 @@ import Login from "../pages/user/Login"
 import VerifyOtp from "../pages/user/VerifyOtp"
 import ForgotPassword from "../pages/user/ForgotPassword"
 import ChooseInterest from "../pages/user/ChooseInterest"
+import Home from "../pages/user/Home"
 
 
 
@@ -13,7 +14,7 @@ const UserRouter=()=>{
     return(
 
    <Routes>
-
+     <Route path="/" element={<Home/>}/>
      <Route path='/signup' element={<SignUp/>}/>
      <Route path='/verifyOtp' element={<VerifyOtp/>}/>
      <Route path='/forgotpassword' element={<ForgotPassword/>}/>

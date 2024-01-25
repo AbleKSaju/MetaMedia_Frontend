@@ -1,20 +1,59 @@
 import React, { useState } from "react";
 import { UserCheck, MessageCircleHeart, BookUser } from "lucide-react";
+import { toast } from "sonner";
 
 const ChooseInterest = () => {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+ 
+  // const handleImageClick = (imageName: string) => {
+  //   if (selectedImages.includes(imageName)) {
+  //     setSelectedImages((prevSelected) =>
+  //       prevSelected.filter((name) => name !== imageName)
+  //     );
+  //   } else {
+  //     setSelectedImages((prevSelected) => [...prevSelected, imageName]);
+  //   }
+  // };
   const handleImageClick = (imageName: string) => {
-    if (selectedImages.includes(imageName)) {
-      setSelectedImages((prevSelected) =>
-        prevSelected.filter((name) => name !== imageName)
-      );
-    } else {
-      setSelectedImages((prevSelected) => [...prevSelected, imageName]);
+    const newSelectedImages = selectedImages.includes(imageName)
+      ? selectedImages.filter((name) => name !== imageName)
+      : [...selectedImages, imageName];
+  
+    if (newSelectedImages.length > 5) {
+      toast.error("You can choose at most 5 interests.");
+    } else { 
+      setSelectedImages(newSelectedImages);
+     
+      
     }
   };
+
+  const handleNext=async(e:any)=>{
+    e.preventDefault(); 
+    
+    if(selectedImages.length <2  ){
+      toast.error("You can choose at leat 2 interests.");
+    }else {
+    
+      console.log(selectedImages,'PPP');
+      
+
+
+    }
+
+
+  }
+
+
+  
   return (
     <div className="h-[95vh] w-[100vw] overflow-hidden flex items-center justify-center">
       <div className="grid grid-cols-7 grid-rows-6 gap-4">
+
+
+     
+
+
         <div className="col-start-2 row-start-2 w-10">
           <div className="w-20 h-20 flex items-center justify-center bg-teal-800 rounded-full overflow-hidden">
             <UserCheck
@@ -57,6 +96,8 @@ const ChooseInterest = () => {
         <div className="row-start-3 col-start-3 mt-10 w-[23vw] font-bold font-roboto text-teal-800 ml-20 text-center ">
           CHOOSE YOUR INTERESTS
         </div>
+
+
 
         <div
           className="col-start-2 row-start-4 "
@@ -301,10 +342,11 @@ const ChooseInterest = () => {
           </p>
         </div>
 
-        <div className="col-start-6 mt-10 row-start-3">Skip →</div>
+        {/* <div className="col-start-6 mt-10 row-start-3">Skip →</div> */}
 
         <div className="col-start-4 row-start-6 mt-5">
-          <button className="bg-teal-800 px-6 py-2 text-amber-50 font-bold rounded-full transition duration-300 ease-in-out hover:bg-teal-600 hover:text-white focus:outline-none focus:ring focus:border-teal-800">
+       
+          <button onClick={handleNext} className="bg-teal-800 px-6 py-2 text-amber-50 font-bold rounded-full transition duration-300 ease-in-out hover:bg-teal-600 hover:text-white focus:outline-none focus:ring focus:border-teal-800">
             Next
           </button>
         </div>

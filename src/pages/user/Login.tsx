@@ -1,6 +1,4 @@
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
-import React, { useEffect, useRef, useState } from 'react';
+
 import { LoginFuntion } from '../../utils/api/metords/post';
 import {addUser,clearUser} from '../../utils/ReduxStore/Slice/userSlice'
 import {LoginWithGoogle} from '../../utils/api/metords/post'
@@ -9,6 +7,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { toast } from 'sonner';
 import mongoose from 'mongoose'
 import { LoginFormData, useValidate } from '../../utils/formValidation/LoginValidation';
+import { GoogleAuth } from '../../utils/firebase/firebase';
 
 
 
@@ -16,65 +15,80 @@ const Login = () => {
     
 
     
-    const user= useSelector((state:any)=>state.user.userId)
+    const user= useSelector((state:any)=>state.user.email)
+    console.log('user',user);
+    
     const dispatch = useDispatch()
     const Navigate=useNavigate()
     
 
 //-------------
-const handleGoogle=()=>{
+const handleGoogle=(e:any)=>{
+    e.preventDefault(); 
+   const user:any= GoogleAuth()
 
+
+   const datas=user.then (async(data:any)=>{
+
+    console.log(data.user,'GGGG');
+    const dat={
+
+    
+        profile:data.user.photoURL,
+        email:data.user.email,
+        name:data.user.displayName,
+         isGoogle:true,
+         isFacebook:false
+    }
+    
+
+    console.log(dat,'-------');
+    
+    
+
+    if(data.user.emailVerified){
+
+        const responce:any = await LoginWithGoogle(dat)
+        
+        if(responce){
+            console.log(responce);
+            if(responce.data.status){
+                const data:ResponseData={
+                    email:responce.data.responce.user.email,
+                    name:responce.data.responce.user.name,
+                    userId:responce.data.responce.user.userId,
+                    profile:responce.data.responce.user.profile,
+                    isGoogle:responce.data.responce.user.isGoogle,
+                    isFacebook:responce.data.responce.user.isFacebook,
+                }
+                dispatch(clearUser())
+                dispatch(addUser(data))
+                Navigate('/')
+                
+            }else{
+                toast.error("user login fail")
+            }
+            toast.success(responce?.data?.message)
+        }
+        
+    }else{
+        toast.error("Your google email is not veified ..")
+    }   
+   })
 }
 //-------------
 
 
 const { errors, handleSubmit, register } = useValidate();
-
-//google sign up
-  const responseMessage: any = async(response: any) => {
-    const decode: any = jwtDecode(response.credential);
-    console.log(decode);
-     
-    if(decode.email_verified==true){
-     
-        const data={
-            profile:decode.picture,
-            email:decode.email,
-            name:decode.given_name,
-            isGoogle:true,
-            isFacebook:false
-        }
-
-        const responce:any = await LoginWithGoogle(data)
- if(responce){
-console.log(responce);
-if(responce?.data?.status){
-  Navigate('/')
-}else{
-    toast.error("user login fail")
-}
-     toast.success(responce?.data?.message)
- }
-
-    }else{
-        toast.error("Your google email is not veified ..")
-    }
-  };
-  const errorMessage: any = (error: any) => {
-    console.log(error);
-  };
-
-  //google end------
-
  
-
- 
-  
 
     interface ResponseData {
         email?: string;
         name?: string; 
-        userId:mongoose.Schema.Types.ObjectId
+        userId:mongoose.Schema.Types.ObjectId;
+        profile:string,
+        isGoogle:boolean,
+        isFacebook:boolean
       }
 
     //form data set in 
@@ -89,7 +103,10 @@ if(responce?.data?.status){
             const data:ResponseData={
              email:responce.data.email,
              name:responce.data.name,
-             userId:responce.data.userId
+             userId:responce.data.userId,
+             profile:responce.data.profile,
+             isGoogle:responce.data.isGoogle,
+             isFacebook:responce.data.isFacebook
      
             }
      
@@ -138,7 +155,7 @@ if(responce?.data?.status){
               {...register("email")}
           
             />
-            <p className="text-red-600">
+            <p className="text-red-600 text-start text-xs">
               {errors && errors.email && <p>{errors.email.message}</p>}
             </p>
           </div>
@@ -152,7 +169,7 @@ if(responce?.data?.status){
               type="text"
               {...register("password")}
             />
-            <p className="text-red-600">
+            <p className="text-red-600 text-xs text-start">
               {errors && errors.password && <p>{errors.password.message}</p>}
             </p>
           </div>
@@ -169,32 +186,22 @@ if(responce?.data?.status){
           <div className="col-span-4 col-start-3 row-start-8 p-2">
             <p className="text-teal-800 font-light">or continue with</p>
           </div>
-          <button onClick={handleGoogle} className="col-start-2 ml-6  row-start-9">
+          <button onClick={handleGoogle} className="col-start-3   row-start-9">
             {
               <div>
-                 {/* <img src="/fonts/google.png" alt="G" /> */}
+                 <img src="/fonts/google.png" alt="G" />
                
-                <GoogleLogin
-                  onSuccess={responseMessage}
-                  onError={errorMessage}
-                  useOneTap
-                />
               </div>
             }
           </button>
           <button
             type="button"
-            // onClick={handleMainButtonClick}
-            className="col-start-6 row-start-9 ml-2 "
+           
+            className="col-start-6 row-start-9  "
           >
             <img className='w-[50px] h-[50px]' src="/fonts/facebook.png" alt="G" />
           </button>
-          {/* {condition && (
-          <FacebookLoginButton
-            onLoginSuccess={handleLoginSuccess}
-            onLoginFailure={handleLoginFailure}
-          />
-        )} */}
+         
 
           {/* Create account */}
           <div className="col-span-4 col-start-2 row-start-10">
