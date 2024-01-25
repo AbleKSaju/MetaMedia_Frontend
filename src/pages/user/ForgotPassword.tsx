@@ -24,7 +24,7 @@ const ForgotPassword = () => {
             <div className="col-start-3 row-start-6">
               <button
                 type="button"
-                className="focus:outline-none text-amber-50  bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-teal-800 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                className="focus:outline-none text-amber-50  bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-teal-800 dark:hover:bg-teal-700 dark:focus:ring-green-800"
               >
                 Submit
               </button>
