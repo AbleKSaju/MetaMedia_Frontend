@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import mongoose from 'mongoose'
 import { LoginFormData, useValidate } from '../../utils/formValidation/LoginValidation';
 import { GoogleAuth } from '../../utils/firebase/firebase';
+import React from 'react';
 
 
 
@@ -17,11 +18,9 @@ const Login = () => {
     
     const user= useSelector((state:any)=>state.user.email)
     console.log('user',user);
-    
     const dispatch = useDispatch()
     const Navigate=useNavigate()
     
-
 //-------------
 const handleGoogle=(e:any)=>{
     e.preventDefault(); 
@@ -32,22 +31,14 @@ const handleGoogle=(e:any)=>{
 
     console.log(data.user,'GGGG');
     const dat={
-
-    
         profile:data.user.photoURL,
         email:data.user.email,
         name:data.user.displayName,
          isGoogle:true,
          isFacebook:false
     }
-    
-
-    console.log(dat,'-------');
-    
-    
 
     if(data.user.emailVerified){
-
         const responce:any = await LoginWithGoogle(dat)
         
         if(responce){
@@ -81,7 +72,6 @@ const handleGoogle=(e:any)=>{
 
 const { errors, handleSubmit, register } = useValidate();
  
-
     interface ResponseData {
         email?: string;
         name?: string; 
@@ -93,13 +83,10 @@ const { errors, handleSubmit, register } = useValidate();
 
     //form data set in 
     const formsubmit = async(Data: LoginFormData) => {
-     
-      
         const responce:any=await LoginFuntion({...Data})
         if(responce.data.message){
             toast.error(responce?.data?.message)
            }else{
-     
             const data:ResponseData={
              email:responce.data.email,
              name:responce.data.name,
@@ -107,18 +94,12 @@ const { errors, handleSubmit, register } = useValidate();
              profile:responce.data.profile,
              isGoogle:responce.data.isGoogle,
              isFacebook:responce.data.isFacebook
-     
-            }
-     
+            }     
             dispatch(clearUser())
             dispatch(addUser(data))
             Navigate('/')
      
              toast.success(responce?.data?.name)
-
-    
-
-  
     }
 }
       

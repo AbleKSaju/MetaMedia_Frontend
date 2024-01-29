@@ -2,12 +2,13 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { SignUpFunction } from "../../utils/api/metords/post";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   RegisterFormData,
   useRegisterValidate,
 } from "../../utils/formValidation/SignUpValidation";
 import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
+import React from "react";
 
 const SignUp = () => {
   const Navigate = useNavigate();
@@ -28,11 +29,14 @@ const SignUp = () => {
 
   const formSubmit = async (Data: RegisterFormData) => {
     const response: any = await SignUpFunction({ ...Data });
+    console.log(response,"resss");
+    
     if (response?.data?.status) {
       toast.success("Register success");
       Navigate("/verifyOtp");
+    }else{
+      toast.error(response?.data?.message);
     }
-    toast.error(response?.data?.message);
   };
 
 
@@ -130,7 +134,11 @@ const SignUp = () => {
             <div className="col-span-4 col-start-3 row-start-10">
               <p className="text-teal-800 font-light">
                 have an account ?{" "}
-                <span className="text-bold text-black text-bold">Log in</span>{" "}
+                <span className="text-bold text-black text-bold hover:underline">
+                  <Link to="/login">
+                  Log In
+                  </Link>
+                  </span>{" "}
               </p>
             </div>
           </form>
@@ -144,25 +152,3 @@ const SignUp = () => {
 export default SignUp;
 
 
-
-// Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
-
-// // Your web app's Firebase configuration
-// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCVUUteSxMeaVb8Y_KgZbqJDGHrqGdno2M",
-//   authDomain: "facebook-auth-b69a2.firebaseapp.com",
-//   projectId: "facebook-auth-b69a2",
-//   storageBucket: "facebook-auth-b69a2.appspot.com",
-//   messagingSenderId: "754761676497",
-//   appId: "1:754761676497:web:866a808dad28aa30a677f0",
-//   measurementId: "G-DH5J0B66WW"
-// };
-
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);

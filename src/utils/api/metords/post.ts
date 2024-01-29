@@ -6,6 +6,8 @@ import {
   VerifyOtp_Api,
   LoginWithGoogle_Api,
   AddProfile_Api,
+  ForgotPassword_Api,
+  ChangePassword_Api,
 } from "../endpoints/common";
 
 export const LoginFuntion = async (data: any) => {
@@ -43,5 +45,22 @@ export const LoginWithGoogle = async (data: UserData) => {
 export const AddProfileFunction = async (data: any) => {
   try {
     return axios.create({ withCredentials: true }).post(AddProfile_Api, data);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error,"err");
+    
+  }
+};
+export const ForgotPasswordFunction = async (data: any) => {
+  try {
+    return axios.create({ withCredentials: true }).post(ForgotPassword_Api, data);
+  } catch (error) {
+    console.log(error,"err");
+  }
+};
+export const ChangePasswordFunction = async (data: any) => {
+  try {
+    return axios.create({ withCredentials: true }).post(ChangePassword_Api, data);
+  } catch (error) {
+    console.log(error,"err");
+  }
 };

@@ -1,24 +1,19 @@
-import Sidebar from "../../components/HomeComponent/Sidebar"
+import React from "react";
+import MainBody from "../../components/HomeComponent/MainBody";
+import Story from "../../components/HomeComponent/Story";
+import Suggestion from "../../components/HomeComponent/Suggestion";
+import Aside from "../../components/HomeComponent/Aside";
 
-
-
-
-const Home=()=>{
-     return (
-        <>
-  
-  <div className="flex">
-
-    <Sidebar/>
-
-  <div className="h-screen flex-1 p-7 ">
-        <h1 className="text-2xl font-semibold ">Home Page</h1>
+const Home = () => {
+  return (
+    <>
+      <div className="flex-row flex overflow-auto">
+        <Aside />
+        <MainBody />
       </div>
-    </div>
+    </>
+  );
+};
 
-
-        </>
-     )
-}
 
 export default Home
