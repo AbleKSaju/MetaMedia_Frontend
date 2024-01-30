@@ -1,21 +1,4 @@
-<<<<<<< HEAD
-import React from "react";
-import MainBody from "../../components/HomeComponent/MainBody";
-import Story from "../../components/HomeComponent/Story";
-import Suggestion from "../../components/HomeComponent/Suggestion";
-import Aside from "../../components/HomeComponent/Aside";
 
-const Home = () => {
-  return (
-    <>
-      <div className="flex-row flex overflow-auto">
-        <Aside />
-        <MainBody />
-      </div>
-    </>
-  );
-};
-=======
 import Sidebar from "../../components/HomeComponent/Sidebar"
 import Story from "../../components/HomeComponent/Story"
 
@@ -36,7 +19,7 @@ const Home=()=>{
     {/* story     */}
     <div className="w-full   bg-blue-300 h-56  ">
      
-<Story/>
+    <Story/>
 
     </div>
 
@@ -69,7 +52,7 @@ const Home=()=>{
 
 
     </div>
->>>>>>> razik
-
+</>
+     )}
 
 export default Home
