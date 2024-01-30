@@ -109,11 +109,8 @@ const { errors, handleSubmit, register } = useValidate();
 
 
     <>
-    <div className="relative flex justify-center align-middle bg-gray-50 mt-10">
-
-
-      {/* wrapper div  */}
-      <div className="relative bg-amber-50 px-6 pt-10 pb-16 shadow-xl flex justify-center ring-1 w-[70vw] h-[85vh] mt-6 ring-gray-900/5 sm:mx-auto rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
+   <div className="relative flex justify-center md:items-center align-middle bg-gray-50 h-[100vh]">
+      <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
         <form
           className="grid grid-cols-8 grid-rows-14 gap-3 text-center"
           onSubmit={handleSubmit(formsubmit)}
@@ -156,14 +153,14 @@ const { errors, handleSubmit, register } = useValidate();
           </div>
 
           {/* submit */}
-          <div className="col-span-8 col-start-2 col-end-8 row-start-7">
-            <button
-              type="submit"
-              className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md"
-            >
-             Sign in
-            </button>
-          </div>
+          <div className="col-span-2 lg:col-span-4 mt-5 col-start-3 lg:col-start-3 col-end-7 row-start-6">
+              <button
+                type="submit"
+                className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+              >
+                Log In
+              </button>
+            </div>
           <div className="col-span-4 col-start-3 row-start-8 p-2">
             <p className="text-teal-800 font-light">or continue with</p>
           </div>
