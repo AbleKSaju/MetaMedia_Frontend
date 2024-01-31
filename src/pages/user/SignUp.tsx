@@ -6,13 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import {RegisterFormData,useRegisterValidate,} from "../../utils/formValidation/SignUpValidation";
 import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
-
 import { addToken,clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
-
 import { useDispatch,useSelector } from "react-redux";
-
 import {
-
   LoginWithFacebook,
   LoginWithGoogle,
   SignUpFunction,
