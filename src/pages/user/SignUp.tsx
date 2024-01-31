@@ -6,7 +6,13 @@ import { Link, useNavigate } from "react-router-dom";
 import {RegisterFormData,useRegisterValidate,} from "../../utils/formValidation/SignUpValidation";
 import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
-import { useDispatch, useSelector } from "react-redux";import {
+
+import { addToken,clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
+
+import { useDispatch,useSelector } from "react-redux";
+
+import {
+
   LoginWithFacebook,
   LoginWithGoogle,
   SignUpFunction,
@@ -56,7 +62,7 @@ const SignUp = () => {
             const data: ResponseData = {
               email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
@@ -64,6 +70,7 @@ const SignUp = () => {
             console.log(data, "dataaa");
             dispatch(clearUser());
             dispatch(addUser(data));
+            dispatch(addToken(response.data.accesstoken))
             if (data) {
               toast.success(response?.data?.message);
               Navigate("/chooseinterest");
@@ -72,7 +79,7 @@ const SignUp = () => {
             const data: ResponseData = {
               email: response.data.user.email,
               name: response.data.user.name,
-              userId: response.user._id,
+              userId: response.data.user._id,
               profile: response.data.user.profile,
               isGoogle: response.data.user.isGoogle,
               isFacebook: response.data.user.isFacebook,
@@ -80,6 +87,8 @@ const SignUp = () => {
             console.log(data, "dataaa");
             dispatch(clearUser());
             dispatch(addUser(data));
+            dispatch(addToken(response.data.accesstoken))
+    
             if (data) {
               toast.success(response?.data?.message);
               Navigate("/");
@@ -114,14 +123,16 @@ const SignUp = () => {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
           };
-          console.log(data, "dataaa");
           dispatch(clearUser());
           dispatch(addUser(data));
+          dispatch(addToken(response.data.accesstoken))
+
+         
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/chooseinterest");
@@ -130,15 +141,16 @@ const SignUp = () => {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
           };
           
-          console.log(data, "dataaa");
+         
           dispatch(clearUser());
           dispatch(addUser(data));
+          dispatch(addToken(response.data.accesstoken))
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/");
@@ -156,7 +168,6 @@ const SignUp = () => {
     console.log(response, "resss");
 
     if (response?.data?.status) {
-      toast.success("Register success");
       Navigate("/verifyOtp");
     } else {
       toast.error(response?.data?.message);
