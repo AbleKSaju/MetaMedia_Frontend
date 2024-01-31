@@ -72,7 +72,7 @@ const VerifyOtp: React.FC = () => {
     const otp: any = otpNumber.join("");
     if (otp.length == 4) {
       const response: any = await verifyOtpFunction({ otp: otp });
-      if (response?.data == "user created sucessfull") {
+      if (response?.data == " created sucessfull") {
         toast.success("Otp verified");
         Navigate("/login");
       }

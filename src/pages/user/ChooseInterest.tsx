@@ -1,49 +1,40 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { UserCheck, MessageCircleHeart, BookUser } from "lucide-react";
 import { toast } from "sonner";
+import { ChooseInterestFunction } from "../../utils/api/metords/post";
+import { useNavigate } from "react-router-dom";
 
 const ChooseInterest = () => {
+  const Navigate = useNavigate()
+
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
  
-  // const handleImageClick = (imageName: string) => {
-  //   if (selectedImages.includes(imageName)) {
-  //     setSelectedImages((prevSelected) =>
-  //       prevSelected.filter((name) => name !== imageName)
-  //     );
-  //   } else {
-  //     setSelectedImages((prevSelected) => [...prevSelected, imageName]);
-  //   }
-  // };
   const handleImageClick = (imageName: string) => {
-    const newSelectedImages = selectedImages.includes(imageName)
-      ? selectedImages.filter((name) => name !== imageName)
-      : [...selectedImages, imageName];
-  
+    const newSelectedImages = selectedImages.includes(imageName)?selectedImages.filter((name) => name !== imageName):[...selectedImages, imageName];
+
     if (newSelectedImages.length > 5) {
       toast.error("You can choose at most 5 interests.");
     } else { 
       setSelectedImages(newSelectedImages);
-     
-      
     }
   };
 
-  const handleNext=async(e:any)=>{
-    e.preventDefault(); 
-    
-    if(selectedImages.length <2  ){
-      toast.error("You can choose at leat 2 interests.");
-    }else {
-    
-      console.log(selectedImages,'PPP');
-      
+  const handleNext = async (e: any) => {
+    e.preventDefault();
 
-
+    if (selectedImages.length < 2) {
+      toast.error("Choose atleat 2 interests.");
+    } else {
+      console.log(selectedImages, "PPP");
+      const response:any = await ChooseInterestFunction(selectedImages)
+      if(response?.data?.status){
+        toast.success(response?.data?.message)
+        Navigate('/addprofile')
+      }else{
+        toast.error(response?.data?.message)
+      }
     }
-
-
-  }
-
+  };
 
   
   return (
