@@ -65,6 +65,7 @@ export const ChangePasswordFunction = async (data: any) => {
     console.log(error,"err");
   }
 };
+
 export const ChooseInterestFunction=(data:any)=>{
   try {
     console.log(data,"dtaaa");

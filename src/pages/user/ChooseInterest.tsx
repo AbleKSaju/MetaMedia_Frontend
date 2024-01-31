@@ -8,6 +8,7 @@ const ChooseInterest = () => {
   const Navigate = useNavigate()
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
+
   const handleImageClick = (imageName: string) => {
     const newSelectedImages = selectedImages.includes(imageName)?selectedImages.filter((name) => name !== imageName):[...selectedImages, imageName];
 

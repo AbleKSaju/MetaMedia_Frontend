@@ -1,6 +1,7 @@
 import { LoginFuntion, LoginWithFacebook } from "../../utils/api/metords/post";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { LoginWithGoogle } from "../../utils/api/metords/post";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import {
   useValidate,
 } from "../../utils/formValidation/LoginValidation";
 import { FacebookAuth, GoogleAuth } from "../../utils/firebase/firebase";
+
 import React from "react";
 
 const Login = () => {
@@ -169,6 +171,7 @@ const Login = () => {
   return (
     <>
       <div className="relative flex justify-center md:items-center align-middle bg-gray-50 h-[100vh]">
+
         <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
           <form
             className="grid grid-cols-8 grid-rows-14 gap-3 text-center"
@@ -211,11 +214,12 @@ const Login = () => {
 
             {/* submit */}
             <div className="col-span-2 lg:col-span-4 mt-5 col-start-3 lg:col-start-3 col-end-7 row-start-6">
+
               <button
                 type="submit"
-                className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md"
               >
-                Log In
+                Sign in
               </button>
             </div>
             <div className="col-span-4 col-start-3 row-start-8 p-2">
