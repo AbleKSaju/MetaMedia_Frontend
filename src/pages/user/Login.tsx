@@ -40,6 +40,9 @@ const handleGoogle=(e:any)=>{
 
     if(data.user.emailVerified){
         const responce:any = await LoginWithGoogle(dat)
+
+        console.log('KKKKKKKKK',responce,"KKKKKKKKKKK");
+        
         
         if(responce){
             console.log(responce);
