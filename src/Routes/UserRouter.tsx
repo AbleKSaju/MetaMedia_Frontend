@@ -27,8 +27,6 @@ const UserRouter=()=>{
      <Route path="/addprofile" element={<AddProfile/>}/>
      <Route path="/selectMod" element={<Mods/>}/>
      
-
-
    </Routes>
 
     )

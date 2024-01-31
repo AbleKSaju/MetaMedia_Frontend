@@ -1,65 +1,46 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { UserCheck, MessageCircleHeart, BookUser } from "lucide-react";
 import { toast } from "sonner";
+import { ChooseInterestFunction } from "../../utils/api/metords/post";
+import { useNavigate } from "react-router-dom";
 
 const ChooseInterest = () => {
+  const Navigate = useNavigate()
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
- 
-  // const handleImageClick = (imageName: string) => {
-  //   if (selectedImages.includes(imageName)) {
-  //     setSelectedImages((prevSelected) =>
-  //       prevSelected.filter((name) => name !== imageName)
-  //     );
-  //   } else {
-  //     setSelectedImages((prevSelected) => [...prevSelected, imageName]);
-  //   }
-  // };
+
   const handleImageClick = (imageName: string) => {
-    const newSelectedImages = selectedImages.includes(imageName)
-      ? selectedImages.filter((name) => name !== imageName)
-      : [...selectedImages, imageName];
-  
+    const newSelectedImages = selectedImages.includes(imageName)?selectedImages.filter((name) => name !== imageName):[...selectedImages, imageName];
+
     if (newSelectedImages.length > 5) {
       toast.error("You can choose at most 5 interests.");
-    } else { 
+    } else {
       setSelectedImages(newSelectedImages);
-     
-      
     }
   };
 
-  const handleNext=async(e:any)=>{
-    e.preventDefault(); 
-    
-    if(selectedImages.length <2  ){
-      toast.error("You can choose at leat 2 interests.");
-    }else {
-    
-      console.log(selectedImages,'PPP');
-      
+  const handleNext = async (e: any) => {
+    e.preventDefault();
 
-
+    if (selectedImages.length < 2) {
+      toast.error("Choose atleat 2 interests.");
+    } else {
+      console.log(selectedImages, "PPP");
+      const response:any = await ChooseInterestFunction(selectedImages)
+      if(response?.data?.status){
+        toast.success(response?.data?.message)
+        Navigate('/addprofile')
+      }else{
+        toast.error(response?.data?.message)
+      }
     }
+  };
 
-
-  }
-
-
-  
   return (
-    <div className="h-[95vh] w-[100vw] overflow-hidden flex items-center justify-center">
-      <div className="grid grid-cols-7 grid-rows-6 gap-4">
-
-
-     
-
-
+    <div className="h-[96vh] w-[100vw] overflow-hidden ">
+      <div className="grid grid-cols-7 lg:ml-20  grid-rows-3 gap-4">
         <div className="col-start-2 row-start-2 w-10">
           <div className="w-20 h-20 flex items-center justify-center bg-teal-800 rounded-full overflow-hidden">
-            <UserCheck
-              size={50}
-              color="white"
-            />
+            <UserCheck size={50} color="white" />
           </div>
           <p className="ml-3 mt-6 text-teal-800"> Created</p>
         </div>
@@ -70,10 +51,7 @@ const ChooseInterest = () => {
 
         <div className="col-start-4 row-start-2">
           <div className="w-20 h-20 flex items-center justify-center bg-teal-800 rounded-full overflow-hidden">
-            <MessageCircleHeart
-              size={50}
-              color="white"
-            />
+            <MessageCircleHeart size={50} color="white" />
           </div>
           <p className="ml-4 mt-6 text-teal-800"> Intrest</p>
           <hr className="w-16 ml-2 border-t-2 border-teal-800" />
@@ -84,11 +62,7 @@ const ChooseInterest = () => {
 
         <div className="col-start-6 row-start-2">
           <div className="w-20 h-20 flex items-center justify-center bg-teal-800 rounded-full overflow-hidden ">
-            <BookUser
-              size={50}
-              color="white"
-
-            />
+            <BookUser size={50} color="white" />
           </div>
           <p className="ml-4 mt-6 text-teal-800"> Profile</p>
         </div>
@@ -97,17 +71,15 @@ const ChooseInterest = () => {
           CHOOSE YOUR INTERESTS
         </div>
 
-
-
         <div
           className="col-start-2 row-start-4 "
           onClick={() => handleImageClick("design")}
         >
-          <div className="w-20 h-20 mb-0 rounded-full overflow-hidden">
+          <div className="w-20 h-20 rounded-full overflow-hidden">
             <img
               src="/interest/design.jpeg"
               alt="Your Image"
-              className={`w-20 h-20 mb-0 rounded-full overflow-hidden ${
+              className={`w-20 h-20 rounded-full overflow-hidden ${
                 selectedImages.includes("design")
                   ? "border-2 border-teal-950 inset-0 bg-teal-800 opacity-50"
                   : ""
@@ -127,7 +99,7 @@ const ChooseInterest = () => {
           className="col-start-3 row-start-4"
           onClick={() => handleImageClick("education")}
         >
-          <div className="w-20 h-20 mb-0 rounded-full overflow-hidden">
+          <div className="w-20 h-20 rounded-full overflow-hidden">
             <img
               src="/interest/education.png"
               alt="Your Image"
@@ -344,9 +316,11 @@ const ChooseInterest = () => {
 
         {/* <div className="col-start-6 mt-10 row-start-3">Skip →</div> */}
 
-        <div className="col-start-4 row-start-6 mt-5">
-       
-          <button onClick={handleNext} className="bg-teal-800 px-6 py-2 text-amber-50 font-bold rounded-full transition duration-300 ease-in-out hover:bg-teal-600 hover:text-white focus:outline-none focus:ring focus:border-teal-800">
+        <div className="col-start-4 row-start-6">
+          <button
+            onClick={handleNext}
+            className="bg-teal-800 px-6 py-2 text-amber-50 font-bold rounded-full transition duration-300 ease-in-out hover:bg-teal-600 hover:text-white focus:outline-none focus:ring focus:border-teal-800"
+          >
             Next
           </button>
         </div>

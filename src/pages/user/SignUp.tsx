@@ -1,102 +1,179 @@
 // import { GoogleLogin } from "@react-oauth/google";
 // import { jwtDecode } from "jwt-decode";
-import { LoginWithGoogle, SignUpFunction } from "../../utils/api/metords/post";
+import {
+  LoginWithFacebook,
+  LoginWithGoogle,
+  SignUpFunction,
+} from "../../utils/api/metords/post";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import {
   RegisterFormData,
   useRegisterValidate,
 } from "../../utils/formValidation/SignUpValidation";
-import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
+import { FacebookAuth, GoogleAuth } from "../../utils/firebase/firebase";
 // import React from "react";
 import mongoose from "mongoose";
-import {addUser,clearUser} from '../../utils/ReduxStore/Slice/userSlice'
+import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { useDispatch } from "react-redux";
+import { addToRedux } from "../../utils/common/addToRedux";
+import { ResponseData } from "src/utils/interface/userInterface";
 
 const SignUp = () => {
   const Navigate = useNavigate();
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
 
   const { errors, handleSubmit, register } = useRegisterValidate();
 
-  const SignInWithFacebook=async(e:any)=>{
+  const SignInWithFacebook = async (e: any) => {
     e.preventDefault();
-    const user:any=await FacebookAuth()
-    console.log("user :",user); 
-  }
+    await FacebookAuth().then(async (data: any) => {
+      const userData = {
+        profile: data.user.photoURL,
+        email: data.user.email,
+        name: data.user.displayName,
+        isGoogle: false,
+        isFacebook: true,
+      };
+      if (data.user.email) {
+        const response: any = await LoginWithFacebook(userData);
+        if (
+          response?.data?.status &&
+          response?.data?.data?.profile?.interests?.length < 2
+        ) {
+          const data: ResponseData = {
+            email: response.data.data.basicInformation.email,
+            name: response.data.data.basicInformation.fullName,
+            userId: response.data.data._id,
+            profile: response.data.data.profile.profileUrl,
+            isGoogle: response.data.data.basicInformation.isGoogle,
+            isFacebook: response.data.data.basicInformation.isFacebook,
+          };
+          console.log(data, "dataaa");
+          dispatch(clearUser());
+          dispatch(addUser(data));
+          if (data) {
+            toast.success(response?.data?.message);
+            Navigate("/chooseinterest");
+          }
+        } else if (response?.data?.status) {
+          const data: ResponseData = {
+            email: response.data.data.basicInformation.email,
+            name: response.data.data.basicInformation.fullName,
+            userId: response.data.data._id,
+            profile: response.data.data.profile.profileUrl,
+            isGoogle: response.data.data.basicInformation.isGoogle,
+            isFacebook: response.data.data.basicInformation.isFacebook,
+          };
+          console.log(data, "dataaa");
+          dispatch(clearUser());
+          dispatch(addUser(data));
+          if (data) {
+            toast.success(response?.data?.message);
+            Navigate("/");
+          }
+        } else {
+          toast.error(response?.data?.message);
+        }
+      } else {
+        toast.error("email not found");
+      }
+    });
+  };
 
+  const handleGoogle = async(e: any) => {
+    e.preventDefault();
+    await GoogleAuth().then(async (data: any) => {
+      const userData = {
+        profile: data.user.photoURL,
+        email: data.user.email,
+        name: data.user.displayName,
+        isGoogle: true,
+        isFacebook: false,
+      };
+
+      if (data.user.email) {
+        const response: any = await LoginWithGoogle(userData);
+        if (
+          response?.data?.status &&
+          response?.data?.data?.profile?.interests?.length < 2
+        ) {
+          const data: ResponseData = {
+            email: response.data.data.basicInformation.email,
+            name: response.data.data.basicInformation.fullName,
+            userId: response.data.data._id,
+            profile: response.data.data.profile.profileUrl,
+            isGoogle: response.data.data.basicInformation.isGoogle,
+            isFacebook: response.data.data.basicInformation.isFacebook,
+          };
+          console.log(data, "dataaa");
+          dispatch(clearUser());
+          dispatch(addUser(data));
+          if (data) {
+            toast.success(response?.data?.message);
+            Navigate("/chooseinterest");
+          }
+        } else if (response?.data?.status) {
+          const data: ResponseData = {
+            email: response.data.data.basicInformation.email,
+            name: response.data.data.basicInformation.fullName,
+            userId: response.data.data._id,
+            profile: response.data.data.profile.profileUrl,
+            isGoogle: response.data.data.basicInformation.isGoogle,
+            isFacebook: response.data.data.basicInformation.isFacebook,
+          };
+          
+          console.log(data, "dataaa");
+          dispatch(clearUser());
+          dispatch(addUser(data));
+          if (data) {
+            toast.success(response?.data?.message);
+            Navigate("/");
+          }
+        } else {
+          toast.error(response?.data?.message);
+        }
+        // if (responce) {
+        //   console.log(responce,"res");
+        //   if (responce.data.status) {
+        //     const data: ResponseData = {
+        //       email: responce.data.responce.user.email,
+        //       name: responce.data.responce.user.name,
+        //       userId: responce.data.responce.user.userId,
+        //       profile: responce.data.responce.user.profile,
+        //       isGoogle: responce.data.responce.user.isGoogle,
+        //       isFacebook: responce.data.responce.user.isFacebook,
+        //     };
+        //     dispatch(clearUser());
+        //     dispatch(addUser(data));
+        //     Navigate("/");
+        //   } else {
+        //     toast.error("user login fail");
+        //   }
+        //   toast.success(responce?.data?.message);
+        // }
+      } else {
+        toast.error("Your google email is not veified ..");
+      }
+    });
+  };
   const formSubmit = async (Data: RegisterFormData) => {
     const response: any = await SignUpFunction({ ...Data });
-    console.log(response,"resss");
-    
+    console.log(response, "resss");
+
     if (response?.data?.status) {
       toast.success("Register success");
       Navigate("/verifyOtp");
-    }else{
+    } else {
       toast.error(response?.data?.message);
     }
   };
 
-  const handleGoogle=(e:any)=>{
-    e.preventDefault(); 
-   const user:any= GoogleAuth()
-
-   interface ResponseData {
-    email?: string;
-    name?: string; 
-    userId:mongoose.Schema.Types.ObjectId;
-    profile:string,
-    isGoogle:boolean,
-    isFacebook:boolean
-  }
-
-   const datas=user.then (async(data:any)=>{
-
-    console.log(data.user,'GGGG');
-    const dat={
-        profile:data.user.photoURL,
-        email:data.user.email,
-        name:data.user.displayName,
-         isGoogle:true,
-         isFacebook:false
-    }
-
-    if(data.user.emailVerified){
-        const responce:any = await LoginWithGoogle(dat)
-        
-        if(responce){
-            console.log(responce);
-            if(responce.data.status){
-                const data:ResponseData={
-                    email:responce.data.responce.user.email,
-                    name:responce.data.responce.user.name,
-                    userId:responce.data.responce.user.userId,
-                    profile:responce.data.responce.user.profile,
-                    isGoogle:responce.data.responce.user.isGoogle,
-                    isFacebook:responce.data.responce.user.isFacebook,
-                }
-                dispatch(clearUser())
-                dispatch(addUser(data))
-                Navigate('/')
-                
-            }else{
-                toast.error("user login fail")
-            }
-            toast.success(responce?.data?.message)
-        }
-        
-    }else{
-        toast.error("Your google email is not veified ..")
-    }   
-   })
-}
-
   return (
     <>
       <div className="relative flex justify-center md:items-center align-middle bg-gray-50 h-[100vh]">
-      <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
-        <form
+        <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
+          <form
             className="grid grid-cols-8 grid-rows-14 gap-3 text-center"
             onSubmit={handleSubmit(formSubmit)}
           >
@@ -161,13 +238,12 @@ const SignUp = () => {
               <p className="text-teal-800 font-light">or continue with</p>
             </div>
             <button onClick={handleGoogle} className="col-start-3 row-start-9">
-            {
-              <div>
-                 <img src="/fonts/google.png" alt="G" />
-               
-              </div>
-            }
-          </button>
+              {
+                <div>
+                  <img src="/fonts/google.png" alt="G" />
+                </div>
+              }
+            </button>
             <button
               type="button"
               onClick={SignInWithFacebook}
@@ -181,14 +257,11 @@ const SignUp = () => {
               <p className="text-teal-800 font-light">
                 have an account ?{" "}
                 <span className="text-bold text-black text-bold hover:underline">
-                  <Link to="/login">
-                  Log In
-                  </Link>
-                  </span>{" "}
+                  <Link to="/login">Log In</Link>
+                </span>{" "}
               </p>
             </div>
           </form>
-
         </div>
       </div>
     </>
@@ -196,5 +269,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-

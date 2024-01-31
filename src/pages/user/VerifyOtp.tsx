@@ -66,17 +66,17 @@ const VerifyOtp: React.FC = () => {
     }
   };
 
-  const { handleSubmit, register } = useForm<{ otp: string }>();
-
-  const formSumbit = async (Data: { otp: string }) => {
+  const formSumbit = async (e:any) => {
+    e.preventDefault()
     const otp: any = otpNumber.join("");
     if (otp.length == 4) {
       const response: any = await verifyOtpFunction({ otp: otp });
-      if (response?.data == "user created sucessfull") {
-        toast.success("Otp verified");
-        Navigate("/login");
+      if (response?.data?.status) {
+        toast.success(response?.data?.message);
+        Navigate("/chooseinterest");
+      }else{
+        toast.error(response?.data?.message);
       }
-      toast.error(response?.data?.message);
     } else {
       toast.error("Otp required");
     }
@@ -87,7 +87,7 @@ const VerifyOtp: React.FC = () => {
       <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
         <form
           className="grid grid-cols-6 grid-rows-12 gap-8"
-          onSubmit={handleSubmit(formSumbit)}
+          onSubmit={formSumbit}
         >
           <div className="col-span-7  col-start-1 row-start-2 bg-red-30  text-teal-800 text-3xl">
             <h1 className="font-roboto text-4xl lg:text-5xl">
