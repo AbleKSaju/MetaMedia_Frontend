@@ -48,15 +48,15 @@ const SignUp = () => {
           const response: any = await LoginWithFacebook(userData);
           if (
             response?.data?.status &&
-            response?.data?.data?.profile?.interests?.length < 2
+            response?.data?.user?.interest?.length < 2 
           ) {
             const data: ResponseData = {
-              email: response.data.data.basicInformation.email,
-              name: response.data.data.basicInformation.fullName,
-              userId: response.data.data._id,
-              profile: response.data.data.profile.profileUrl,
-              isGoogle: response.data.data.basicInformation.isGoogle,
-              isFacebook: response.data.data.basicInformation.isFacebook,
+              email: response.data.user.email,
+            name: response.data.user.name,
+            userId: response.user._id,
+            profile: response.data.user.profile,
+            isGoogle: response.data.user.isGoogle,
+            isFacebook: response.data.user.isFacebook,
             };
             console.log(data, "dataaa");
             dispatch(clearUser());
@@ -67,12 +67,12 @@ const SignUp = () => {
             }
           } else if (response?.data?.status) {
             const data: ResponseData = {
-              email: response.data.data.basicInformation.email,
-              name: response.data.data.basicInformation.fullName,
-              userId: response.data.data._id,
-              profile: response.data.data.profile.profileUrl,
-              isGoogle: response.data.data.basicInformation.isGoogle,
-              isFacebook: response.data.data.basicInformation.isFacebook,
+              email: response.data.user.email,
+              name: response.data.user.name,
+              userId: response.user._id,
+              profile: response.data.user.profile,
+              isGoogle: response.data.user.isGoogle,
+              isFacebook: response.data.user.isFacebook,
             };
             console.log(data, "dataaa");
             dispatch(clearUser());
@@ -106,15 +106,15 @@ const SignUp = () => {
         const response: any = await LoginWithGoogle(userData);
         if (
           response?.data?.status &&
-          response?.data?.data?.profile?.interests?.length < 2
+          response?.data?.user?.interest?.length < 2 
         ) {
           const data: ResponseData = {
-            email: response.data.data.basicInformation.email,
-            name: response.data.data.basicInformation.fullName,
-            userId: response.data.data._id,
-            profile: response.data.data.profile.profileUrl,
-            isGoogle: response.data.data.basicInformation.isGoogle,
-            isFacebook: response.data.data.basicInformation.isFacebook,
+            email: response.data.user.email,
+            name: response.data.user.name,
+            userId: response.user._id,
+            profile: response.data.user.profile,
+            isGoogle: response.data.user.isGoogle,
+            isFacebook: response.data.user.isFacebook,
           };
           console.log(data, "dataaa");
           dispatch(clearUser());
@@ -125,12 +125,12 @@ const SignUp = () => {
           }
         } else if (response?.data?.status) {
           const data: ResponseData = {
-            email: response.data.data.basicInformation.email,
-            name: response.data.data.basicInformation.fullName,
-            userId: response.data.data._id,
-            profile: response.data.data.profile.profileUrl,
-            isGoogle: response.data.data.basicInformation.isGoogle,
-            isFacebook: response.data.data.basicInformation.isFacebook,
+            email: response.data.user.email,
+            name: response.data.user.name,
+            userId: response.user._id,
+            profile: response.data.user.profile,
+            isGoogle: response.data.user.isGoogle,
+            isFacebook: response.data.user.isFacebook,
           };
           
           console.log(data, "dataaa");
