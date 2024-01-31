@@ -25,7 +25,7 @@ const VerifyOtp: React.FC = () => {
   ];
 
   useEffect(() => {
-    let countdown;
+    let countdown:any ;
     const decrementTimer = () => {
       setTimer((prevTimer) => prevTimer - 1);
     };
