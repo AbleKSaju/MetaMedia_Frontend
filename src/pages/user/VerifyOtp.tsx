@@ -6,12 +6,21 @@ import React, {
   useEffect,
 } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { verifyOtpFunction } from "../../utils/api/metords/post";
 import { useRegisterValidate } from "../../utils/formValidation/SignUpValidation";
+import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
+import { addToken } from "../..//utils/ReduxStore/Slice/tokenSlice";
+
+import { ResponseData } from "../../utils/interface/userInterface";
 
 const VerifyOtp: React.FC = () => {
+
+
+const dispatch=useDispatch()
+
   const [otpNumber, setOtp] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(60); // Initial timer value in seconds
   const [showResendMessage, setShowResendMessage] = useState(false);
@@ -72,6 +81,18 @@ const VerifyOtp: React.FC = () => {
     if (otp.length == 4) {
       const response: any = await verifyOtpFunction({ otp: otp });
       if (response?.data?.status) {
+        const data: ResponseData = {
+          email: response.data.user.email,
+        name: response.data.user.name,
+        userId: response.data.user._id,
+        profile: response.data.user.profile,
+        isGoogle: response.data.user.isGoogle,
+        isFacebook: response.data.user.isFacebook,
+        };
+        dispatch(clearUser());
+        dispatch(addUser(data));
+        dispatch(addToken(response.data.accesstoken))
+
         toast.success(response?.data?.message);
         Navigate("/chooseinterest");
       }else{
@@ -81,7 +102,7 @@ const VerifyOtp: React.FC = () => {
       toast.error("Otp required");
     }
   };
-
+ 
   return (
     <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-0 sm:py-12">
       <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">

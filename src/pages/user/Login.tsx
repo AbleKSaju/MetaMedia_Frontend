@@ -1,23 +1,24 @@
 import { LoginFuntion, LoginWithFacebook } from "../../utils/api/metords/post";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
-import {} from '../../utils/ReduxStore/Slice/tokenSlice'
+import { addToken } from '../../utils/ReduxStore/Slice/tokenSlice'
 import { LoginWithGoogle } from "../../utils/api/metords/post";
-
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import mongoose from "mongoose";
-import {
-  LoginFormData,
-  useValidate,
-} from "../../utils/formValidation/LoginValidation";
+import {LoginFormData,useValidate} from "../../utils/formValidation/LoginValidation";
 import { FacebookAuth, GoogleAuth } from "../../utils/firebase/firebase";
 
-import React from "react";
+
+
 
 const Login = () => {
-  const user = useSelector((state: any) => state.user.email);
-  console.log("user", user);
+    const userData = useSelector((state:any) => state.persisted.user.userData);
+    const token = useSelector((state:any) => state.persisted.token.token);
+    
+  console.log("user", userData);
+  console.log("token", token);
+
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
@@ -41,7 +42,7 @@ const Login = () => {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
@@ -49,7 +50,7 @@ const Login = () => {
           console.log(data, "dataaa");
           dispatch(clearUser());
           dispatch(addUser(data));
-
+          dispatch(addToken(response.data.accesstoken))
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/chooseinterest");
@@ -58,7 +59,7 @@ const Login = () => {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
@@ -66,6 +67,7 @@ const Login = () => {
           console.log(data, "dataaa");
           dispatch(clearUser());
           dispatch(addUser(data));
+          dispatch(addToken(response.data.accesstoken))
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/");
@@ -105,7 +107,7 @@ const Login = () => {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
@@ -113,6 +115,7 @@ const Login = () => {
           console.log(data, "dataaa");
           dispatch(clearUser());
           dispatch(addUser(data));
+          dispatch(addToken(response.data.accesstoken))
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/chooseinterest");
@@ -121,7 +124,7 @@ const Login = () => {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
@@ -129,6 +132,7 @@ const Login = () => {
           console.log(data, "dataaa");
           dispatch(clearUser());
           dispatch(addUser(data));
+          dispatch(addToken(response.data.accesstoken))
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/");
@@ -163,7 +167,7 @@ const Login = () => {
       const data: ResponseData = {
         email: response.data.user.email,
             name: response.data.user.name,
-            userId: response.user._id,
+            userId: response.data.user._id,
             profile: response.data.user.profile,
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
