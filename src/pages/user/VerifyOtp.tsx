@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  ChangeEvent,
-  KeyboardEvent,
-  useEffect,
-} from "react";
+import React, {useState,useRef,ChangeEvent,KeyboardEvent,useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -25,7 +19,7 @@ const VerifyOtp: React.FC = () => {
   ];
 
   useEffect(() => {
-    let countdown;
+    let countdown:any;
     const decrementTimer = () => {
       setTimer((prevTimer) => prevTimer - 1);
     };

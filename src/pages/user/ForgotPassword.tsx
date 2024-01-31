@@ -19,7 +19,6 @@ const ForgotPassword = () => {
     }
   };
     
-
   return (
     <>
       <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-0 sm:py-12">
