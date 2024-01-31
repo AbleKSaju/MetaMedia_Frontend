@@ -1,3 +1,4 @@
+
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "sonner";
@@ -5,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {RegisterFormData,useRegisterValidate,} from "../../utils/formValidation/SignUpValidation";
 import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
-import { useDispatch } from "react-redux";import {
+import { useDispatch, useSelector } from "react-redux";import {
   LoginWithFacebook,
   LoginWithGoogle,
   SignUpFunction,
@@ -14,6 +15,9 @@ import { ResponseData } from "src/utils/interface/userInterface";
 
 
 const SignUp = () => {
+  const userData=useSelector((state:any)=>state.persisted.user.userData)
+  console.log(userData,"USERRRRDDAAATTAAA");
+  
   const dispatch = useDispatch()
   const Navigate = useNavigate();
 
@@ -47,15 +51,15 @@ const SignUp = () => {
           const response: any = await LoginWithFacebook(userData);
           if (
             response?.data?.status &&
-            response?.data?.data?.profile?.interests?.length < 2
+            response?.data?.user?.interest?.length < 2 
           ) {
             const data: ResponseData = {
-              email: response.data.data.basicInformation.email,
-              name: response.data.data.basicInformation.fullName,
-              userId: response.data.data._id,
-              profile: response.data.data.profile.profileUrl,
-              isGoogle: response.data.data.basicInformation.isGoogle,
-              isFacebook: response.data.data.basicInformation.isFacebook,
+              email: response.data.user.email,
+            name: response.data.user.name,
+            userId: response.user._id,
+            profile: response.data.user.profile,
+            isGoogle: response.data.user.isGoogle,
+            isFacebook: response.data.user.isFacebook,
             };
             console.log(data, "dataaa");
             dispatch(clearUser());
@@ -66,12 +70,12 @@ const SignUp = () => {
             }
           } else if (response?.data?.status) {
             const data: ResponseData = {
-              email: response.data.data.basicInformation.email,
-              name: response.data.data.basicInformation.fullName,
-              userId: response.data.data._id,
-              profile: response.data.data.profile.profileUrl,
-              isGoogle: response.data.data.basicInformation.isGoogle,
-              isFacebook: response.data.data.basicInformation.isFacebook,
+              email: response.data.user.email,
+              name: response.data.user.name,
+              userId: response.user._id,
+              profile: response.data.user.profile,
+              isGoogle: response.data.user.isGoogle,
+              isFacebook: response.data.user.isFacebook,
             };
             console.log(data, "dataaa");
             dispatch(clearUser());
@@ -88,98 +92,76 @@ const SignUp = () => {
         }
       });
     };
-  
-    const handleGoogle = async(e: any) => {
-      e.preventDefault();
-      await GoogleAuth().then(async (data: any) => {
-        const userData = {
-          profile: data.user.photoURL,
-          email: data.user.email,
-          name: data.user.displayName,
-          isGoogle: true,
-          isFacebook: false,
-        };
-  
-        if (data.user.email) {
-          const response: any = await LoginWithGoogle(userData);
-          if (
-            response?.data?.status &&
-            response?.data?.data?.profile?.interests?.length < 2
-          ) {
-            const data: ResponseData = {
-              email: response.data.data.basicInformation.email,
-              name: response.data.data.basicInformation.fullName,
-              userId: response.data.data._id,
-              profile: response.data.data.profile.profileUrl,
-              isGoogle: response.data.data.basicInformation.isGoogle,
-              isFacebook: response.data.data.basicInformation.isFacebook,
-            };
-            console.log(data, "dataaa");
-            dispatch(clearUser());
-            dispatch(addUser(data));
-            if (data) {
-              toast.success(response?.data?.message);
-              Navigate("/chooseinterest");
-            }
-          } else if (response?.data?.status) {
-            const data: ResponseData = {
-              email: response.data.data.basicInformation.email,
-              name: response.data.data.basicInformation.fullName,
-              userId: response.data.data._id,
-              profile: response.data.data.profile.profileUrl,
-              isGoogle: response.data.data.basicInformation.isGoogle,
-              isFacebook: response.data.data.basicInformation.isFacebook,
-            };
-  
-            console.log(data, "dataaa");
-            dispatch(clearUser());
-            dispatch(addUser(data));
-            if (data) {
-              toast.success(response?.data?.message);
-              Navigate("/");
-            }
-          } else {
-            toast.error(response?.data?.message);
+
+
+  const handleGoogle = async(e: any) => {
+    e.preventDefault();
+    await GoogleAuth().then(async (data: any) => {
+      const userData = {
+        profile: data.user.photoURL,
+        email: data.user.email,
+        name: data.user.displayName,
+        isGoogle: true,
+        isFacebook: false,
+      };
+
+      if (data.user.email) {
+        const response: any = await LoginWithGoogle(userData);
+        if (
+          response?.data?.status &&
+          response?.data?.user?.interest?.length < 2 
+        ) {
+          const data: ResponseData = {
+            email: response.data.user.email,
+            name: response.data.user.name,
+            userId: response.user._id,
+            profile: response.data.user.profile,
+            isGoogle: response.data.user.isGoogle,
+            isFacebook: response.data.user.isFacebook,
+          };
+          console.log(data, "dataaa");
+          dispatch(clearUser());
+          dispatch(addUser(data));
+          if (data) {
+            toast.success(response?.data?.message);
+            Navigate("/chooseinterest");
           }
-          // if (responce) {
-          //   console.log(responce,"res");
-          //   if (responce.data.status) {
-          //     const data: ResponseData = {
-          //       email: responce.data.responce.user.email,
-          //       name: responce.data.responce.user.name,
-          //       userId: responce.data.responce.user.userId,
-          //       profile: responce.data.responce.user.profile,
-          //       isGoogle: responce.data.responce.user.isGoogle,
-          //       isFacebook: responce.data.responce.user.isFacebook,
-          //     };
-          //     dispatch(clearUser());
-          //     dispatch(addUser(data));
-          //     Navigate("/");
-          //   } else {
-          //     toast.error("user login fail");
-          //   }
-          //   toast.success(responce?.data?.message);
-          // }
+        } else if (response?.data?.status) {
+          const data: ResponseData = {
+            email: response.data.user.email,
+            name: response.data.user.name,
+            userId: response.user._id,
+            profile: response.data.user.profile,
+            isGoogle: response.data.user.isGoogle,
+            isFacebook: response.data.user.isFacebook,
+          };
+          
+          console.log(data, "dataaa");
+          dispatch(clearUser());
+          dispatch(addUser(data));
+          if (data) {
+            toast.success(response?.data?.message);
+            Navigate("/");
+          }
         } else {
-          toast.error("Your google email is not veified ..");
+          toast.error(response?.data?.message);
         }
-      });
-    };
-
-
-
+      } else {
+        toast.error("Your google email is not veified ..");
+      }
+    });
+  };
   const formSubmit = async (Data: RegisterFormData) => {
     const response: any = await SignUpFunction({ ...Data });
-    console.log(response,"resss");
-    
+    console.log(response, "resss");
+
     if (response?.data?.status) {
       toast.success("Register success");
       Navigate("/verifyOtp");
-    }else{
+    } else {
       toast.error(response?.data?.message);
     }
   };
-
 
   return (
     <>
@@ -251,15 +233,11 @@ const SignUp = () => {
             <div className="col-span-4 col-start-3 row-start-7 p-2">
               <p className="text-teal-800 font-light">or continue with</p>
             </div>
-            <button className="col-start-2 ml-4 row-start-9">
+            <button onClick={handleGoogle} className="col-start-3 row-start-9">
               {
                 <div>
-                  {" "}
-                  <GoogleLogin
-                    onSuccess={responseMessage}
-                    onError={errorMessage}
-                    useOneTap
-                  />{" "}
+                  <img src="/fonts/google.png" alt="G" />
+
                 </div>
               }
             </button>
@@ -276,14 +254,11 @@ const SignUp = () => {
               <p className="text-teal-800 font-light">
                 have an account ?{" "}
                 <span className="text-bold text-black text-bold hover:underline">
-                  <Link to="/login">
-                  Log In
-                  </Link>
-                  </span>{" "}
+                  <Link to="/login">Log In</Link>
+                </span>{" "}
               </p>
             </div>
           </form>
-
         </div>
       </div>
     </>
@@ -291,5 +266,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-

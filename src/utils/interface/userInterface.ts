@@ -7,7 +7,9 @@ export interface UserData {
     isGoogle: boolean;
     isFacebook: boolean;
   }
-  export interface ResponseData {
+
+ export interface ResponseData {
+
     email?: string;
     name?: string; 
     userId:mongoose.Schema.Types.ObjectId;
@@ -15,3 +17,4 @@ export interface UserData {
     isGoogle:boolean,
     isFacebook:boolean
   }
+

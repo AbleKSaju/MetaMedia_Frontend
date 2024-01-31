@@ -4,7 +4,6 @@ import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,AddProfile_Api,Fo
 
 export const LoginFuntion = async (data: any) => {
   try {
-    console.log("ENNNT");
     return axios.create({ withCredentials: true }).post(Login_Api, data);
   } catch (error) {
     return error;
@@ -12,7 +11,6 @@ export const LoginFuntion = async (data: any) => {
 };
 export const SignUpFunction = async (data: any) => {
   try {
-    console.log("CALLING SIGN UP");
     return axios.create({ withCredentials: true }).post(SignUp_Api, data);
   } catch (error) {
     return error;
@@ -30,10 +28,21 @@ export const verifyOtpFunction = async (data: any) => {
 export const LoginWithGoogle = async (data: UserData) => {
   try {
     return axios
-      .create({ withCredentials: true })
-      .post(LoginWithGoogle_Api, data);
-  } catch (error) {}
+      .create({ withCredentials: true }).post(LoginWithGoogle_Api, data);
+  } catch (error) {
+    console.log(error,"err");
+  }
 };
+
+export const LoginWithFacebook = async (data: UserData) => {
+  try {
+    return axios
+      .create({ withCredentials: true }).post(LoginWithFacebook_Api, data);
+  } catch (error) {
+    console.log(error,"err");
+  }
+};
+
 export const AddProfileFunction = async (data: any) => {
   try {
     return axios.create({ withCredentials: true }).post(AddProfile_Api, data);
@@ -52,16 +61,6 @@ export const ForgotPasswordFunction = async (data: any) => {
 export const ChangePasswordFunction = async (data: any) => {
   try {
     return axios.create({ withCredentials: true }).post(ChangePassword_Api, data);
-  } catch (error) {
-    console.log(error,"err");
-  }
-};
-
-
-export const LoginWithFacebook = async (data: UserData) => {
-  try {
-    return axios
-      .create({ withCredentials: true }).post(LoginWithFacebook_Api, data);
   } catch (error) {
     console.log(error,"err");
   }

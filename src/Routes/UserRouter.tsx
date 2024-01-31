@@ -11,8 +11,6 @@ import Home from "../pages/user/Home"
 import Mods from "../pages/user/Mods"
 
 
-
-
 const UserRouter=()=>{
     return(
 
@@ -27,8 +25,6 @@ const UserRouter=()=>{
      <Route path="/addprofile" element={<AddProfile/>}/>
      <Route path="/selectMod" element={<Mods/>}/>
      
-
-
    </Routes>
 
     )
