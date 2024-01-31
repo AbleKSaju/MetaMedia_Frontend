@@ -8,15 +8,30 @@ import { AddProfileFunction } from "../../utils/api/metords/post";
 
 const AddProfile = () => {
   console.log("ENter");
-
+  
   const { errors, handleSubmit, register } = useAddProfleValidate();
 
-  
+  // const [dob, setDob] = useState("");
 
-
+  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   let inputValue = e.target.value.replace(/\D/g, "");
+  //   if (inputValue.length <= 2) {
+  //     setDob(inputValue);
+  //   } else if (inputValue.length <= 4) {
+  //     setDob(`${inputValue.slice(0, 2)}/${inputValue.slice(2)}`);
+  //   } else {
+  //     setDob(
+  //       `${inputValue.slice(0, 2)}/${inputValue.slice(2, 4)}/${inputValue.slice(
+  //         4,
+  //         8
+  //       )}`
+  //     );
+  //   }
+  // };
 
   const formSubmit = async (Data: AddProfileFormData) => {
     console.log("enter to submit");
+    
 
     const response: any = await AddProfileFunction({ ...Data });
     console.log(response, "ressseeee");
@@ -103,14 +118,15 @@ const AddProfile = () => {
               </p>
             </div>
             <div className="ml-12 md:ml-0 lg:ml-10 col-span-full sm:col-span-2 md:col-span-5 row-start-9 md:row-start-10 mt-9">
-              <input type="radio" id="male" name="gender" />
-              <label htmlFor="male" className="text-teal-800">
-                Male
-              </label>
+              <input type="radio" /> &nbsp;
+              <label htmlFor="" className="text-teal-800">
+                male
+              </label>{" "}
               &nbsp;
-              <input type="radio" id="female" name="gender" />
-              <label htmlFor="female" className="text-teal-800">
-                Female
+              <input type="radio" />
+              &nbsp;
+              <label htmlFor="" className="text-teal-800">
+                female
               </label>
               &nbsp;
             </div>
