@@ -10,7 +10,6 @@ const userSlice=createSlice({
     reducers:{
         addUser:(state,action)=>{
             state.userData = {...state.userData,...action.payload}
-            console.log(state.userData,'state.user user added');
        },
        clearUser:(state)=>{
            state.userData={}
