@@ -5,9 +5,10 @@ import { ChooseInterestFunction } from "../../utils/api/metords/post";
 import { useNavigate } from "react-router-dom";
 
 const ChooseInterest = () => {
+  console.log("Enter to ChooseInterest");
+
   const Navigate = useNavigate()
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
-
 
   const handleImageClick = (imageName: string) => {
     const newSelectedImages = selectedImages.includes(imageName)?selectedImages.filter((name) => name !== imageName):[...selectedImages, imageName];

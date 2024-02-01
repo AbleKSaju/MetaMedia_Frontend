@@ -11,8 +11,6 @@ const MainBody=()=>{
 {[...Array(20)].map((_, index) => (
             <Story key={index} />
           ))}
-
-     
 </div>
 
 {/* constent */}

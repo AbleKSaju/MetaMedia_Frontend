@@ -122,6 +122,7 @@ const Login = () => {
           dispatch(addToken(response.data.accesstoken))
           if (data) {
             toast.success(response?.data?.message);
+            
             Navigate("/chooseinterest");
           }
         } else if (response?.data?.status) {
@@ -165,7 +166,7 @@ const Login = () => {
   //form data set in
   const formsubmit = async (Data: LoginFormData) => {
     const response: any = await LoginFuntion({ ...Data });
-    if (response.data.message) {
+    if (response.data.status==false) {
       toast.error(response?.data?.message);
     } else {
       const data: ResponseData = {
@@ -178,9 +179,18 @@ const Login = () => {
       };
       dispatch(clearUser());
       dispatch(addUser(data));
-      Navigate("/chooseinterest");
-
-      toast.success(response?.data?.user.name);
+      dispatch(addToken(response.data.accesstoken))
+      console.log(response,"RESPONSED");
+      toast.success(response?.data?.message);
+      if (
+        response?.data?.status &&
+        response?.data?.user?.interest?.length < 2 
+      ){
+        console.log("LOADING TO chooseinterest ");
+        Navigate("/chooseinterest");
+      }else{
+        Navigate("/");
+      }
     }
   };
 
@@ -223,13 +233,14 @@ const Login = () => {
                 type="text"
                 {...register("password")}
               />
+              <Link to="/forgotpassword" className="flex justify-end text-teal-800 hover:underline">forgotpassword?</Link>
               <p className="text-red-600 text-xs text-start">
                 {errors && errors.password && <p>{errors.password.message}</p>}
               </p>
             </div>
 
             {/* submit */}
-            <div className="col-span-2 lg:col-span-4 mt-5 col-start-3 lg:col-start-3 col-end-7 row-start-6">
+            <div className="col-span-2 lg:col-span-4 mt-4 col-start-3 lg:col-start-3 col-end-7 row-start-6">
 
               <button
                 type="submit"
@@ -238,7 +249,7 @@ const Login = () => {
                 Sign in
               </button>
             </div>
-            <div className="col-span-4 col-start-3 row-start-8 p-2">
+            <div className="col-span-4 col-start-3 row-start-8 p-1">
               <p className="text-teal-800 font-light">or continue with</p>
             </div>
             <button
@@ -264,7 +275,7 @@ const Login = () => {
               <Link to={"/signUp"}>
                 <p className="text-teal-800 font-roboto font-light text-sm whitespace-nowrap ml-8 mt-5 ">
                   Don't have an account ?{" "}
-                  <span className="whitespace-nowrap font-medium">
+                  <span className="whitespace-nowrap font-medium hover:underline">
                     {" "}
                     Register free{" "}
                   </span>

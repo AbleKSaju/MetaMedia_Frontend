@@ -21,7 +21,7 @@ const ForgotPassword = () => {
     
   return (
     <>
-      <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-0 sm:py-12">
+      <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-8 sm:py-12">
         <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
           <form
             className=" grid grid-cols-5 grid-rows-9 gap-8"

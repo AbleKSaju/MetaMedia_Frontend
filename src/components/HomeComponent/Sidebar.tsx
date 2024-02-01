@@ -9,14 +9,33 @@ import {
   ImagePlus,
   BellRing,
 } from "lucide-react";
+import { LogoutFunction } from "../../utils/api/metords/post";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
+import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
+  const dispatch = useDispatch()
+  const Navigate=useNavigate()
   const [open, setOpen] = useState(true);
   const [selectedMenu, setSelectedMenu]: any = useState(null);
-
   const HandleSidebarClick = (index: any) => {
     setSelectedMenu(index);
   };
+  const handleLogout=async (e:any)=>{
+    e.preventDefault()
+    const response:any=await LogoutFunction()
+    console.log(response,"RRR");
+    if(response?.data?.status){
+      dispatch(clearToken())
+      toast.success(response?.data?.message)
+      console.log("navigate to login");
+      Navigate('/login')
+    }else{
+      toast.error("Logout error")
+    }
+  }
   return (
     <>
       <div
@@ -272,6 +291,11 @@ const Sidebar = () => {
             </motion.div>
             <span className={`${!open && "hidden"} origin-left duration-700`}>
               Notification
+            </span>
+          </li>
+          <li>
+            <span onClick={handleLogout} >
+              LogOut
             </span>
           </li>
         </ul>

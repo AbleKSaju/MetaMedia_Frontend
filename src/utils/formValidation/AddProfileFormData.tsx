@@ -41,6 +41,9 @@ export const schema: ZodType<AddProfileFormData> = z.object({
   location: z.string().min(2, {
     message: "location not match",
   }),
+  gender: z.string().refine((value) => ["male", "female"].includes(value), {
+    message: "Please select a valid gender",
+  }),
   // gender: z.enum(["male", "female"]),
 //   profile: z
 //     .any()

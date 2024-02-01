@@ -23,13 +23,13 @@ const SignUp = () => {
   const dispatch = useDispatch()
   const Navigate = useNavigate();
 
-  const responseMessage: any = (response: any) => {
-    const decode: any = jwtDecode(response.credential);
-    console.log(decode);
-  };
-  const errorMessage: any = (error: any) => {
-    console.log(error);
-  };
+  // const responseMessage: any = (response: any) => {
+  //   const decode: any = jwtDecode(response.credential);
+  //   console.log(decode);
+  // };
+  // const errorMessage: any = (error: any) => {
+  //   console.log(error);
+  // };
   const { errors, handleSubmit, register } = useRegisterValidate();
 
 
@@ -51,6 +51,11 @@ const SignUp = () => {
         };
         if (data.user.email) {
           const response: any = await LoginWithFacebook(userData);
+          console.log(response,"RESSSS");
+          console.log(response?.data?.user?.interest,"INN");
+          console.log(response?.data?.user?.interest.length,"LENN");
+          console.log(response?.data?.user?.interest?.length < 2);
+          
           if (
             response?.data?.status &&
             response?.data?.user?.interest?.length < 2 
@@ -63,12 +68,14 @@ const SignUp = () => {
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
             };
-            console.log(data, "dataaa");
             dispatch(clearUser());
             dispatch(addUser(data));
-            dispatch(addToken(response.data.accesstoken))
+            const token=response.data.accesstoken.toString()
+            console.log(token,"TOK!!!!!");
+            dispatch(addToken(token))
             if (data) {
               toast.success(response?.data?.message);
+              console.log("Entering to chooseinterest");
               Navigate("/chooseinterest");
             }
           } else if (response?.data?.status) {
@@ -80,13 +87,17 @@ const SignUp = () => {
               isGoogle: response.data.user.isGoogle,
               isFacebook: response.data.user.isFacebook,
             };
-            console.log(data, "dataaa");
             dispatch(clearUser());
             dispatch(addUser(data));
-            dispatch(addToken(response.data.accesstoken))
+            const token=response.data.accesstoken.toString()
+            console.log(token,"TOK");
+            
+            dispatch(addToken(token))
     
             if (data) {
               toast.success(response?.data?.message);
+              console.log("y is here");
+              
               Navigate("/");
             }
           } else {
@@ -161,8 +172,6 @@ const SignUp = () => {
   };
   const formSubmit = async (Data: RegisterFormData) => {
     const response: any = await SignUpFunction({ ...Data });
-    console.log(response, "resss");
-
     if (response?.data?.status) {
       Navigate("/verifyOtp");
     } else {
@@ -172,7 +181,7 @@ const SignUp = () => {
 
   return (
     <>
-      <div className="relative flex justify-center align-middle bg-gray-50 mt-10">
+      <div className="relative flex justify-center align-middle mt-16">
 
         {/* wrapper div  */}
         <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">

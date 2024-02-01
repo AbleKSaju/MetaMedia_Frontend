@@ -14,12 +14,9 @@ import { verifyOtpFunction } from "../../utils/api/metords/post";
 import { useRegisterValidate } from "../../utils/formValidation/SignUpValidation";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { addToken } from "../..//utils/ReduxStore/Slice/tokenSlice";
-
 import { ResponseData } from "../../utils/interface/userInterface";
 
-
 const VerifyOtp: React.FC = () => {
-
 
 const dispatch=useDispatch()
 
@@ -94,8 +91,8 @@ const dispatch=useDispatch()
         dispatch(clearUser());
         dispatch(addUser(data));
         dispatch(addToken(response.data.accesstoken))
-
         toast.success(response?.data?.message);
+        
         Navigate("/chooseinterest");
       }else{
         toast.error(response?.data?.message);

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UserData } from "../../interface/userInterface";
-import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,AddProfile_Api,ForgotPassword_Api,ChangePassword_Api,LoginWithFacebook_Api, ChooseInterest_Api} from "../endpoints/common";
+import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,AddProfile_Api,ForgotPassword_Api,ChangePassword_Api,LoginWithFacebook_Api, ChooseInterest_Api, Logout_APi} from "../endpoints/common";
 
 export const LoginFuntion = async (data: any) => {
   try {
@@ -9,6 +9,13 @@ export const LoginFuntion = async (data: any) => {
     return error;
   }
 };
+export const LogoutFunction = async ()=>{
+  try {
+    return axios.create({ withCredentials: true }).get(Logout_APi);
+  } catch (error) {
+    return error;
+  }
+}
 export const SignUpFunction = async (data: any) => {
   try {
     return axios.create({ withCredentials: true }).post(SignUp_Api, data);

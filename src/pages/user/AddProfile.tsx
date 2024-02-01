@@ -4,11 +4,14 @@ import {
   useAddProfleValidate,
 } from "../../utils/formValidation/AddProfileFormData";
 import { AddProfileFunction } from "../../utils/api/metords/post";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 // import React from "react";
 
 const AddProfile = () => {
+  const Navigate=useNavigate()
   console.log("ENter");
-  
+
   const { errors, handleSubmit, register } = useAddProfleValidate();
 
   // const [dob, setDob] = useState("");
@@ -30,11 +33,14 @@ const AddProfile = () => {
   // };
 
   const formSubmit = async (Data: AddProfileFormData) => {
-    console.log("enter to submit");
-    
-
     const response: any = await AddProfileFunction({ ...Data });
     console.log(response, "ressseeee");
+    if(response?.data?.status){
+      toast.success(response.data.message)
+      Navigate('/')
+    }else{
+      toast.error(response.data.message)
+    }
   };
 
   return (
@@ -104,7 +110,6 @@ const AddProfile = () => {
                 {errors && errors.bio && <p>{errors.bio.message}</p>}
               </p>
             </div>
-
             <div className="col-span-full sm:col-span-2 md:col-span-5 lg:w-70 lg:mr-10 row-start-9 md:row-start-9">
               <p className="text-start text-teal-800 font-light">location</p>
               <input
@@ -117,7 +122,7 @@ const AddProfile = () => {
                 {errors && errors.location && <p>{errors.location.message}</p>}
               </p>
             </div>
-            <div className="ml-12 md:ml-0 lg:ml-10 col-span-full sm:col-span-2 md:col-span-5 row-start-9 md:row-start-10 mt-9">
+            {/* <div className="ml-12 md:ml-0 lg:ml-10 col-span-full sm:col-span-2 md:col-span-5 row-start-9 md:row-start-10 mt-9">
               <input type="radio" /> &nbsp;
               <label htmlFor="" className="text-teal-800">
                 male
@@ -129,6 +134,31 @@ const AddProfile = () => {
                 female
               </label>
               &nbsp;
+            </div> */}
+            <div className="ml-12 md:ml-0 lg:ml-10 col-span-full sm:col-span-2 md:col-span-5 row-start-9 md:row-start-10 mt-9">
+              <input
+                type="radio"
+                {...register("gender", { required: "Gender is required" })}
+                value="male"
+              />{" "}
+              &nbsp;
+              <label htmlFor="" className="text-teal-800">
+                male
+              </label>{" "}
+              &nbsp;
+              <input
+                type="radio"
+                {...register("gender", { required: "Gender is required" })}
+                value="female"
+              />
+              &nbsp;
+              <label htmlFor="" className="text-teal-800">
+                female
+              </label>
+              &nbsp;
+              <p className="text-red-600">
+                {errors && errors.gender && <p>Gender is required</p>}
+              </p>
             </div>
             <div className="col-start-9 mr- lg:col-start-8 lg:mr-8 lg:col-span-3 col-span-3 mt-24 row-start-10 flex flex-col bg-red-500 justify-end">
               <button
