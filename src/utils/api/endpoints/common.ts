@@ -12,4 +12,5 @@ export const ForgotPassword_Api="http://localhost:3001/api/auth/forgotPassword"
 export const ChangePassword_Api="http://localhost:3001/api/auth/changePassword"
 export const AddProfile_Api="http://localhost:3001/api/auth/addProfile"
 
-// USER SERVICE
+
+export const RefreshToken_Api="http://localhost:3001/api/auth/refresh"
