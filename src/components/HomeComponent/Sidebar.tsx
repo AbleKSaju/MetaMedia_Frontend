@@ -15,11 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { useDispatch } from "react-redux";
 
-const Sidebar = () => {
+const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
   const dispatch = useDispatch()
   const Navigate=useNavigate()
   const [open, setOpen] = useState(true);
-  const [selectedMenu, setSelectedMenu]: any = useState(null);
+  // const [selectedMenu, setSelectedMenu]: any = useState(null);
   const HandleSidebarClick = (index: any) => {
     setSelectedMenu(index);
   };
@@ -76,9 +76,9 @@ const Sidebar = () => {
           </motion.div>
         </div>
         <ul className="pt-6">
-          <li
+        <li
             className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
-   ${0 === 0 && "bg-light-white"} ${
+         ${0 === 0 && "bg-light-white"} ${
               selectedMenu === 0 && "bg-teal-700 rounded-xl "
             }`}
             onClick={() => HandleSidebarClick(0)}
@@ -86,19 +86,19 @@ const Sidebar = () => {
             <motion.div
               whileHover={{
                 scale: 1.6,
-                rotate: 360,
+                
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                rotate: -360,
+                
                 borderRadius: "100%",
               }}
             >
               {selectedMenu === 0 ? (
-                <Home className={(!open && "hidden") || ""} />
+                <Home  />
               ) : (
-                <Home />
+                <Home  />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left duration-700`}>
@@ -115,17 +115,17 @@ const Sidebar = () => {
             <motion.div
               whileHover={{
                 scale: 1.6,
-                rotate: 360,
+                
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                rotate: -360,
+                
                 borderRadius: "100%",
               }}
             >
               {selectedMenu === 0 ? (
-                <Search className={(!open && "hidden") || ""} />
+                <Search  />
               ) : (
                 <Search />
               )}
@@ -145,18 +145,18 @@ const Sidebar = () => {
             <motion.div
               whileHover={{
                 scale: 1.6,
-                rotate: 360,
+                
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                rotate: -360,
+                
                 borderRadius: "100%",
               }}
             >
               {selectedMenu === 0 ? (
                 <LucideMessageSquareText
-                  className={(!open && "hidden") || ""}
+                  
                 />
               ) : (
                 <LucideMessageSquareText />
@@ -177,17 +177,17 @@ const Sidebar = () => {
             <motion.div
               whileHover={{
                 scale: 1.6,
-                rotate: 360,
+               
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                rotate: -360,
+                
                 borderRadius: "100%",
               }}
             >
               {selectedMenu === 0 ? (
-                <Clapperboard className={(!open && "hidden") || ""} />
+                <Clapperboard  />
               ) : (
                 <Clapperboard />
               )}
@@ -211,14 +211,14 @@ const Sidebar = () => {
               }}
               whileTap={{
                 scale: 1.7,
-                rotate: 360,
+                
                 transition: { ease: "easeInOut", duration: 0.9 },
                 borderRadius: "100%",
               }}
             >
               {selectedMenu === 0 ? (
                 <img
-                  className="w-7 h-7 rounded-full"
+                  className="w-7 h-6 rounded-full"
                   src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
                 />
               ) : (
@@ -244,17 +244,17 @@ const Sidebar = () => {
             <motion.div
               whileHover={{
                 scale: 1.6,
-                rotate: 360,
+                
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 1.7,
-                rotate: -360,
+                
                 borderRadius: "100%",
               }}
             >
               {selectedMenu === 0 ? (
-                <ImagePlus className={(!open && "hidden") || ""} />
+                <ImagePlus  />
               ) : (
                 <ImagePlus />
               )}
@@ -274,17 +274,17 @@ const Sidebar = () => {
             <motion.div
               whileHover={{
                 scale: 1.6,
-                rotate: 360,
+                
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                rotate: -360,
+               
                 borderRadius: "100%",
               }}
             >
               {selectedMenu === 0 ? (
-                <BellRing className={(!open && "hidden") || ""} />
+                <BellRing  />
               ) : (
                 <BellRing />
               )}
@@ -293,11 +293,7 @@ const Sidebar = () => {
               Notification
             </span>
           </li>
-          <li>
-            <span onClick={handleLogout} >
-              LogOut
-            </span>
-          </li>
+         
         </ul>
       </div>
     </>
