@@ -41,7 +41,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
       <div
         className={` ${
           open ? "w-60" : "w-20 "
-        } bg-teal-900 h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
+        } bg-[#01161E] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -68,18 +68,25 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
             }}
           >
             <img
-              src="./src/assets/logo-color.png"
+              src="./src/assets/logo.png"
               className={`cursor-pointer duration-700    ${
-                open && "rotate-[360deg] h-[120px] ml-7 rounded-full "
+                open && "rotate-[360deg] h-[120px] ml-4 rounded-full "
               }`}
             />
           </motion.div>
         </div>
         <ul className="pt-6">
+
+
+
+
+
+
+          {/* home */}
         <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4 
          ${0 === 0 && "bg-light-white"} ${
-              selectedMenu === 0 && "bg-teal-700 rounded-xl "
+              selectedMenu === 0 && "bg-white rounded-xl text-black "
             }`}
             onClick={() => HandleSidebarClick(0)}
           >
@@ -96,19 +103,33 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               }}
             >
               {selectedMenu === 0 ? (
-                <Home  />
+                <Home className="text-black" />
               ) : (
                 <Home  />
               )}
             </motion.div>
-            <span className={`${!open && "hidden"} origin-left duration-700`}>
-              Home
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 0 ? (
+              <div className="text-black">  Home</div>
+               ) : (
+                <div >   Home</div>
+                )}
+           
             </span>
           </li>
+
+
+
+
+
+
+
+{/* search  */}
+
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
          ${1 === 1 && "bg-light-white"} ${
-              selectedMenu === 1 && "bg-teal-700 rounded-xl "
+              selectedMenu === 1 && "bg-white rounded-xl text-black"
             }`}
             onClick={() => HandleSidebarClick(1)}
           >
@@ -124,21 +145,32 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 0 ? (
-                <Search  />
+              {selectedMenu === 1 ? (
+                <Search className="text-black" />
               ) : (
                 <Search />
               )}
             </motion.div>
-            <span className={`${!open && "hidden"} origin-left duration-700`}>
-              Search
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 1 ? (
+              <div className="text-black">  Search</div>
+               ) : (
+                <div >   Search</div>
+                )}
+           
             </span>
+            
           </li>
 
+
+
+
+
+{/* message  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
          ${2 === 2 && "bg-light-white"} ${
-              selectedMenu === 2 && "bg-teal-700 rounded-xl "
+              selectedMenu === 2 && "bg-white rounded-xl text-black "
             }`}
             onClick={() => HandleSidebarClick(2)}
           >
@@ -154,23 +186,34 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 0 ? (
-                <LucideMessageSquareText
+              {selectedMenu === 2 ? (
+                <LucideMessageSquareText className="text-black"
                   
                 />
               ) : (
                 <LucideMessageSquareText />
               )}
             </motion.div>
-            <span className={`${!open && "hidden"} origin-left duration-700`}>
-              Message
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 2 ? (
+              <div className="text-black">  Message</div>
+               ) : (
+                <div >   Message</div>
+                )}
+           
             </span>
+            
           </li>
 
+
+
+
+          {/* post  */}
+
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
          ${3 === 3 && "bg-light-white"} ${
-              selectedMenu === 3 && "bg-teal-700 rounded-xl "
+              selectedMenu === 3 && "bg-white rounded-xl text-black "
             }`}
             onClick={() => HandleSidebarClick(3)}
           >
@@ -186,21 +229,31 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 0 ? (
-                <Clapperboard  />
+              {selectedMenu === 3 ? (
+                <Clapperboard className="text-black" />
               ) : (
                 <Clapperboard />
               )}
             </motion.div>
-            <span className={`${!open && "hidden"} origin-left duration-700`}>
-              Posts
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 3 ? (
+              <div className="text-black">  Posts</div>
+               ) : (
+                <div >   Posts</div>
+                )}
+           
             </span>
+            
           </li>
 
+
+
+
+{/* profile  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5  rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
          ${4 === 4 && "bg-light-white"} ${
-              selectedMenu === 4 && "bg-teal-700 rounded-xl "
+              selectedMenu === 4 && "bg-white rounded-xl text-black "
             }`}
             onClick={() => HandleSidebarClick(4)}
           >
@@ -216,28 +269,38 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 0 ? (
+              {selectedMenu === 4 ? (
                 <img
-                  className="w-7 h-6 rounded-full"
+                  className= {`w-8 h-8 rounded-full text-black  `}
                   src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
                 />
               ) : (
                 <img
-                  className="w-7 h-7 rounded-full"
+                  className="w-8 h-8 rounded-full "
                   src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
                 />
               )}
             </motion.div>
 
-            <span className={`${!open && "hidden"} origin-left duration-700`}>
-              Profile
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 4 ? (
+              <div className="text-black">  Profile</div>
+               ) : (
+                <div >   Profile</div>
+                )}
+           
             </span>
+            
           </li>
 
+
+
+
+{/* create  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
          ${5 === 5 && "bg-light-white"} ${
-              selectedMenu === 5 && "bg-teal-700 rounded-xl "
+              selectedMenu === 5 && "bg-white rounded-xl text-black "
             }`}
             onClick={() => HandleSidebarClick(5)}
           >
@@ -253,21 +316,31 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 0 ? (
-                <ImagePlus  />
+              {selectedMenu === 5 ? (
+                <ImagePlus  className="text-black" />
               ) : (
                 <ImagePlus />
               )}
             </motion.div>
-            <span className={`${!open && "hidden"} origin-left duration-700`}>
-              Create
+
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 5 ? (
+              <div className="text-black">  Create</div>
+               ) : (
+                <div >   Create</div>
+                )}
+           
             </span>
+            
+           
           </li>
 
+
+{/* notification  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-teal-700 hover:rounded-xl text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
          ${6 === 6 && "bg-light-white"} ${
-              selectedMenu === 6 && "bg-teal-700 rounded-xl "
+              selectedMenu === 6 && "bg-white rounded-xl text-black "
             }`}
             onClick={() => HandleSidebarClick(6)}
           >
@@ -283,15 +356,22 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 0 ? (
-                <BellRing  />
+              {selectedMenu === 6 ? (
+                <BellRing className="text-black"   />
               ) : (
                 <BellRing />
               )}
             </motion.div>
-            <span className={`${!open && "hidden"} origin-left duration-700`}>
-              Notification
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 6 ? (
+              <div className="text-black">  Notification</div>
+               ) : (
+                <div >   Notification</div>
+                )}
+           
             </span>
+            
+           
           </li>
          
         </ul>
