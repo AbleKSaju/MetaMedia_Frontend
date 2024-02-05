@@ -36,13 +36,13 @@ const Home = () => {
         }
       };
    
-   
   return (
     <>
-      <div className="flex">
+      <div className="flex ">
+        <div className="hidden sm:flex">
         <Sidebar setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} />
-
-        <div className="h-screen flex-1 p-7 ">
+        </div>
+        <div className="h-screen flex-1 sm:p-7 ">
          {renderMainComponent()}
         </div>
       </div>
