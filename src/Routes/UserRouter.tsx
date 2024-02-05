@@ -11,6 +11,7 @@ import Home from "../pages/user/Home";
 import Mods from "../pages/user/Mods";
 import ProtectedRoute from "./ProtectedRoute";
 import ProtectedAuthRoute from "./ProtectedAuthRoute";
+import S from "../pages/user/S";
 
 const UserRouter = () => {
   return (
@@ -74,6 +75,9 @@ const UserRouter = () => {
           // </ProtectedRoute>
         }
       />
+
+ <Route path="/s"element={ <S/>} />
+
       {/* <Route path="/logout"/> */}
     </Routes>
   );

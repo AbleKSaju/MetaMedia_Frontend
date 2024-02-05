@@ -70,7 +70,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
             <img
               src="./src/assets/logo.png"
               className={`cursor-pointer duration-700    ${
-                open && "rotate-[360deg] h-[120px] ml-4 rounded-full "
+                open && "rotate-[360deg] h-[120px] ml- rounded-full "
               }`}
             />
           </motion.div>
