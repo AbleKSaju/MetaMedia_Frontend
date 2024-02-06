@@ -41,7 +41,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
       <div
         className={` ${
           open ? "w-60" : "w-20 "
-        } bg-[#01161E] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
+        } bg-[#042F2C] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8  duration-300 block   `}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -84,9 +84,9 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 
           {/* home */}
         <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4 
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
          ${0 === 0 && "bg-light-white"} ${
-              selectedMenu === 0 && "bg-white rounded-xl text-black "
+              selectedMenu === 0 && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
             onClick={() => HandleSidebarClick(0)}
           >
@@ -211,7 +211,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
           {/* post  */}
 
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
          ${3 === 3 && "bg-light-white"} ${
               selectedMenu === 3 && "bg-white rounded-xl text-black "
             }`}

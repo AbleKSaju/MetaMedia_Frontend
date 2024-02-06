@@ -1,10 +1,23 @@
 
+import Story from "./Story"
 const MainBody=()=>{
  
     return (
 <>
+{/* main div  */}
+<div className="bg-green-50"> 
 
-<div>Home</div>
+{/* status  */}
+
+<Story/>
+
+
+
+
+
+
+{/* main div  end */}
+</div>
 
 </>
 
