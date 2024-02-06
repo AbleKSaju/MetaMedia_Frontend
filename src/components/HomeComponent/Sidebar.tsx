@@ -41,7 +41,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
       <div
         className={` ${
           open ? "w-60" : "w-20 "
-        } bg-[#01161E] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
+        } bg-[#042F2C] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -67,12 +67,12 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               transition: { ease: "easeInOut", duration: 1.2 },
             }}
           >
-            <img
-              src="./src/assets/logo.png"
+            {/* <img
+              src="./src/assets/logo-color.png"
               className={`cursor-pointer duration-700    ${
                 open && "rotate-[360deg] h-[120px] ml- rounded-full "
               }`}
-            />
+            /> */}
           </motion.div>
         </div>
         <ul className="pt-6">
