@@ -41,7 +41,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
       <div
         className={` ${
           open ? "w-60" : "w-20 "
-        } bg-[#01161E] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
+        } bg-[#01161E] p-5 rounded-tr-lg rounded-br-lg pt-8 duration-300 `}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
