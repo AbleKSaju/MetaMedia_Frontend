@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { ResponseData } from "../interface/userInterface";
 import { addUser, clearUser } from "../ReduxStore/Slice/userSlice";
-import { LoginWithFacebook } from "../api/metords/post";
+import { LoginWithFacebook } from "../api/methods/AuthService/post";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 

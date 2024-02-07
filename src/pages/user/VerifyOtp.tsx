@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { verifyOtpFunction } from "../../utils/api/metords/post";
+import { verifyOtpFunction } from "../../utils/api/methods/AuthService/post";
 import { useRegisterValidate } from "../../utils/formValidation/SignUpValidation";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { addToken } from "../..//utils/ReduxStore/Slice/tokenSlice";

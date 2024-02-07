@@ -18,3 +18,13 @@ input[type=number] {
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
+.highlight-item {
+  flex-shrink: 0; /* Ensure items don't shrink to fit */
+  margin-right: 0.1rem; /* Adjust as needed for spacing between items */
+}
+
+/* Optional: Hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

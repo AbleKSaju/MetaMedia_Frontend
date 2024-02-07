@@ -1,7 +1,7 @@
-import { LoginFuntion, LoginWithFacebook } from "../../utils/api/metords/post";
+import { LoginFuntion, LoginWithFacebook } from "../../utils/api/methods/AuthService/post";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { addToken } from '../../utils/ReduxStore/Slice/tokenSlice'
-import { LoginWithGoogle } from "../../utils/api/metords/post";
+import { LoginWithGoogle } from "../../utils/api/methods/AuthService/post";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";

@@ -1,16 +1,21 @@
+import {AUTH_URL,POST_URL,STORY_URL,USER_URL} from '../baseUrl/axios.baseUrl' 
+
 
 // AUTH SERVICE
 
-export const Login_Api = "http://localhost:3001/api/auth/login"
-export const Logout_APi = "http://localhost:3001/api/auth/logout"
-export const SignUp_Api = "http://localhost:3001/api/auth/signup"
-export const VerifyOtp_Api = "http://localhost:3001/api/auth/verifyOtp"
-export const LoginWithGoogle_Api="http://localhost:3001/api/auth/loginWithGoogle"
-export const LoginWithFacebook_Api="http://localhost:3001/api/auth/loginWithFaceBook"
-export const ChooseInterest_Api="http://localhost:3001/api/auth/chooseInterest"
-export const ForgotPassword_Api="http://localhost:3001/api/auth/forgotPassword"
-export const ChangePassword_Api="http://localhost:3001/api/auth/changePassword"
-export const AddProfile_Api="http://localhost:3001/api/auth/addProfile"
+export const Login_Api = `${AUTH_URL}/login`
+export const Logout_APi = `${AUTH_URL}/logout`
+export const SignUp_Api = `${AUTH_URL}/signup`
+export const VerifyOtp_Api = `${AUTH_URL}/verifyOtp`
+export const LoginWithGoogle_Api=`${AUTH_URL}/loginWithGoogle`
+export const LoginWithFacebook_Api=`${AUTH_URL}/loginWithFaceBook`
+export const ChooseInterest_Api=`${AUTH_URL}/chooseInterest`
+export const ForgotPassword_Api=`${AUTH_URL}/forgotPassword`
+export const ChangePassword_Api=`${AUTH_URL}/changePassword`
+export const AddProfile_Api=`${AUTH_URL}/addProfile`
+export const RefreshToken_Api=`${AUTH_URL}/refresh`
 
 
-export const RefreshToken_Api="http://localhost:3001/api/auth/refresh"
+// STORY SERVICE
+
+export const AddHighlight_Api=`${STORY_URL}/addHighlight`

@@ -12,7 +12,7 @@ import {
   LoginWithFacebook,
   LoginWithGoogle,
   SignUpFunction,
-} from "../../utils/api/metords/post";
+} from "../../utils/api/methods/AuthService/post";
 import { ResponseData } from "src/utils/interface/userInterface";
 
 

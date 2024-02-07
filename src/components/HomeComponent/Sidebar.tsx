@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -8,18 +8,21 @@ import {
   Clapperboard,
   ImagePlus,
   BellRing,
+  Settings,
+  Menu,
 } from "lucide-react";
-import { LogoutFunction } from "../../utils/api/metords/post";
+import { LogoutFunction } from "../../utils/api/methods/AuthService/post";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { useDispatch } from "react-redux";
 
-const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
+const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
   const dispatch = useDispatch()
   const Navigate=useNavigate()
-  const [open, setOpen] = useState(true);
   // const [selectedMenu, setSelectedMenu]: any = useState(null);
+  console.log(open,"open");
+  
   const HandleSidebarClick = (index: any) => {
     setSelectedMenu(index);
   };
@@ -36,14 +39,27 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
       toast.error("Logout error")
     }
   }
+  // const showAndHideSidebar = () => {
+  //   const bar = document.getElementById("bar") as HTMLInputElement;
+  //   console.log(bar);
+    
+  //   bar.click();
+  // };
+
+  // const [sideBar,setSideBar] = useState(1)
+
+  // console.log(sideBar,"SIDEBAR");
+
   return (
     <>
       <div
         className={` ${
           open ? "w-60" : "w-20 "
-        } bg-[#042F2C] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
+        } bg-[#042F2C] h-screen p-5  rounded-tr-lg rounded-br-lg pt-8 relative duration-300 `}
       >
+        {/* <Menu/> */}
         <svg
+        id="bar"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -51,7 +67,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
           stroke="currentColor"
           className={`absolute cursor-pointer -right-0 text-amber-50 top-9 w-7 mr-1 mt-[750px]
             ${!open && "rotate-180"}`}
-          onClick={() => setOpen(!open)}
+          // onClick={() => setOpen(!open)}
         >
           <path
             strokeLinecap="round"
@@ -247,55 +263,6 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
           </li>
 
 
-
-
-{/* profile  */}
-          <li
-            className={`flex mt-5  rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
-         ${4 === 4 && "bg-light-white"} ${
-              selectedMenu === 4 && "bg-white rounded-xl text-black "
-            }`}
-            onClick={() => HandleSidebarClick(4)}
-          >
-            <motion.div
-              whileHover={{
-                scale: 1.6,
-                transition: { ease: "easeInOut", duration: 0.9 },
-              }}
-              whileTap={{
-                scale: 1.7,
-                
-                transition: { ease: "easeInOut", duration: 0.9 },
-                borderRadius: "100%",
-              }}
-            >
-              {selectedMenu === 4 ? (
-                <img
-                  className= {`w-8 h-8 rounded-full text-black  `}
-                  src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
-                />
-              ) : (
-                <img
-                  className="w-8 h-8 rounded-full "
-                  src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
-                />
-              )}
-            </motion.div>
-
-            <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 4 ? (
-              <div className="text-black">  Profile</div>
-               ) : (
-                <div >   Profile</div>
-                )}
-           
-            </span>
-            
-          </li>
-
-
-
-
 {/* create  */}
           <li
             className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
@@ -373,6 +340,92 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
             
            
           </li>
+
+
+{/* settings  */}
+          <li
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+         ${7 === 7 && "bg-light-white"} ${
+              selectedMenu === 7 && "bg-white rounded-xl text-black "
+            }`}
+            onClick={() => HandleSidebarClick(7)}
+          >
+            <motion.div
+              whileHover={{
+                scale: 1.6,
+                
+                transition: { ease: "easeInOut", duration: 0.9 },
+              }}
+              whileTap={{
+                scale: 0.8,
+               
+                borderRadius: "100%",
+              }}
+            >
+              {selectedMenu === 7 ? (
+                <Settings className="text-black"   />
+              ) : (
+                <Settings />
+              )}
+            </motion.div>
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 7 ? (
+              <div className="text-black">Settings</div>
+               ) : (
+                <div > Settings</div>
+                )}
+           
+            </span>
+            
+           
+          </li>
+
+
+{/* profile  */}
+<li
+            className={`flex mt-5  rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+         ${4 === 4 && "bg-light-white"} ${
+              selectedMenu === 4 && "bg-white rounded-xl text-black "
+            }`}
+            onClick={() => HandleSidebarClick(4)}
+          >
+            <motion.div
+              whileHover={{
+                scale: 1.6,
+                transition: { ease: "easeInOut", duration: 0.9 },
+              }}
+              whileTap={{
+                scale: 1.7,
+                
+                transition: { ease: "easeInOut", duration: 0.9 },
+                borderRadius: "100%",
+              }}
+            >
+              {selectedMenu === 4 ? (
+                <img
+                  className= {`w-8 h-8 rounded-full text-black  `}
+                  src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
+                />
+              ) : (
+                <img
+                  className="w-8 h-8 rounded-full "
+                  src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
+                />
+              )}
+            </motion.div>
+
+            <span className={`${!open && "hidden"} origin-left `}>
+            {selectedMenu === 4 ? (
+              <div className="text-black">  Profile</div>
+               ) : (
+                <div >   Profile</div>
+                )}
+           
+            </span>
+            
+          </li>
+
+
          
         </ul>
       </div>

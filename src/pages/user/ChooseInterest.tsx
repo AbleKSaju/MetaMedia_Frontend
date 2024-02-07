@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserCheck, MessageCircleHeart, BookUser } from "lucide-react";
 import { toast } from "sonner";
-import { ChooseInterestFunction } from "../../utils/api/metords/post";
+import { ChooseInterestFunction } from "../../utils/api/methods/AuthService/post";
 import { useNavigate } from "react-router-dom";
 
 const ChooseInterest = () => {

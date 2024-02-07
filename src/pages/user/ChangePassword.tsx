@@ -2,7 +2,7 @@ import {
   ChangePasswordFormData,
   useChangePasswordValidation,
 } from "../../utils/formValidation/ChangePasswordValidation";
-import { ChangePasswordFunction } from "../../utils/api/metords/post";
+import { ChangePasswordFunction } from "../../utils/api/methods/AuthService/post";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 

@@ -12,6 +12,7 @@ import Mods from "../pages/user/Mods";
 import ProtectedRoute from "./ProtectedRoute";
 import ProtectedAuthRoute from "./ProtectedAuthRoute";
 import S from "../pages/user/S";
+import Settings from "../pages/user/Settings";
 
 const UserRouter = () => {
   return (
@@ -33,7 +34,7 @@ const UserRouter = () => {
         }
       />
       <Route path="/verifyOtp" element={<VerifyOtp />} />
-      
+
       <Route
         path="/forgotpassword"
         element={
@@ -76,7 +77,9 @@ const UserRouter = () => {
         }
       />
 
- <Route path="/s"element={ <S/>} />
+      {/* <Route path="/settings" element={<Settings />} /> */}
+
+      <Route path="/s" element={<S />} />
 
       {/* <Route path="/logout"/> */}
     </Routes>

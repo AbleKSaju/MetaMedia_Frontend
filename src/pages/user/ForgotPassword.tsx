@@ -1,7 +1,7 @@
 import React from "react";
 import { ForgotPasswordFormData, useForgotPasswordValidaion } from "../../utils/formValidation/ForgotPasswordValidation";
 import { Link, useNavigate } from "react-router-dom";
-import { ForgotPasswordFunction } from "../../utils/api/metords/post";
+import { ForgotPasswordFunction } from "../../utils/api/methods/AuthService/post";
 import { toast } from "sonner";
 
 const ForgotPassword = () => {

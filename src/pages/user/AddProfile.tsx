@@ -3,7 +3,7 @@ import {
   AddProfileFormData,
   useAddProfleValidate,
 } from "../../utils/formValidation/AddProfileFormData";
-import { AddProfileFunction } from "../../utils/api/metords/post";
+import { AddProfileFunction } from "../../utils/api/methods/AuthService/post";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // import React from "react";
