@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -14,8 +14,17 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { useDispatch } from "react-redux";
+import useMediaQuery from "../../utils/costumHook/mediaqueri";
+import { set } from "mongoose";
 
 const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
+  const isLaptop = useMediaQuery("(min-width: 1025px)");
+
+
+
   const dispatch = useDispatch()
   const Navigate=useNavigate()
   const [open, setOpen] = useState(true);
@@ -36,12 +45,32 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
       toast.error("Logout error")
     }
   }
+
+
+  useEffect(()=>{
+    if(isMobile){
+      setOpen(false)
+    }else if(isTablet){
+      setOpen(false)
+    }else if(isLaptop){
+      setOpen(true)
+
+    }
+  },[isLaptop,isMobile,isTablet])
+
+
+
+
+
+
+
+
   return (
     <>
       <div
         className={` ${
           open ? "w-60" : "w-20 "
-        } bg-[#042F2C] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
+        } bg-[#07312E] h-screen p-5  rounded-tr-[50px] rounded-br-lg pt-8 relative duration-300 `}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -67,12 +96,12 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               transition: { ease: "easeInOut", duration: 1.2 },
             }}
           >
-            {/* <img
-              src="./src/assets/logo-color.png"
+            <img
+              src="./src/assets/meta-new.png"
               className={`cursor-pointer duration-700    ${
                 open && "rotate-[360deg] h-[120px] ml- rounded-full "
               }`}
-            /> */}
+            />
           </motion.div>
         </div>
         <ul className="pt-6">
@@ -103,14 +132,14 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               }}
             >
               {selectedMenu === 0 ? (
-                <Home className="text-black" />
+                <Home className="text-[#042F2C] " />
               ) : (
                 <Home  />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
             {selectedMenu === 0 ? (
-              <div className="text-black">  Home</div>
+              <div className="text-[#042F2C] ">  Home</div>
                ) : (
                 <div >   Home</div>
                 )}
@@ -127,9 +156,9 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 {/* search  */}
 
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${1 === 1 && "bg-light-white"} ${
-              selectedMenu === 1 && "bg-white rounded-xl text-black"
+              selectedMenu === 1 && "bg-amber-50 rounded-xl text-[#042F2C]"
             }`}
             onClick={() => HandleSidebarClick(1)}
           >
@@ -146,14 +175,14 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               }}
             >
               {selectedMenu === 1 ? (
-                <Search className="text-black" />
+                <Search className="text-[#042F2C]" />
               ) : (
                 <Search />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
             {selectedMenu === 1 ? (
-              <div className="text-black">  Search</div>
+              <div className="text-[#042F2C]">  Search</div>
                ) : (
                 <div >   Search</div>
                 )}
@@ -168,9 +197,9 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 
 {/* message  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${2 === 2 && "bg-light-white"} ${
-              selectedMenu === 2 && "bg-white rounded-xl text-black "
+              selectedMenu === 2 && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
             onClick={() => HandleSidebarClick(2)}
           >
@@ -187,7 +216,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               }}
             >
               {selectedMenu === 2 ? (
-                <LucideMessageSquareText className="text-black"
+                <LucideMessageSquareText className="text-[#042F2C]"
                   
                 />
               ) : (
@@ -196,7 +225,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
             {selectedMenu === 2 ? (
-              <div className="text-black">  Message</div>
+              <div className="text-[#042F2C]">  Message</div>
                ) : (
                 <div >   Message</div>
                 )}
@@ -211,9 +240,9 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
           {/* post  */}
 
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${3 === 3 && "bg-light-white"} ${
-              selectedMenu === 3 && "bg-white rounded-xl text-black "
+              selectedMenu === 3 && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
             onClick={() => HandleSidebarClick(3)}
           >
@@ -230,14 +259,14 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               }}
             >
               {selectedMenu === 3 ? (
-                <Clapperboard className="text-black" />
+                <Clapperboard className="text-[#042F2C]" />
               ) : (
                 <Clapperboard />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
             {selectedMenu === 3 ? (
-              <div className="text-black">  Posts</div>
+              <div className="text-[#042F2C]">  Posts</div>
                ) : (
                 <div >   Posts</div>
                 )}
@@ -251,9 +280,9 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 
 {/* profile  */}
           <li
-            className={`flex mt-5  rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5  rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${4 === 4 && "bg-light-white"} ${
-              selectedMenu === 4 && "bg-white rounded-xl text-black "
+              selectedMenu === 4 && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
             onClick={() => HandleSidebarClick(4)}
           >
@@ -271,7 +300,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
             >
               {selectedMenu === 4 ? (
                 <img
-                  className= {`w-8 h-8 rounded-full text-black  `}
+                  className= {`w-8 h-8 rounded-full text-[#042F2C]  `}
                   src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
                 />
               ) : (
@@ -284,7 +313,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 
             <span className={`${!open && "hidden"} origin-left `}>
             {selectedMenu === 4 ? (
-              <div className="text-black">  Profile</div>
+              <div className="text-[#042F2C]">  Profile</div>
                ) : (
                 <div >   Profile</div>
                 )}
@@ -298,9 +327,9 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 
 {/* create  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${5 === 5 && "bg-light-white"} ${
-              selectedMenu === 5 && "bg-white rounded-xl text-black "
+              selectedMenu === 5 && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
             onClick={() => HandleSidebarClick(5)}
           >
@@ -317,7 +346,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               }}
             >
               {selectedMenu === 5 ? (
-                <ImagePlus  className="text-black" />
+                <ImagePlus  className="text-[#042F2C]" />
               ) : (
                 <ImagePlus />
               )}
@@ -325,7 +354,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 
             <span className={`${!open && "hidden"} origin-left `}>
             {selectedMenu === 5 ? (
-              <div className="text-black">  Create</div>
+              <div className="text-[#042F2C]">  Create</div>
                ) : (
                 <div >   Create</div>
                 )}
@@ -338,9 +367,9 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
 
 {/* notification  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-white text-xl font-sans font-semibold items-center gap-x-4
          ${6 === 6 && "bg-light-white"} ${
-              selectedMenu === 6 && "bg-white rounded-xl text-black "
+              selectedMenu === 6 && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
             onClick={() => HandleSidebarClick(6)}
           >
@@ -357,14 +386,14 @@ const   Sidebar = ({setSelectedMenu,selectedMenu}:any) => {
               }}
             >
               {selectedMenu === 6 ? (
-                <BellRing className="text-black"   />
+                <BellRing className="text-[#042F2C]"   />
               ) : (
                 <BellRing />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
             {selectedMenu === 6 ? (
-              <div className="text-black">  Notification</div>
+              <div className="text-[#042F2C]">  Notification</div>
                ) : (
                 <div >   Notification</div>
                 )}
