@@ -1,12 +1,17 @@
+
 import StoryCard from "./storycard";
 
-const Story = () => {
+const   Story = () => {
   
-   
+
+
   return (
     <>
 
-<div className="fixed lg:w-[1140px] lg:mt-0 ">
+
+
+<div className=" w-[640px]  md:w-[700px] p-1 lg:w-[1140px]  lg:mt-0 ">
+
   <div className="not-prose relative  rounded-xl  overflow-x-scroll  scrollbar-hide ">
    
     <div className="relative rounded-xl  ">
