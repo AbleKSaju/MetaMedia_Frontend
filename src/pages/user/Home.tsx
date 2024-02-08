@@ -70,7 +70,7 @@ const Home = () => {
             open={sidebaropen}
           />
         </div>
-        <div className={`${selectedMenu == 7 ? "sm:ml-0 sm:flex":"sm:ml-60 sm:p-7 lg:ml-72 " }`}>
+        <div className={`${selectedMenu == 7 ? "sm:ml-0 sm:flex":"sm:ml-60 sm:p-7 md:p-2 lg:ml-72 " }`}>
           {renderMainComponent()}
         </div>
       </div>

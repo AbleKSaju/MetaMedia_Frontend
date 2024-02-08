@@ -1,3 +1,4 @@
+
 const Post =()=>{
     return (
         <>
@@ -8,3 +9,4 @@ const Post =()=>{
 }
 
 export default Post
+
