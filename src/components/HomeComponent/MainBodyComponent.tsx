@@ -1,6 +1,6 @@
-import PostScroll from "./PostScroll";
-import Story from "./Story";
-import Suggestion from "./Suggestion";
+import PostScroll from "./PostScrollComponent";
+import Story from "./StoryComponent";
+import Suggestion from "./SuggestionComponent";
 const MainBody = () => {
   return (
     <>

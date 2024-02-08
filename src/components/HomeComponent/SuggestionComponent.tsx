@@ -1,4 +1,4 @@
-import SuggestOneFriend from "./SuggestOneFriend"
+import SuggestOneFriend from "./SuggestOneFriendComponent"
 
 const Suggestion=()=>{
     return (

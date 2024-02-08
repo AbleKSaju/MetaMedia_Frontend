@@ -316,8 +316,6 @@ const ChooseInterest = () => {
           </p>
         </div>
 
-        {/* <div className="col-start-6 mt-10 row-start-3">Skip →</div> */}
-
         <div className="col-start-4 row-start-6">
           <button
             onClick={handleNext}

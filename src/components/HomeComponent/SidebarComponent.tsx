@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -9,15 +8,8 @@ import {
   ImagePlus,
   BellRing,
   Settings,
-  Menu,
 } from "lucide-react";
-import { LogoutFunction } from "../../utils/api/methods/AuthService/post";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
-import { useDispatch } from "react-redux";
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
-import { set } from "mongoose";
 
 
 const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
@@ -26,62 +18,11 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
   const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
   const isLaptop = useMediaQuery("(min-width: 1025px)");
 
-
-
-
-  const dispatch = useDispatch()
-  const Navigate=useNavigate()
   // const [selectedMenu, setSelectedMenu]: any = useState(null);
-  console.log(open,"open");
   
   const HandleSidebarClick = (index: any) => {
     setSelectedMenu(index);
   };
-  const handleLogout=async (e:any)=>{
-    e.preventDefault()
-    const response:any=await LogoutFunction()
-    console.log(response,"RRR");
-    if(response?.data?.status){
-      dispatch(clearToken())
-      toast.success(response?.data?.message)
-      console.log("navigate to login");
-      Navigate('/login')
-    }else{
-      toast.error("Logout error")
-    }
-  }
-
-  // const showAndHideSidebar = () => {
-  //   const bar = document.getElementById("bar") as HTMLInputElement;
-  //   console.log(bar);
-    
-  //   bar.click();
-  // };
-
-  // const [sideBar,setSideBar] = useState(1)
-
-  // console.log(sideBar,"SIDEBAR");
-// =======
-
-
-//   useEffect(()=>{
-//     if(isMobile){
-//       setOpen(false)
-//     }else if(isTablet){
-//       setOpen(false)
-//     }else if(isLaptop){
-//       setOpen(true)
-
-//     }
-//   },[isLaptop,isMobile,isTablet])
-
-
-
-
-
-
-
-
 
   return (
     <>
@@ -89,7 +30,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
         className={` ${
           open ? "w-60" : "w-20 "
 
-        } bg-[#07312E] h-screen p-5  rounded-tr-lg rounded-br-lg pt-8 relative duration-300 `}
+        } bg-[#07312E] h-screen p-5 z-30  rounded-tr-lg rounded-br-lg pt-8 relative duration-300 `}
 
       >
         {/* <Menu/> */}

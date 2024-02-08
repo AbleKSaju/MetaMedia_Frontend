@@ -1,5 +1,5 @@
 
-import StoryCard from "./storycard";
+import StoryCard from "./storycardComponent";
 
 const   Story = () => {
   

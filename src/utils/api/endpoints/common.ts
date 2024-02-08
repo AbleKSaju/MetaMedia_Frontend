@@ -12,10 +12,15 @@ export const LoginWithFacebook_Api=`${AUTH_URL}/loginWithFaceBook`
 export const ChooseInterest_Api=`${AUTH_URL}/chooseInterest`
 export const ForgotPassword_Api=`${AUTH_URL}/forgotPassword`
 export const ChangePassword_Api=`${AUTH_URL}/changePassword`
-export const AddProfile_Api=`${AUTH_URL}/addProfile`
 export const RefreshToken_Api=`${AUTH_URL}/refresh`
+
+// USER SERVICE
+
+export const AddProfile_Api=`${USER_URL}/addProfile`
+export const EditProfile_Api=`${USER_URL}/editProfile`
 
 
 // STORY SERVICE
 
 export const AddHighlight_Api=`${STORY_URL}/addHighlight`
+
