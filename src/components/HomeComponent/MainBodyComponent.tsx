@@ -1,9 +1,8 @@
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
 
-import PostScroll from "./PostScroll";
-import Story from "./Story";
-import Suggestion from "./Suggestion";
-
+import PostScroll from "./PostScrollComponent";
+import Story from "./StoryComponent";
+import Suggestion from "./SuggestionComponent";
 const MainBody = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");

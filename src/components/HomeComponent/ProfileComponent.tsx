@@ -1,8 +1,8 @@
 import { useState } from "react";
 import PostsComponent from "../SubHomeComponents/PostsComponent";
 import {Edit,X} from "lucide-react";
-import StoryCard from "./storycard";
-import Highlight from "./Highlight";
+import StoryCard from "./storycardComponent";
+import Highlight from "./HighlightComponent";
 import { boolean } from "zod";
 import { disable } from "debug";
 import { addHighlightFunction } from "../../utils/api/methods";
@@ -39,7 +39,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className="p-4 lg:pt-10 lg:flex lg:justify-around bg-red-300">
+      <div className="p-4 lg:pt-10 lg:flex lg:justify-around">
         <div className="flex justify-center lg:justify-start">
           <div className=" w-32 lg:w-40 lg:h-40 h-32">
             <img

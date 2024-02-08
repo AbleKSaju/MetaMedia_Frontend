@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../../components/HomeComponent/Sidebar";
-import MainBody from "../../components/HomeComponent/MainBody";
+import Sidebar from "../../components/HomeComponent/SidebarComponent";
+import MainBody from "../../components/HomeComponent/MainBodyComponent";
 import Search from "../../components/HomeComponent/SearchComponent";
 import Message from "../../components/HomeComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
 import Profile from "../../components/HomeComponent/ProfileComponent";
 import Create from "../../components/HomeComponent/CreateComponent";
 import Notification from "../../components/HomeComponent/NotificationComponent";
-import Footer from "../../components/HomeComponent/Footer";
+import Footer from "../../components/HomeComponent/FooterComponent";
 import Settings from "./Settings";
 
 const Home = () => {
@@ -55,15 +55,12 @@ const Home = () => {
       default:
         return <MainBody />;
     }
-  };
-
-  console.log(selectedMenu,"SELL.");
-  
+  };  
 
   return (
     <>
-      <div className=" ">
-        <div className="fixed h-screen hidden sm:flex">
+      <div className="r">
+        <div className="fixed sm:z-10 h-screen hidden sm:flex">
           <Sidebar
             setSelectedMenu={setSelectedMenu}
             selectedMenu={selectedMenu}
