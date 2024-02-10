@@ -20,10 +20,12 @@ const MainBody = () => {
         <div className="lg:mt-5 lg:w-full lg:h-full flex overflow-y-hidden ">
           {/* post */}
           <div className="lg:w-3/4 lg:h-[600px]   overflow-y-auto scrollbar-hide flex items-center    flex-col">
-            <div className=" lg:mt-0 md:mt-0  ">
+            <div className=" lg:mt-0 md:mt-0    ">
 
             <PostScroll />
             <PostScroll />
+            <PostScroll />
+
 
            
 

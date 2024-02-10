@@ -9,6 +9,9 @@ import {
   ImagePlus,
   BellRing,
   Settings,
+  ImagePlusIcon,
+  Film,
+  Radio,
   Menu,
 } from "lucide-react";
 import { LogoutFunction } from "../../utils/api/methods/AuthService/post";
@@ -22,10 +25,28 @@ import { set } from "mongoose";
 
 const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
 
+
+  const [isOpen,setIsOpen]=useState(false)
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
   const isLaptop = useMediaQuery("(min-width: 1025px)");
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const modal = document.querySelector(".fixed") as HTMLElement;
+      if (modal && !modal.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen]);
 
 
 
@@ -34,7 +55,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
   // const [selectedMenu, setSelectedMenu]: any = useState(null);
   console.log(open,"open");
   
-  const HandleSidebarClick = (index: any) => {
+  const HandleSidebarClick:any = (index: any) => {
     setSelectedMenu(index);
   };
   const handleLogout=async (e:any)=>{
@@ -51,6 +72,17 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
     }
   }
 
+
+
+  const handleCreate=(e:any)=>{
+    e.preventDefault()
+     setIsOpen(!isOpen)
+  }
+
+  const handlePostClick=(e:any)=>{
+    e.preventDefault()
+
+  }
   // const showAndHideSidebar = () => {
   //   const bar = document.getElementById("bar") as HTMLInputElement;
   //   console.log(bar);
@@ -305,7 +337,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
          ${5 === 5 && "bg-light-white"} ${
               selectedMenu === 5 && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
-            onClick={() => HandleSidebarClick(5)}
+            onClick={(e) => handleCreate(e)}
           >
             <motion.div
               whileHover={{
@@ -337,6 +369,26 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
             
            
           </li>
+{isOpen && (
+ <div className="fixed w-52">
+ <div className= " bg-amber-50 w-full h-44 rounded-md flex flex-col justify-center  items-center border border-[#042F2C] p-1 ">
+   <div className="p-3 border w-full rounded-md flex justify-center" onClick={(e)=>handlePostClick(e)}>
+     <p className="text-center font-roboto text-lg  font-semibold text-[#042F2C]" >Post</p>
+     <div className="pl-4 pt-1"><ImagePlusIcon className="text-[#042F2C]"/></div>
+   </div>
+   <div className="p-3 border w-full rounded-md flex justify-center"> 
+   <p className="text-center font-roboto text-lg  font-semibold text-[#042F2C]">Live</p>
+   <div className="pl-4 pt-1"><Radio className="text-[#042F2C]"/></div>
+   </div> 
+   <div className="p-3 border w-full rounded-md flex justify-center"> 
+   <p className=" text-center font-roboto text-lg  font-semibold text-[#042F2C]" > Story</p>
+   <div className="pl-4 pt-1"><Film className="text-[#042F2C]"/></div>
+   </div> 
+ </div>
+</div>
+
+)}
+      
 
 
 {/* notification  */}

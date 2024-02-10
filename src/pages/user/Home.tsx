@@ -71,7 +71,9 @@ const Home = () => {
           />
         </div>
         <div className={`${selectedMenu == 7 ? "sm:ml-0 sm:flex":"sm:ml-60 sm:p-7 md:p-2 lg:ml-72 " }`}>
+            
           {renderMainComponent()}
+         
         </div>
       </div>
       <div className="fixed bottom-0 border-y border-teal-900 sm:hidden w-full flex justify-around items-center p-4 z-10 bg-white">
