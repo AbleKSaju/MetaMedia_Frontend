@@ -12,6 +12,10 @@ import Mods from "../pages/user/Mods";
 import ProtectedRoute from "./ProtectedRoute";
 import S from "../pages/user/S";
 
+import Settings from "../pages/user/Settings";
+import AddPostModal from "../components/HomeComponent/AddPostcomponent";
+import SizeSelectModal from "../components/HomeComponent/SizeSelectModal";
+
 const UserRouter = () => {
   return (
     <Routes>
@@ -25,6 +29,13 @@ const UserRouter = () => {
       <Route path="/addprofile" element={<AddProfile />} />
       <Route path="/selectMod" element={<Mods />} />
       <Route path="/s" element={<S />} />
+
+      <Route path="/post" element={<AddPostModal/>} />
+      <Route path="/size" element={<SizeSelectModal/>} />
+
+
+      {/* <Route path="/logout"/> */}
+
     </Routes>
   );
 };

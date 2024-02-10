@@ -23,6 +23,7 @@ const Home = () => {
   return (
     <>
 
+
         <AsideComponent sidebarOpen={sidebarOpen}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
@@ -35,6 +36,7 @@ const Home = () => {
           <Route path="/settings/*" element={<Settings setSidebarOpen={setSidebarOpen}/>} />
       {/* </Route> */}
     </Routes>
+
 
     </>
   );

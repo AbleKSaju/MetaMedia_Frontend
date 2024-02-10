@@ -5,8 +5,9 @@ const PostScroll = () => {
   return (
     <>
 
-      <div className=" md:p-5  sm:p-3 p-7 w-screen sm:w-full flex items-center  sm:pl-0   lg:p-4  ">
-        <div className="relative flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[464px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
+      <div className=" md:p-5  sm:p-3 p-7 w-screen sm:w-full flex justify-center  sm:pl-0   lg:p-4   ">
+        <div className=" flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[464px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
+
           <div className="flex p-2 sm:p-4 pl-5 md:p-3 sm:pl-5 ">
             <img
               className="lg:w-10 lg:h-10 font-roboto  rounded-full lg:ml-6 lg:mt-1 md:ml-3  md:border-2 border-amber-100 border-2  lg:border-2 w-10 h-10 md:w-12 md:h-12 "

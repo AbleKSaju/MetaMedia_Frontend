@@ -8,13 +8,68 @@ import {
   ImagePlus,
   BellRing,
   Settings,
+  ImagePlusIcon,
+  Film,
+  Radio,
+  Menu,
+
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+
+
+
+
+
+
+
+
+
+
 
 const Sidebar = ({ open}:any) => {
   const location = useLocation();
   // const activePath = "/path/to/target";
   console.log(location.pathname, "PATHNAME");
+
+
+  const [isOpen,setIsOpen]=useState(false)
+ 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const modal = document.querySelector(".fixed") as HTMLElement;
+      if (modal && !modal.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen]);
+
+
+
+
+
+  
+
+
+
+
+  const handleCreate=(e:any)=>{
+    e.preventDefault()
+     setIsOpen(!isOpen)
+  }
+
+  const handlePostClick=(e:any)=>{
+    e.preventDefault()
+
+  }
 
 
   return (
@@ -204,6 +259,9 @@ const Sidebar = ({ open}:any) => {
          ${5 === 5 && "bg-light-white"} ${
               location.pathname === "/create" && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
+
+            onClick={(e) => handleCreate(e)}
+
           >
             <motion.div
               whileHover={{
@@ -232,6 +290,26 @@ const Sidebar = ({ open}:any) => {
               )}
             </span>
           </li>
+{isOpen && (
+ <div className="fixed w-52">
+ <div className= " bg-amber-50 w-full h-44 rounded-md flex flex-col justify-center  items-center border border-[#042F2C] p-1 ">
+   <div className="p-3 border w-full rounded-md flex justify-center" onClick={(e)=>handlePostClick(e)}>
+     <p className="text-center font-roboto text-lg  font-semibold text-[#042F2C]" >Post</p>
+     <div className="pl-4 pt-1"><ImagePlusIcon className="text-[#042F2C]"/></div>
+   </div>
+   <div className="p-3 border w-full rounded-md flex justify-center"> 
+   <p className="text-center font-roboto text-lg  font-semibold text-[#042F2C]">Live</p>
+   <div className="pl-4 pt-1"><Radio className="text-[#042F2C]"/></div>
+   </div> 
+   <div className="p-3 border w-full rounded-md flex justify-center"> 
+   <p className=" text-center font-roboto text-lg  font-semibold text-[#042F2C]" > Story</p>
+   <div className="pl-4 pt-1"><Film className="text-[#042F2C]"/></div>
+   </div> 
+ </div>
+</div>
+
+)}
+      
 
           {/* notification  */}
           <li
