@@ -40,26 +40,28 @@ const Login = () => {
         console.log(response,"RESSS");
         
         if (
-          response?.data?.status &&
-          response?.data?.user?.interest?.length < 2 
-        ) {
-          const data: ResponseData = {
-            email: response.data.user.email,
-            name: response.data.user.name,
-            userId: response.data.user._id,
-            profile: response.data.user.profile,
-            isGoogle: response.data.user.isGoogle,
-            isFacebook: response.data.user.isFacebook,
-          };
-          console.log(data, "dataaa");
-          dispatch(clearUser());
-          dispatch(addUser(data));
-          dispatch(addToken(response.data.accesstoken))
-          if (data) {
-            toast.success(response?.data?.message);
-            Navigate("/chooseinterest");
-          }
-        } else if (response?.data?.status) {
+          response?.data?.status 
+          // &&
+        //   response?.data?.user?.interest?.length < 2 
+        // ) {
+        //   const data: ResponseData = {
+        //     email: response.data.user.email,
+        //     name: response.data.user.name,
+        //     userId: response.data.user._id,
+        //     profile: response.data.user.profile,
+        //     isGoogle: response.data.user.isGoogle,
+        //     isFacebook: response.data.user.isFacebook,
+        //   };
+        //   console.log(data, "dataaa");
+        //   dispatch(clearUser());
+        //   dispatch(addUser(data));
+        //   dispatch(addToken(response.data.accesstoken))
+        //   if (data) {
+        //     toast.success(response?.data?.message);
+        //     Navigate("/chooseinterest");
+        //   }
+        // } else if (response?.data?.status
+          ) {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
@@ -103,29 +105,31 @@ const Login = () => {
         console.log(response,'KKKKKK');
         
         if (
-          response?.data?.status &&
-          response?.data?.user?.interest?.length < 2 
+          response?.data?.status 
+        //   &&
+        //   response?.data?.user?.interest?.length < 2 
+        // ) {
+        //     console.log('ENter');
+            
+        //   const data: ResponseData = {
+        //     email: response.data.user.email,
+        //     name: response.data.user.name,
+        //     userId: response.data.user._id,
+        //     profile: response.data.user.profile,
+        //     isGoogle: response.data.user.isGoogle,
+        //     isFacebook: response.data.user.isFacebook,
+        //   };
+        //   console.log(data, "dataaa");
+        //   dispatch(clearUser());
+        //   dispatch(addUser(data));
+        //   dispatch(addToken(response.data.accesstoken))
+        //   if (data) {
+        //     toast.success(response?.data?.message);
+            
+        //     Navigate("/chooseinterest");
+        //   }
+        // } else if (response?.data?.status
         ) {
-            console.log('ENter');
-            
-          const data: ResponseData = {
-            email: response.data.user.email,
-            name: response.data.user.name,
-            userId: response.data.user._id,
-            profile: response.data.user.profile,
-            isGoogle: response.data.user.isGoogle,
-            isFacebook: response.data.user.isFacebook,
-          };
-          console.log(data, "dataaa");
-          dispatch(clearUser());
-          dispatch(addUser(data));
-          dispatch(addToken(response.data.accesstoken))
-          if (data) {
-            toast.success(response?.data?.message);
-            
-            Navigate("/chooseinterest");
-          }
-        } else if (response?.data?.status) {
           const data: ResponseData = {
             email: response.data.user.email,
             name: response.data.user.name,
@@ -181,15 +185,12 @@ const Login = () => {
       dispatch(addUser(data));
       dispatch(addToken(response.data.accesstoken))
       console.log(response,"RESPONSED");
-      toast.success(response?.data?.message);
-      if (
-        response?.data?.status &&
-        response?.data?.user?.interest?.length < 2 
-      ){
-        console.log("LOADING TO chooseinterest ");
-        Navigate("/chooseinterest");
-      }else{
+      if (response?.data?.status){
+        toast.success(response?.data?.message);
         Navigate("/");
+      }else{
+        toast.error(response?.data?.message);
+
       }
     }
   };

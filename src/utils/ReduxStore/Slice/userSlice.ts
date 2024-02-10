@@ -13,11 +13,18 @@ const userSlice=createSlice({
        clearUser:(state)=>{
            state.userData={}
        },
+       editUser:(state,action)=>{
+        console.log("Enter to ACTION");
+        console.log(state.userData,"ALREADy");
+        console.log(action,"actt");
+        
+        state.userData = {...state.userData,...action.payload}
+       },
        getUser:()=>{},
        updateUser:()=>{}
     }
 })
 
-export const {addUser,clearUser,getUser,updateUser} =userSlice.actions
+export const {addUser,clearUser,editUser,getUser,updateUser} =userSlice.actions
 
 export default userSlice.reducer;

@@ -10,78 +10,21 @@ import AddProfile from "../pages/user/AddProfile";
 import Home from "../pages/user/Home";
 import Mods from "../pages/user/Mods";
 import ProtectedRoute from "./ProtectedRoute";
-import ProtectedAuthRoute from "./ProtectedAuthRoute";
 import S from "../pages/user/S";
-import Settings from "../pages/user/Settings";
 
 const UserRouter = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          // <ProtectedAuthRoute>
-          <SignUp />
-          // </ProtectedAuthRoute>
-        }
-      />
+      <Route path="/*" element={<Home />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path="/verifyOtp" element={<VerifyOtp />} />
-
-      <Route
-        path="/forgotpassword"
-        element={
-          // <ProtectedAuthRoute>
-          <ForgotPassword />
-          // </ProtectedAuthRoute>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          // <ProtectedAuthRoute>
-          <Login />
-          // </ProtectedAuthRoute>
-        }
-      />
-      <Route
-        path="/chooseinterest"
-        element={
-          <ProtectedRoute>
-            <ChooseInterest />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/changepassword"
-        element={
-          // <ProtectedAuthRoute>
-          <ChangePassword />
-          // </ProtectedAuthRoute>
-        }
-      />
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/chooseinterest" element={<ChooseInterest />} />
+      <Route path="/changepassword" element={<ChangePassword />} />
       <Route path="/addprofile" element={<AddProfile />} />
-      <Route
-        path="/selectMod"
-        element={
-          // <ProtectedRoute>
-          <Mods />
-          // </ProtectedRoute>
-        }
-      />
-
-      {/* <Route path="/settings" element={<Settings />} /> */}
-
+      <Route path="/selectMod" element={<Mods />} />
       <Route path="/s" element={<S />} />
-
-      {/* <Route path="/logout"/> */}
     </Routes>
   );
 };

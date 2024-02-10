@@ -1,4 +1,8 @@
-const Post =()=>{
+import { SetSidebarOpenFunction } from "src/pages/user/Home"
+
+const Post: React.FC<SetSidebarOpenFunction> = ({setSidebarOpen}) => {
+
+    setSidebarOpen(true)
     return (
         <>
         
@@ -8,3 +12,4 @@ const Post =()=>{
 }
 
 export default Post
+

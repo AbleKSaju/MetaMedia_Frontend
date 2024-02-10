@@ -9,33 +9,24 @@ import {
   BellRing,
   Settings,
 } from "lucide-react";
-import useMediaQuery from "../../utils/costumHook/mediaqueri";
+import { Link, useLocation } from "react-router-dom";
 
+const Sidebar = ({ open}:any) => {
+  const location = useLocation();
+  // const activePath = "/path/to/target";
+  console.log(location.pathname, "PATHNAME");
 
-const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
-
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
-  const isLaptop = useMediaQuery("(min-width: 1025px)");
-
-  // const [selectedMenu, setSelectedMenu]: any = useState(null);
-  
-  const HandleSidebarClick = (index: any) => {
-    setSelectedMenu(index);
-  };
 
   return (
     <>
       <div
         className={` ${
           open ? "w-60" : "w-20 "
-
         } bg-[#07312E] h-screen p-5 z-30  rounded-tr-lg rounded-br-lg pt-8 relative duration-300 `}
-
       >
         {/* <Menu/> */}
         <svg
-        id="bar"
+          id="bar"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -43,7 +34,6 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
           stroke="currentColor"
           className={`absolute cursor-pointer -right-0 text-amber-50 top-9 w-7 mr-1 mt-[750px]
             ${!open && "rotate-180"}`}
-          // onClick={() => setOpen(!open)}
         >
           <path
             strokeLinecap="round"
@@ -60,7 +50,7 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
             }}
           >
             <img
-              src="./src/assets/meta-new.png"
+              src="../src/assets/meta-new.png"
               className={`cursor-pointer duration-700    ${
                 open && "rotate-[360deg] h-[120px] ml- rounded-full "
               }`}
@@ -68,303 +58,257 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
           </motion.div>
         </div>
         <ul className="pt-6">
-
-
-
-
-
-
           {/* home */}
-        <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
+          <Link
+            to="/"
+            className={`flex mt-5 rounded-md p-2 cursor-pointer  text-amber-50 text-xl font-sans font-semibold items-center gap-x-4 
          ${0 === 0 && "bg-light-white"} ${
-              selectedMenu === 0 && "bg-amber-50 rounded-xl text-[#042F2C] "
+          location.pathname === "/" && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
-            onClick={() => HandleSidebarClick(0)}
           >
             <motion.div
               whileHover={{
                 scale: 1.6,
-                
+
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                
+
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 0 ? (
+              {location.pathname === "/" ? (
                 <Home className="text-[#042F2C] " />
               ) : (
-                <Home  />
+                <Home />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 0 ? (
-              <div className="text-[#042F2C] ">  Home</div>
-               ) : (
-                <div >   Home</div>
-                )}
-           
+              {location.pathname === "/" ? (
+                <div className="text-[#042F2C] "> Home</div>
+              ) : (
+                <div> Home</div>
+              )}
             </span>
-          </li>
+          </Link>
 
+          {/* search  */}
 
-
-
-
-
-
-{/* search  */}
-
-          <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
+          <Link
+            to="/search"
+            className={`flex mt-5 rounded-md p-2 cursor-pointer  text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${1 === 1 && "bg-light-white"} ${
-              selectedMenu === 1 && "bg-amber-50 rounded-xl text-[#042F2C]"
+          location.pathname === "/search" && "bg-amber-50 rounded-xl text-[#042F2C]"
             }`}
-            onClick={() => HandleSidebarClick(1)}
           >
             <motion.div
               whileHover={{
                 scale: 1.6,
-                
+
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                
+
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 1 ? (
+              {location.pathname === "/search" ? (
                 <Search className="text-[#042F2C]" />
               ) : (
                 <Search />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 1 ? (
-              <div className="text-[#042F2C]">  Search</div>
-               ) : (
-                <div >   Search</div>
-                )}
-           
+              {location.pathname === "/search" ? (
+                <div className="text-[#042F2C]"> Search</div>
+              ) : (
+                <div> Search</div>
+              )}
             </span>
-            
-          </li>
+          </Link>
 
-
-
-
-
-{/* message  */}
+          {/* message  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer  text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${2 === 2 && "bg-light-white"} ${
-              selectedMenu === 2 && "bg-amber-50 rounded-xl text-[#042F2C] "
+              location.pathname === "/message" && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
-            onClick={() => HandleSidebarClick(2)}
           >
             <motion.div
               whileHover={{
                 scale: 1.6,
-                
+
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                
+
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 2 ? (
-                <LucideMessageSquareText className="text-[#042F2C]"
-                  
-                />
+              {location.pathname === "/message" ? (
+                <LucideMessageSquareText className="text-[#042F2C]" />
               ) : (
                 <LucideMessageSquareText />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 2 ? (
-              <div className="text-[#042F2C]">  Message</div>
-               ) : (
-                <div >   Message</div>
-                )}
-           
+              {location.pathname === "/message" ? (
+                <div className="text-[#042F2C]"> Message</div>
+              ) : (
+                <div> Message</div>
+              )}
             </span>
-            
           </li>
-
-
-
 
           {/* post  */}
 
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer  text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${3 === 3 && "bg-light-white"} ${
-              selectedMenu === 3 && "bg-amber-50 rounded-xl text-[#042F2C] "
+              location.pathname === "/post" && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
-            onClick={() => HandleSidebarClick(3)}
           >
             <motion.div
               whileHover={{
                 scale: 1.6,
-               
+
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-                
+
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 3 ? (
+              {location.pathname === "/post" ? (
                 <Clapperboard className="text-[#042F2C]" />
               ) : (
                 <Clapperboard />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 3 ? (
-              <div className="text-[#042F2C]">  Posts</div>
-               ) : (
-                <div >   Posts</div>
-                )}
-           
+              {location.pathname === "/post" ? (
+                <div className="text-[#042F2C]"> Posts</div>
+              ) : (
+                <div> Posts</div>
+              )}
             </span>
-            
           </li>
 
-
-
-{/* create  */}
+          {/* create  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer  text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${5 === 5 && "bg-light-white"} ${
-              selectedMenu === 5 && "bg-amber-50 rounded-xl text-[#042F2C] "
+              location.pathname === "/create" && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
-            onClick={() => HandleSidebarClick(5)}
           >
             <motion.div
               whileHover={{
                 scale: 1.6,
-                
+
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 1.7,
-                
+
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 5 ? (
-                <ImagePlus  className="text-[#042F2C]" />
+              {location.pathname === "/create" ? (
+                <ImagePlus className="text-[#042F2C]" />
               ) : (
                 <ImagePlus />
               )}
             </motion.div>
 
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 5 ? (
-              <div className="text-[#042F2C]">  Create</div>
-               ) : (
-                <div >   Create</div>
-                )}
-           
+              {location.pathname === "/create" ? (
+                <div className="text-[#042F2C]"> Create</div>
+              ) : (
+                <div> Create</div>
+              )}
             </span>
-            
-           
           </li>
 
-
-{/* notification  */}
+          {/* notification  */}
           <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-amber-50 hover:rounded-xl hover:text-[#042F2C] text-white text-xl font-sans font-semibold items-center gap-x-4
+            className={`flex mt-5 rounded-md p-2 cursor-pointer  text-white text-xl font-sans font-semibold items-center gap-x-4
          ${6 === 6 && "bg-light-white"} ${
-              selectedMenu === 6 && "bg-amber-50 rounded-xl text-[#042F2C] "
+              location.pathname === "/notification" && "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
-            onClick={() => HandleSidebarClick(6)}
           >
             <motion.div
               whileHover={{
                 scale: 1.6,
-                
+
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-               
+
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 6 ? (
-                <BellRing className="text-[#042F2C]"   />
+              {location.pathname === "/notification" ? (
+                <BellRing className="text-[#042F2C]" />
               ) : (
                 <BellRing />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 6 ? (
-              <div className="text-[#042F2C]">  Notification</div>
-               ) : (
-                <div >   Notification</div>
-                )}
-           
+              {location.pathname === "/notification" ? (
+                <div className="text-[#042F2C]"> Notification</div>
+              ) : (
+                <div> Notification</div>
+              )}
             </span>
-            
-           
           </li>
 
-
-{/* settings  */}
-          <li
-            className={`flex mt-5 rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+          {/* settings  */}
+          <Link
+            to="/settings"
+            className={`flex mt-5 rounded-md p-2 cursor-pointer text-white text-xl font-sans font-semibold items-center gap-x-4
          ${7 === 7 && "bg-light-white"} ${
-              selectedMenu === 7 && "bg-white rounded-xl text-black "
+              location.pathname === "/settings" && "bg-white rounded-xl text-black "
             }`}
-            onClick={() => HandleSidebarClick(7)}
           >
             <motion.div
               whileHover={{
                 scale: 1.6,
-                
+
                 transition: { ease: "easeInOut", duration: 0.9 },
               }}
               whileTap={{
                 scale: 0.8,
-               
+
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 7 ? (
-                <Settings className="text-black"   />
+              {location.pathname === "/settings" ? (
+                <Settings className="text-black" />
               ) : (
                 <Settings />
               )}
             </motion.div>
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 7 ? (
-              <div className="text-black">Settings</div>
-               ) : (
-                <div > Settings</div>
-                )}
-           
+              {location.pathname === "/settings" ? (
+                <div className="text-black">Settings</div>
+              ) : (
+                <div> Settings</div>
+              )}
             </span>
-            
-           
-          </li>
+          </Link>
 
-
-{/* profile  */}
-<li
-            className={`flex mt-5  rounded-md p-2 cursor-pointer hover:bg-white hover:rounded-xl hover:text-black text-white text-xl font-sans font-semibold items-center gap-x-4
+          {/* profile  */}
+          <Link
+            to="profile"
+            className={`flex mt-5  rounded-md p-2 cursor-pointer text-white text-xl font-sans font-semibold items-center gap-x-4
          ${4 === 4 && "bg-light-white"} ${
-              selectedMenu === 4 && "bg-white rounded-xl text-black "
+              location.pathname === "/profile" && "bg-white rounded-xl text-black "
             }`}
-            onClick={() => HandleSidebarClick(4)}
           >
             <motion.div
               whileHover={{
@@ -373,14 +317,14 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
               }}
               whileTap={{
                 scale: 1.7,
-                
+
                 transition: { ease: "easeInOut", duration: 0.9 },
                 borderRadius: "100%",
               }}
             >
-              {selectedMenu === 4 ? (
+              {location.pathname === "/profile" ? (
                 <img
-                  className= {`w-8 h-8 rounded-full text-black  `}
+                  className={`w-8 h-8 rounded-full text-black  `}
                   src="https://i.pinimg.com/564x/53/12/21/531221133b6028752e2a523b6d8cdc5d.jpg"
                 />
               ) : (
@@ -392,18 +336,13 @@ const   Sidebar = ({setSelectedMenu,selectedMenu,open}:any) => {
             </motion.div>
 
             <span className={`${!open && "hidden"} origin-left `}>
-            {selectedMenu === 4 ? (
-              <div className="text-black">  Profile</div>
-               ) : (
-                <div >   Profile</div>
-                )}
-           
+              {location.pathname === "/profile" ? (
+                <div className="text-black"> Profile</div>
+              ) : (
+                <div> Profile</div>
+              )}
             </span>
-            
-          </li>
-
-
-         
+          </Link>
         </ul>
       </div>
     </>

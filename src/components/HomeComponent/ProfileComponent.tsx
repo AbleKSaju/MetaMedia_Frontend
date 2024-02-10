@@ -1,44 +1,60 @@
 import { useState } from "react";
 import PostsComponent from "../SubHomeComponents/PostsComponent";
 import {Edit,X} from "lucide-react";
-import StoryCard from "./storycardComponent";
 import Highlight from "./HighlightComponent";
-import { boolean } from "zod";
-import { disable } from "debug";
 import { addHighlightFunction } from "../../utils/api/methods";
+import { SetSidebarOpenFunction } from "src/pages/user/Home";
+import { Link } from "react-router-dom";
 
-
-const Profile = () => {
+const Profile: React.FC<SetSidebarOpenFunction> = ({setSidebarOpen}) => {
+  console.log("I AM PROFILE");
+  
   const [highlightName, setHighlightName] = useState("");
   const [postComponent, setPostComponent] = useState(true);
   const [otherUser, setOtherUser] = useState(false);
   const [addHighlight, setAddHighlight] = useState(false);
   const [highlightData, setHighlightData] = useState(["aads", "asdasas"]);
+  setSidebarOpen(true)
 
   const addImage = () => {
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
     fileInput.click();
   };
 
-  const handleFileChange = async (e: any) => {
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    const data = {
-      name: highlightName,
-      file: formData,
-    };
-    try {
-      const response = await addHighlightFunction(data);
-      // dispatch(setCredentials({ ...res }));
-      console.log(response, "responseee");
-    } catch (err) {
-      console.log(err, "errorrr");
-      // toast.error(err?.data?.message || err.message);
-    }
+    const handleFileChange = async (e: any) => {
+      let data
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      if(highlightName){
+        data = {
+          name: highlightName,
+          file: formData,
+        };
+        const response = await addHighlightFunction(data);
+        console.log(response,"rrrr");
+        
+      }else{
+        data = {
+          file : formData
+        }
+        const response = await addHighlightFunction(data);
+        console.log(response,"resss");
+        
+
+      }
+ 
+    // try {
+    //   // dispatch(setCredentials({ ...res }));
+    //   console.log(response, "responseee");
+    // } catch (err) {
+    //   console.log(err, "errorrr");
+    //   // toast.error(err?.data?.message || err.message);
+    // }
   };
 
   return (
     <>
+     <div className="sm:ml-60 sm:p-7 md:p-2 lg:ml-72 ">
       <div className="p-4 lg:pt-10 lg:flex lg:justify-around">
         <div className="flex justify-center lg:justify-start">
           <div className=" w-32 lg:w-40 lg:h-40 h-32">
@@ -52,7 +68,9 @@ const Profile = () => {
                 kendalljenner
               </p>
               <p className="ml-3">
+                <Link to="/settings/editProfile">
                 <Edit />
+                </Link>
               </p>
             </div>
           </div>
@@ -200,6 +218,7 @@ const Profile = () => {
       <div className="lg:px-16">
         {postComponent && <PostsComponent />}
         {!postComponent && <PostsComponent />}
+      </div>
       </div>
 
     </>

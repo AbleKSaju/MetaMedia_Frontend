@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { UseFormSetValue, useForm } from "react-hook-form";
 import { ZodType, z } from "zod";
 
 
@@ -8,7 +8,7 @@ export type EditProfileFormData = {
     fullname: string;
     mobile: string;
     bio: string;
-    gender?: string;
+    gender: string;
 }
 
 
@@ -42,18 +42,32 @@ export const schema: ZodType<EditProfileFormData> = z.object({
     }),
   });
 
-export const useEditProfleValidate = () => {
+  export const useEditProfileValidate = (
+    initialValues: EditProfileFormData
+  ) => {
     const {
       register,
       handleSubmit,
       formState: { errors },
-    } = useForm<EditProfileFormData>({ resolver: zodResolver(schema) });
-    console.log("ooyaaa");
+      // setValue,
+    } = useForm<EditProfileFormData>({
+      resolver: zodResolver(schema),
+      defaultValues: initialValues,
+    });
+  
+    // const setFieldValue: UseFormSetValue<EditProfileFormData> = (
+    //   field: keyof EditProfileFormData,
+    //   value: string
+    // ) => {
+    //   const sanitizedValue = value ?? "";
+    //   setValue(field, sanitizedValue);
+    // };
     
     return {
       register,
       handleSubmit,
       errors,
+      // setFieldValue,
     };
   };
   

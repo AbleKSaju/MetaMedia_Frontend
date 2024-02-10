@@ -1,27 +1,35 @@
-import React from 'react'
-import {Home,LayoutGrid,LucideMessageSquareText,Search,User} from "lucide-react";
-
+import React from "react";
+import {
+  Home,
+  LayoutGrid,
+  LucideMessageSquareText,
+  Search,
+  User,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <>
-        <p className="">
+      <div className="fixed bottom-0 border-y border-teal-900 sm:hidden w-full flex justify-around items-center p-4 z-10 bg-white">
+        <Link to="/">
           <Home />
-        </p>
-        <p className="">
+        </Link>
+        <Link to="/search" className="">
           <Search />
-        </p>
-        <p className="">
+        </Link>
+        <Link to="/post" className="">
           <LayoutGrid />
-        </p>
-        <p className="">
+        </Link>
+        <Link to="/message" className="">
           <LucideMessageSquareText />
-        </p>
-        <p className="">
+        </Link>
+        <Link to="/profile" className="">
           <User />
-        </p>
+        </Link>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

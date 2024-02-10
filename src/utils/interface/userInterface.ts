@@ -12,9 +12,13 @@ export interface UserData {
 
     email?: string;
     name?: string; 
-    userId:mongoose.Schema.Types.ObjectId;
-    profile:string,
-    isGoogle:boolean,
-    isFacebook:boolean
+    userName?:string;
+    bio?:string
+    mobile?:string
+    gender?:string
+    userId?:mongoose.Schema.Types.ObjectId;
+    profile?:string,
+    isGoogle?:boolean,
+    isFacebook?:boolean
   }
 

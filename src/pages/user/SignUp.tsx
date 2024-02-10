@@ -30,14 +30,13 @@ const SignUp = () => {
   // const errorMessage: any = (error: any) => {
   //   console.log(error);
   // };
-  const { errors, handleSubmit, register } = useRegisterValidate();
 
+  const { errors, handleSubmit, register } = useRegisterValidate();
 
   // const SignInWithFacebook=()=>{
   //   const user:any=FacebookAuth()
   //   console.log("user :",user); 
   // }
-
 
     const SignInWithFacebook = async (e: any) => {
       e.preventDefault();
@@ -52,33 +51,32 @@ const SignUp = () => {
         if (data.user.email) {
           const response: any = await LoginWithFacebook(userData);
           console.log(response,"RESSSS");
-          console.log(response?.data?.user?.interest,"INN");
-          console.log(response?.data?.user?.interest.length,"LENN");
-          console.log(response?.data?.user?.interest?.length < 2);
           
           if (
-            response?.data?.status &&
-            response?.data?.user?.interest?.length < 2 
+            response?.data?.status 
+          //  &&
+          //   response?.data?.user?.interest?.length < 2 
+          // ) {
+          //   const data: ResponseData = {
+          //     email: response.data.user.email,
+          //   name: response.data.user.name,
+          //   userId: response.data.user._id,
+          //   profile: response.data.user.profile,
+          //   isGoogle: response.data.user.isGoogle,
+          //   isFacebook: response.data.user.isFacebook,
+          //   };
+          //   dispatch(clearUser());
+          //   dispatch(addUser(data));
+          //   const token=response.data.accesstoken.toString()
+          //   console.log(token,"TOK!!!!!");
+          //   dispatch(addToken(token))
+          //   if (data) {
+          //     toast.success(response?.data?.message);
+          //     console.log("Entering to chooseinterest");
+          //     Navigate("/chooseinterest");
+          //   }
+          // } else if (response?.data?.status
           ) {
-            const data: ResponseData = {
-              email: response.data.user.email,
-            name: response.data.user.name,
-            userId: response.data.user._id,
-            profile: response.data.user.profile,
-            isGoogle: response.data.user.isGoogle,
-            isFacebook: response.data.user.isFacebook,
-            };
-            dispatch(clearUser());
-            dispatch(addUser(data));
-            const token=response.data.accesstoken.toString()
-            console.log(token,"TOK!!!!!");
-            dispatch(addToken(token))
-            if (data) {
-              toast.success(response?.data?.message);
-              console.log("Entering to chooseinterest");
-              Navigate("/chooseinterest");
-            }
-          } else if (response?.data?.status) {
             const data: ResponseData = {
               email: response.data.user.email,
               name: response.data.user.name,
@@ -91,14 +89,10 @@ const SignUp = () => {
             dispatch(addUser(data));
             const token=response.data.accesstoken.toString()
             console.log(token,"TOK");
-            
             dispatch(addToken(token))
-    
             if (data) {
-              toast.success(response?.data?.message);
-              console.log("y is here");
-              
-              Navigate("/");
+              toast.success(response?.data?.message);              
+              Navigate("/chooseinterest");
             }
           } else {
             toast.error(response?.data?.message);
@@ -202,6 +196,7 @@ const SignUp = () => {
                 className="p-5 outline-noneborder  border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="abc"
                 type="text"
+                value="Able K Saju"
                 {...register("name")}
               />
               <p className="text-red-600 text-xs text-start">
@@ -216,6 +211,7 @@ const SignUp = () => {
                 className="p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="abc@gmai.com"
                 type="text"
+                value="ableksaju3@gmail.com"
                 {...register("email")}
               />
               <p className="text-red-600 text-xs text-start">
@@ -230,6 +226,7 @@ const SignUp = () => {
                 className=" p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="********"
                 type="text"
+                value="1234"
                 {...register("password")}
               />
               <p className="text-red-600 text-xs text-start">

@@ -33,7 +33,11 @@ const AddProfile = () => {
   // };
 
   const formSubmit = async (Data: AddProfileFormData) => {
+    console.log("SUBMIT");
+    
     const response: any = await AddProfileFunction({ ...Data });
+    console.log("getting response");
+    
     console.log(response, "ressseeee");
     if(response?.data?.status){
       toast.success(response.data.message)
