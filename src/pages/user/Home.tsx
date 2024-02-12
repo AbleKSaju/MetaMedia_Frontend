@@ -12,6 +12,7 @@ import Settings from "./Settings";
 import { Route, Routes } from "react-router-dom";
 import AsideComponent from "../../components/HomeComponent/AsideComponent";
 import { useSelector } from "react-redux";
+import StoryModal from "../../components/HomeComponent/CreateCOmponents/StoryModal";
 
 
 
@@ -20,12 +21,18 @@ export interface SetSidebarOpenFunction {
 }
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [addStory, setAddStory] = useState<boolean>(false);
+
+  console.log(addStory,"addStoryaddStoryaddStoryaddStory");
+  
  
   return (
     <>
 
 
-        <AsideComponent sidebarOpen={sidebarOpen}/>
+ {/* {addStory && <StoryModal setAddStory={setAddStory}/>} */}
+ {addStory && <StoryModal setAddStory={setAddStory}/>}
+        <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStory}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
           <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen}/>} />

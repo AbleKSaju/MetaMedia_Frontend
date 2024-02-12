@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = ({ open }: any) => {
+const Sidebar = ({ open,setAddStory }: any) => {
   const location = useLocation();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -49,6 +49,16 @@ const Sidebar = ({ open }: any) => {
   const handlePostClick = (e: any) => {
     e.preventDefault();
   };
+
+  const CreateNewMedia=(media:string)=>{
+    if(media=="Story"){
+      setAddStory(true)
+    }
+    console.log("ENTERED");
+    console.log(media);
+    
+
+  }
 
   return (
     <>
@@ -293,7 +303,9 @@ const Sidebar = ({ open }: any) => {
                     <Radio className="text-[#042F2C]" />
                   </div>
                 </div>
-                <div className="p-3 border w-full rounded-md flex justify-center">
+                <div className="p-3 border w-full rounded-md flex justify-center"
+                onClick={()=>CreateNewMedia("Story")}
+                >
                   <p className=" text-center font-roboto text-lg  font-semibold text-[#042F2C]">
                     {" "}
                     Story

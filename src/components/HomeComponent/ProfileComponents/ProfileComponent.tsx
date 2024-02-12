@@ -14,7 +14,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
 
   const [addHighlight, setAddHighlight] = useState(false);
   const [openFollowings,setOpenFollowings] = useState(false)
-  const [openFollowers,setOpenFollowers] = useState(true)
+  const [openFollowers,setOpenFollowers] = useState(false)
   const [postComponent, setPostComponent] = useState(false);
   const [otherUser, setOtherUser] = useState(false);
   const [highlightData, setHighlightData] = useState(["aads", "asdasas"]);

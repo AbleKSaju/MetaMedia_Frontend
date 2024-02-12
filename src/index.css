@@ -29,4 +29,21 @@ input[type=number] {
   display: none;
 }
 
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-0.9%);
+    animation-timing-function: cubic-bezier(0.8, 0, 4, 2);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
 
+.modal {
+    transition: opacity 0.25s ease;
+  }
+  body.modal-active {
+    overflow-x: hidden;
+    overflow-y: visible !important;
+  }
