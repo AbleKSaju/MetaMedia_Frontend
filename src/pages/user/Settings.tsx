@@ -10,7 +10,7 @@ const Settings: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
   setSidebarOpen(false);
   return (
     <>
-        <div className= "sm:ml-0 flex  sm:flex">
+        <div className= "sm:ml-0 flex sm:flex">
     <div className="flex w-[400px]  overflow-hidden ">
    
       <AsideComponent />

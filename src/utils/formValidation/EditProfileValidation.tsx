@@ -6,7 +6,7 @@ import { ZodType, z } from "zod";
 export type EditProfileFormData = {
     username: string;
     fullname: string;
-    mobile: string;
+    phoneNumber: string;
     bio: string;
     gender: string;
 }
@@ -31,7 +31,7 @@ export const schema: ZodType<EditProfileFormData> = z.object({
       .regex(/^[A-Za-z][A-Za-z\s]*$/, {
         message: "name must contain only alphabetic characters",
       }),
-    mobile: z.string().refine((value) => value.length === 10, {
+      phoneNumber: z.string().refine((value) => value.length === 10, {
       message: "number must have exactly 10 numbers",
     }),
     bio: z.string()  .min(1, {

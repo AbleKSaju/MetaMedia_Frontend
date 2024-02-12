@@ -1,7 +1,7 @@
 import axios from "axios";
 import { UserData } from "../../../interface/userInterface";
 
-import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,AddProfile_Api,ForgotPassword_Api,ChangePassword_Api,LoginWithFacebook_Api, ChooseInterest_Api, Logout_APi,RefreshToken_Api} from "../../endpoints/common";
+import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,ForgotPassword_Api,ChangePassword_Api,LoginWithFacebook_Api, Logout_APi,RefreshToken_Api, GetUserData_Api} from "../../endpoints/common";
 
 export const LoginFuntion = async (data: any) => {
   try {
@@ -10,6 +10,7 @@ export const LoginFuntion = async (data: any) => {
     return error;
   }
 };
+
 export const LogoutFunction = async ()=>{
   try {
     return axios.create({ withCredentials: true }).get(Logout_APi);
@@ -17,6 +18,7 @@ export const LogoutFunction = async ()=>{
     return error;
   }
 }
+
 export const SignUpFunction = async (data: any) => {
   try {
     return axios.create({ withCredentials: true }).post(SignUp_Api, data);
@@ -51,14 +53,7 @@ export const LoginWithFacebook = async (data: UserData) => {
   }
 };
 
-export const AddProfileFunction = async (data: any) => {
-  try {
-    return axios.create({ withCredentials: true }).post(AddProfile_Api, data);
-  } catch (error) {
-    console.log(error,"err");
-    
-  }
-};
+
 export const ForgotPasswordFunction = async (data: any) => {
   try {
     return axios.create({ withCredentials: true }).post(ForgotPassword_Api, data);
@@ -73,13 +68,12 @@ export const ChangePasswordFunction = async (data: any) => {
     console.log(error,"err");
   }
 };
-
-export const ChooseInterestFunction=(data:any)=>{
+export const GetUserDataFunction = async (data: any) => {
   try {
-    console.log(data,"dtaaa");
-    return axios.create({withCredentials:true}).post(ChooseInterest_Api, data)
+    return axios.create({ withCredentials: true }).post(GetUserData_Api, data);
   } catch (error) {
-    return error
+    console.log(error,"err");
   }
-}
+};
+
 

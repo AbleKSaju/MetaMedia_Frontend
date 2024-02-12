@@ -3,43 +3,39 @@ import {
   AddProfileFormData,
   useAddProfleValidate,
 } from "../../utils/formValidation/AddProfileFormData";
-import { AddProfileFunction } from "../../utils/api/methods/AuthService/post";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { AddProfileFunction } from "../../utils/api/methods";
+import { useDispatch, useSelector } from "react-redux";
+import { ResponseData } from "../../utils/interface/userInterface";
+import { editUser } from "../../utils/ReduxStore/Slice/userSlice";
 // import React from "react";
 
 const AddProfile = () => {
+  const userData=useSelector((state:any)=>state.persisted.user.userData)
   const Navigate=useNavigate()
-  console.log("ENter");
+  const dispatch=useDispatch()
 
   const { errors, handleSubmit, register } = useAddProfleValidate();
 
-  // const [dob, setDob] = useState("");
-
-  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   let inputValue = e.target.value.replace(/\D/g, "");
-  //   if (inputValue.length <= 2) {
-  //     setDob(inputValue);
-  //   } else if (inputValue.length <= 4) {
-  //     setDob(`${inputValue.slice(0, 2)}/${inputValue.slice(2)}`);
-  //   } else {
-  //     setDob(
-  //       `${inputValue.slice(0, 2)}/${inputValue.slice(2, 4)}/${inputValue.slice(
-  //         4,
-  //         8
-  //       )}`
-  //     );
-  //   }
-  // };
-
   const formSubmit = async (Data: AddProfileFormData) => {
-    console.log("SUBMIT");
     
     const response: any = await AddProfileFunction({ ...Data });
     console.log("getting response");
     
-    console.log(response, "ressseeee");
+    console.log(response.data.user, "ressseeee");
     if(response?.data?.status){
+      const data: ResponseData = {
+        gender: response?.data?.user?.gender,
+        phoneNumber: response?.data?.user?.phoneNumber,
+        interests: response?.data?.user?.interests,
+        dateOfBirth: response?.data?.user?.dateOfBirth,
+        userName: response?.data?.user?.userName,
+        bio: response?.data?.user?.bio,
+      };
+      console.log(data, "NEWDATA");
+
+      dispatch(editUser(data));
       toast.success(response.data.message)
       Navigate('/')
     }else{
@@ -61,7 +57,14 @@ const AddProfile = () => {
             <div className="col-span-3 md:col-span-10 row-span-2 flex justify-center col-start-5 row-start-2">
               <div className="w-20 h-20 md:w-32 md:h-32  mb-0 rounded-full overflow-hidden">
                 <img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAJ1BMVEX///8AAABZWVn4+Pi/v7+zs7OioqLp6emZmZlra2tdXV2oqKgeHh5SHkywAAABeUlEQVR4nO3dS66CQBRFURGUn/Mf78uLkZa2rEpxyrUGYO6OAcrGxcsFAAAAAAAAAPhR47RPY+sharoN/26tx6jnPjzdWw9Syzy8zK1HqWQ5CpfWo1SyHoVr61EquR6F19ajVKIwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvP1X7gdhVvrUd6Yl/X6pe1xFD62bz9sXQrvEt+H8ym6EX5rXfNWwb3+sXXLB+XezjC1TvlgKla4t075YC9W2P932P912P+99Aeehz9wpini3OfSEvr/baEwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvP1X9j/f6svR+HSepRK5qPwjDu8Rbw2wgtvYZ/Jc6+/6B792YzTPhV8EwIAAAAAAAAAkOUPN2oQMjDsn+EAAAAASUVORK5CYII="
+                       src={
+                        userData.profile.startsWith("https://graph.facebook.com/")
+                          ? `${userData.profile}`
+                          : userData.profile
+                            ? `http://localhost:3000/profile/${userData.profile}`
+                            : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                      }
+                  // src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAJ1BMVEX///8AAABZWVn4+Pi/v7+zs7OioqLp6emZmZlra2tdXV2oqKgeHh5SHkywAAABeUlEQVR4nO3dS66CQBRFURGUn/Mf78uLkZa2rEpxyrUGYO6OAcrGxcsFAAAAAAAAAPhR47RPY+sharoN/26tx6jnPjzdWw9Syzy8zK1HqWQ5CpfWo1SyHoVr61EquR6F19ajVKIwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvP1X7gdhVvrUd6Yl/X6pe1xFD62bz9sXQrvEt+H8ym6EX5rXfNWwb3+sXXLB+XezjC1TvlgKla4t075YC9W2P932P912P+99Aeehz9wpini3OfSEvr/baEwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvMpzKcwn8J8CvP1X9j/f6svR+HSepRK5qPwjDu8Rbw2wgtvYZ/Jc6+/6B792YzTPhV8EwIAAAAAAAAAkOUPN2oQMjDsn+EAAAAASUVORK5CYII="
                   alt="Your Image"
                   className="w-20 h-20 md:w-32 md:h-32  rounded-full overflow-hidden border-2 border-teal-950 inset-0"
                 />

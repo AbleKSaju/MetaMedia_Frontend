@@ -1,31 +1,59 @@
-import { LoginFuntion, LoginWithFacebook } from "../../utils/api/methods/AuthService/post";
+import {
+  GetUserDataFunction,
+  LoginFuntion,
+  LoginWithFacebook,
+} from "../../utils/api/methods/AuthService/post";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
-import { addToken } from '../../utils/ReduxStore/Slice/tokenSlice'
+import { addToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { LoginWithGoogle } from "../../utils/api/methods/AuthService/post";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import mongoose from "mongoose";
-import {LoginFormData,useValidate} from "../../utils/formValidation/LoginValidation";
+import {
+  LoginFormData,
+  useValidate,
+} from "../../utils/formValidation/LoginValidation";
 import { FacebookAuth, GoogleAuth } from "../../utils/firebase/firebase";
+import { Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import SaveUserDataInRedux from "../../helper/ReduxHelper/SaveUserInRedux";
 
-
-
+interface ResponseData {
+  email?: string;
+  name?: string;
+  userName?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  location?: string;
+  phoneNumber?: string;
+  interests?: string[];
+  bio?: string;
+  userId: mongoose.Schema.Types.ObjectId;
+  profile: string;
+  isGoogle: boolean;
+  isFacebook: boolean;
+}
 
 const Login = () => {
-    const userData = useSelector((state:any) => state.persisted.user.userData);
-    const token = useSelector((state:any) => state.persisted.token.token);
-    
-  console.log("user", userData);
-  console.log("token", token);
+  const userDataFromRedux = useSelector(
+    (state: any) => state.persisted.user.userData
+  );
+  const token = useSelector((state: any) => state.persisted.token.token);
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    console.log(userDataFromRedux, "userDataFromRedux");
+  }, [userDataFromRedux]);
 
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
-
   const SignInWithFacebook = async (e: any) => {
     e.preventDefault();
     await FacebookAuth().then(async (data: any) => {
+      console.log(data, "FBDATA");
+
       const userData = {
         profile: data.user.photoURL,
         email: data.user.email,
@@ -33,54 +61,79 @@ const Login = () => {
         isGoogle: false,
         isFacebook: true,
       };
-      console.log(userData,"UD");
-      
+
       if (data.user.email) {
         const response: any = await LoginWithFacebook(userData);
-        console.log(response,"RESSS");
-        
-        if (
-          response?.data?.status 
-          // &&
-        //   response?.data?.user?.interest?.length < 2 
-        // ) {
-        //   const data: ResponseData = {
-        //     email: response.data.user.email,
-        //     name: response.data.user.name,
-        //     userId: response.data.user._id,
-        //     profile: response.data.user.profile,
-        //     isGoogle: response.data.user.isGoogle,
-        //     isFacebook: response.data.user.isFacebook,
-        //   };
-        //   console.log(data, "dataaa");
-        //   dispatch(clearUser());
-        //   dispatch(addUser(data));
-        //   dispatch(addToken(response.data.accesstoken))
-        //   if (data) {
-        //     toast.success(response?.data?.message);
-        //     Navigate("/chooseinterest");
-        //   }
-        // } else if (response?.data?.status
-          ) {
+
+        if (response?.data?.status) {
+          console.log(response, "Ressssp");
+
+          // setTimeout(() => {
+          //   console.log("INNERsetTimeout");
+
+          //   SaveUserDataInRedux(response);
+          // }, 3000);
+
           const data: ResponseData = {
-            email: response.data.user.email,
-            name: response.data.user.name,
-            userId: response.data.user._id,
-            profile: response.data.user.profile,
-            isGoogle: response.data.user.isGoogle,
-            isFacebook: response.data.user.isFacebook,
+            email: response.data.user.email ?? "",
+            name: response.data.user.name ?? "",
+            userName: response.data.user.userName ?? "",
+            userId: response.data.user._id ?? "",
+            profile: response.data.user.profile ?? "",
+            isGoogle: response.data.user.isGoogle ?? "",
+            isFacebook: response.data.user.isFacebook ?? "",
+            dateOfBirth: response.data.user.dateOfBirth ?? "",
+            gender: response.data.user.gender ?? "",
+            location: response.data.user.location ?? "",
+            phoneNumber: response.data.user.phoneNumber ?? "",
+            interests: response.data.user.interests ?? [],
+            bio: response.data.user.bio ?? "",
           };
-          console.log(data, "dataaa");
+          console.log(data, "ussssssDATta??????????");
+
           dispatch(clearUser());
           dispatch(addUser(data));
-          dispatch(addToken(response.data.accesstoken))
-          if (data) {
+          dispatch(addToken(response.data.accesstoken));
+
+          if (response?.data?.newUser) {
+            console.log("IAMnewUSER");
+            toast.success(response?.data?.message);
+            Navigate("/chooseinterest");
+          } else {
+            const userEmail = { email: response?.data?.user?.email };
+            const userData: any = await GetUserDataFunction(userEmail);
+            // setTimeout(() => {
+            //   SaveUserDataInRedux(userData);
+            // }, 100);
+            const data: ResponseData = {
+              email: userData.data.user.email ?? "",
+              name: userData.data.user.name ?? "",
+              userName: userData.data.user.userName ?? "",
+              userId: userData.data.user._id ?? "",
+              profile: userData.data.user.profile ?? "",
+              isGoogle: userData.data.user.isGoogle ?? "",
+              isFacebook: userData.data.user.isFacebook ?? "",
+              dateOfBirth: userData.data.user.dateOfBirth ?? "",
+              gender: userData.data.user.gender ?? "",
+              location: userData.data.user.location ?? "",
+              phoneNumber: userData.data.user.phoneNumber ?? "",
+              interests: userData.data.user.interests ?? [],
+              bio: userData.data.user.bio ?? "",
+            };
+            console.log(data, "ussssssDATta??????????");
+  
+            dispatch(clearUser());
+            dispatch(addUser(data));
+            dispatch(addToken(response.data.accesstoken));
+  
+            // await SaveUserDataInRedux(userData)
+            console.log(userData, "USERDAETAILS");
+
             toast.success(response?.data?.message);
             Navigate("/");
           }
         } else {
           toast.error(response?.data?.message);
-
         }
       } else {
         toast.error("email not found");
@@ -88,8 +141,9 @@ const Login = () => {
     });
   };
 
+
   //-------------
-  const handleGoogle = async(e: any) => {
+  const handleGoogle = async (e: any) => {
     e.preventDefault();
     await GoogleAuth().then(async (data: any) => {
       const userData = {
@@ -102,33 +156,33 @@ const Login = () => {
 
       if (data.user.email) {
         const response: any = await LoginWithGoogle(userData);
-        console.log(response,'KKKKKK');
-        
+        console.log(response, "KKKKKK");
+
         if (
-          response?.data?.status 
-        //   &&
-        //   response?.data?.user?.interest?.length < 2 
-        // ) {
-        //     console.log('ENter');
-            
-        //   const data: ResponseData = {
-        //     email: response.data.user.email,
-        //     name: response.data.user.name,
-        //     userId: response.data.user._id,
-        //     profile: response.data.user.profile,
-        //     isGoogle: response.data.user.isGoogle,
-        //     isFacebook: response.data.user.isFacebook,
-        //   };
-        //   console.log(data, "dataaa");
-        //   dispatch(clearUser());
-        //   dispatch(addUser(data));
-        //   dispatch(addToken(response.data.accesstoken))
-        //   if (data) {
-        //     toast.success(response?.data?.message);
-            
-        //     Navigate("/chooseinterest");
-        //   }
-        // } else if (response?.data?.status
+          response?.data?.status
+          //   &&
+          //   response?.data?.user?.interest?.length < 2
+          // ) {
+          //     console.log('ENter');
+
+          //   const data: ResponseData = {
+          //     email: response.data.user.email,
+          //     name: response.data.user.name,
+          //     userId: response.data.user._id,
+          //     profile: response.data.user.profile,
+          //     isGoogle: response.data.user.isGoogle,
+          //     isFacebook: response.data.user.isFacebook,
+          //   };
+          //   console.log(data, "dataaa");
+          //   dispatch(clearUser());
+          //   dispatch(addUser(data));
+          //   dispatch(addToken(response.data.accesstoken))
+          //   if (data) {
+          //     toast.success(response?.data?.message);
+
+          //     Navigate("/chooseinterest");
+          //   }
+          // } else if (response?.data?.status
         ) {
           const data: ResponseData = {
             email: response.data.user.email,
@@ -141,7 +195,7 @@ const Login = () => {
           console.log(data, "dataaa");
           dispatch(clearUser());
           dispatch(addUser(data));
-          dispatch(addToken(response.data.accesstoken))
+          dispatch(addToken(response.data.accesstoken));
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/");
@@ -158,39 +212,29 @@ const Login = () => {
 
   const { errors, handleSubmit, register } = useValidate();
 
-  interface ResponseData {
-    email?: string;
-    name?: string;
-    userId: mongoose.Schema.Types.ObjectId;
-    profile: string;
-    isGoogle: boolean;
-    isFacebook: boolean;
-  }
-
   //form data set in
   const formsubmit = async (Data: LoginFormData) => {
     const response: any = await LoginFuntion({ ...Data });
-    if (response.data.status==false) {
+    if (response.data.status == false) {
       toast.error(response?.data?.message);
     } else {
       const data: ResponseData = {
         email: response.data.user.email,
-            name: response.data.user.name,
-            userId: response.data.user._id,
-            profile: response.data.user.profile,
-            isGoogle: response.data.user.isGoogle,
-            isFacebook: response.data.user.isFacebook,
+        name: response.data.user.name,
+        userId: response.data.user._id,
+        profile: response.data.user.profile,
+        isGoogle: response.data.user.isGoogle,
+        isFacebook: response.data.user.isFacebook,
       };
       dispatch(clearUser());
       dispatch(addUser(data));
-      dispatch(addToken(response.data.accesstoken))
-      console.log(response,"RESPONSED");
-      if (response?.data?.status){
+      dispatch(addToken(response.data.accesstoken));
+      console.log(response, "RESPONSED");
+      if (response?.data?.status) {
         toast.success(response?.data?.message);
         Navigate("/");
-      }else{
+      } else {
         toast.error(response?.data?.message);
-
       }
     }
   };
@@ -198,7 +242,6 @@ const Login = () => {
   return (
     <>
       <div className="relative flex justify-center md:items-center align-middle bg-gray-50 h-[100vh]">
-
         <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
           <form
             className="grid grid-cols-8 grid-rows-14 gap-3 text-center"
@@ -226,15 +269,28 @@ const Login = () => {
             </div>
 
             {/* password input */}
-            <div className="col-span-8 col-start-2 col-end-8 row-start-5 ">
+            <div className="col-span-8 col-start-2 col-end-8 row-start-5 relative ">
               <p className="text-start text-teal-800 font-light">Password</p>
               <input
                 className=" p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="********"
-                type="text"
+                type={showPassword ? "text" : "password"}
                 {...register("password")}
               />
-              <Link to="/forgotpassword" className="flex justify-end text-teal-800 hover:underline">forgotpassword?</Link>
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-0 mr-3 mt-2 text-teal-900 "
+              >
+                {showPassword ? <Eye /> : <EyeOff />}
+              </button>
+              <Link
+                to="/forgotpassword"
+                className="flex justify-end text-teal-800 hover:underline"
+              >
+                forgotpassword?
+              </Link>
               <p className="text-red-600 text-xs text-start">
                 {errors && errors.password && <p>{errors.password.message}</p>}
               </p>
@@ -242,7 +298,6 @@ const Login = () => {
 
             {/* submit */}
             <div className="col-span-2 lg:col-span-4 mt-4 col-start-3 lg:col-start-3 col-end-7 row-start-6">
-
               <button
                 type="submit"
                 className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md"

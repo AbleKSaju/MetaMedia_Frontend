@@ -1,9 +1,8 @@
-import {AddProfileFunction,ChangePasswordFunction,ChooseInterestFunction,ForgotPasswordFunction,LoginFuntion,LoginWithFacebook,LoginWithGoogle,LogoutFunction,SignUpFunction,verifyOtpFunction} from './AuthService/post'
+import {ChangePasswordFunction,ForgotPasswordFunction,LoginFuntion,LoginWithFacebook,LoginWithGoogle,LogoutFunction,SignUpFunction,verifyOtpFunction} from './AuthService/post'
+import {AddProfileFunction,ChooseInterestFunction,EditProfileFunction,addProfileImageFunction} from './UserService/post'
 import {addHighlightFunction} from './StoryService/post'
 export{
-    AddProfileFunction,
     ChangePasswordFunction,
-    ChooseInterestFunction,
     ForgotPasswordFunction,
     LoginFuntion,
     LoginWithFacebook,
@@ -11,5 +10,6 @@ export{
     LogoutFunction,
     SignUpFunction,
     verifyOtpFunction,
-    addHighlightFunction
+    addHighlightFunction,
+    AddProfileFunction,ChooseInterestFunction,EditProfileFunction,addProfileImageFunction
 }

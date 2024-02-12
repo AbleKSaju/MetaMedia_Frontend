@@ -8,16 +8,18 @@ const userSlice=createSlice({
     },
     reducers:{
         addUser:(state,action)=>{
+            console.log(action.payload,"PAYLOAD");
+            
             state.userData = {...state.userData,...action.payload}
        },
        clearUser:(state)=>{
            state.userData={}
        },
        editUser:(state,action)=>{
-        console.log("Enter to ACTION");
-        console.log(state.userData,"ALREADy");
-        console.log(action,"actt");
-        
+        state.userData = {...state.userData,...action.payload}
+       },
+       addProfileImage:(state,action)=>{
+        console.log(action,"ACTIONN");
         state.userData = {...state.userData,...action.payload}
        },
        getUser:()=>{},
@@ -25,6 +27,6 @@ const userSlice=createSlice({
     }
 })
 
-export const {addUser,clearUser,editUser,getUser,updateUser} =userSlice.actions
+export const {addUser,clearUser,editUser,getUser,updateUser,addProfileImage} =userSlice.actions
 
 export default userSlice.reducer;

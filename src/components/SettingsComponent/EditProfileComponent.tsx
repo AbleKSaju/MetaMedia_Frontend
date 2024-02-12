@@ -3,7 +3,7 @@ import {
   useEditProfileValidate,
   EditProfileFormData,
 } from "../../utils/formValidation/EditProfileValidation";
-import { EditProfileFunction } from "../../utils/api/methods/UserService/post";
+import { EditProfileFunction } from "../../utils/api/methods";
 import { useDispatch, useSelector } from "react-redux";
 import { ResponseData } from "../../utils/interface/userInterface";
 import { editUser } from "../../utils/ReduxStore/Slice/userSlice";
@@ -13,15 +13,12 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const Navigate=useNavigate()
   const userData = useSelector((state: any) => state.persisted.user.userData);
-
-  console.log(userData, "UDATA");
-
   const { errors, handleSubmit, register } = useEditProfileValidate({
-    fullname: userData.name,
-    username: userData.userName ?? "",
-    mobile: userData.mobile ?? "",
-    bio: userData.bio ?? "",
-    gender: userData.gender ?? "",
+    fullname: userData?.name,
+    username: userData?.userName ?? "",
+    phoneNumber: userData?.phoneNumber ?? "",
+    bio: userData?.bio ?? "",
+    gender: userData?.gender ?? "",
   });
 
   // Inside your component function
@@ -33,11 +30,11 @@ const EditProfile = () => {
       console.log(response.data.user, "usssss");
 
       const data: ResponseData = {
-        gender: response.data.user.gender,
-        mobile: response.data.user.phoneNumber,
-        name: response.data.user.fullName,
-        userName: response.data.user.userName,
-        bio: response.data.user.bio,
+        gender: response?.data?.user?.gender,
+        phoneNumber: response?.data?.user?.phoneNumber,
+        name: response?.data?.user?.fullName,
+        userName: response?.data?.user?.userName,
+        bio: response?.data?.user?.bio,
       };
       console.log(data, "NEWDATA");
 
@@ -88,17 +85,17 @@ const EditProfile = () => {
           </div>
           <div className="lg:flex lg:gap-x-20">
             <div className="mt-5 lg:mt-14 flex flex-col">
-              <label htmlFor="mobile" className="mb-1 lg:mb-2 text-teal-900">
+              <label htmlFor="phoneNumber" className="mb-1 lg:mb-2 text-teal-900">
                 mobile
               </label>
               <input
-                id="mobile"
+                id="phoneNumber"
                 className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-teal-900 rounded-lg focus:border-2 px-2"
                 type="text"
-                {...register("mobile")}
+                {...register("phoneNumber")}
               />
               <p className="text-red-600">
-                {errors && errors.mobile && <p>{errors.mobile.message}</p>}
+                {errors && errors.phoneNumber && <p>{errors.phoneNumber.message}</p>}
               </p>
             </div>
             <div className="mt-5 lg:mt-14 flex flex-col">

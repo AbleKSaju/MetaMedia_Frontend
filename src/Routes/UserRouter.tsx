@@ -29,7 +29,6 @@ const UserRouter = () => {
       <Route path="/addprofile" element={<AddProfile />} />
       <Route path="/selectMod" element={<Mods />} />
       <Route path="/s" element={<S />} />
-
       <Route path="/post" element={<AddPostModal/>} />
       <Route path="/size" element={<SizeSelectModal/>} />
 

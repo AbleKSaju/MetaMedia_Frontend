@@ -5,8 +5,12 @@ import {
 import { ChangePasswordFunction } from "../../utils/api/methods/AuthService/post";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 const ChangePassword = () => {
+  const [showPassword,setShowPassword]=useState(false)
+  const [showConfirmPassword,setConfirmShowPassword]=useState(false)
   const Navigate = useNavigate();
   const { errors, handleSubmit, register } = useChangePasswordValidation();
   const formSubmit = async (Data: ChangePasswordFormData) => {
@@ -31,28 +35,34 @@ const ChangePassword = () => {
               Change Password
             </h1>
           </div>
-          <div className="col-span-8 col-start-2 col-end-8 row-start-5">
+          <div className="col-span-8 col-start-2 col-end-8 row-start-5 relative">
             <p className="text-start text-teal-800 font-light">new password</p>
             <input
               className="p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
               placeholder="abc@gmai.com"
-              type="text"
-              {...register("password")}
-            />
+
+                 type={showPassword ? "text" : "password"}
+                {...register("password")}
+              />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-0 mr-3 mt-2 text-teal-900">{showPassword ? <Eye /> : <EyeOff />}</button>
+
+
             <p className="text-red-600 text-xs text-start">
               {errors && errors.password && <p>{errors.password.message}</p>}
             </p>
           </div>
-          <div className="col-span-8 col-start-2 col-end-8 row-start-6 ">
+          <div className="col-span-8 col-start-2 col-end-8 row-start-6 relative ">
             <p className="text-start text-teal-800 font-light">
               confirm password
             </p>
             <input
               className=" p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
               placeholder="********"
-              type="text"
-              {...register("confirmpassword")}
-            />
+                type={showConfirmPassword ? "text" : "password"}
+                {...register("password")}
+              />
+              <button type="button" onClick={() => setConfirmShowPassword(!showConfirmPassword)} className="absolute right-0 mr-3 mt-2 text-teal-900">{showConfirmPassword ? <Eye /> : <EyeOff />}</button>
+
             <p className="text-red-600 text-xs text-start">
               {errors && errors.confirmpassword && (
                 <p>{errors.confirmpassword.message}</p>

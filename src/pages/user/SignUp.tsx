@@ -14,11 +14,14 @@ import {
   SignUpFunction,
 } from "../../utils/api/methods/AuthService/post";
 import { ResponseData } from "src/utils/interface/userInterface";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 
 const SignUp = () => {
   const userData=useSelector((state:any)=>state.persisted.user.userData)
-  console.log(userData,"USERRRRDDAAATTAAA");
+  
+  const [showPassword,setShowPassword]=useState(false)
   
   const dispatch = useDispatch()
   const Navigate = useNavigate();
@@ -220,22 +223,24 @@ const SignUp = () => {
             </div>
 
             {/* password input */}
-            <div className="col-span-8 col-start-2 col-end-8 row-start-5 ">
+            <div className="col-span-8 col-start-2 col-end-8 row-start-5 relative">
               <p className="text-start text-teal-800 font-light">Password</p>
               <input
                 className=" p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="********"
-                type="text"
                 value="1234"
+                type={showPassword ? "text" : "password"}
                 {...register("password")}
               />
+           
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-0 mr-3 mt-2 text-teal-900">{showPassword ? <Eye /> : <EyeOff />}</button>
               <p className="text-red-600 text-xs text-start">
                 {errors && errors.password && <p>{errors.password.message}</p>}
               </p>
             </div>
 
             {/* submit */}
-            <div className="col-span-8 col-start-2 col-end-8 row-start-6">
+            <div className="col-span-8 col-start-3 col-end-7 row-start-6">
               <button
                 type="submit"
                 className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md"

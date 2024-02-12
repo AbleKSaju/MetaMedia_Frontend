@@ -14,8 +14,11 @@ export interface UserData {
     name?: string; 
     userName?:string;
     bio?:string
-    mobile?:string
-    gender?:string
+    phoneNumber?:string;
+    interests?: string[]; 
+    gender?:string;
+    dateOfBirth?:string;
+    location?:string;
     userId?:mongoose.Schema.Types.ObjectId;
     profile?:string,
     isGoogle?:boolean,

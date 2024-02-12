@@ -1,13 +1,16 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { LogoutFunction } from "../../utils/api/methods";
+import { addProfileImageFunction } from "../../utils/api/methods/UserService/post";
+import { addProfileImage } from "../../utils/ReduxStore/Slice/userSlice";
 
 const Aside = () => {
   const location = useLocation();
-  console.log(location.pathname, "PATHNAME");
+  const userData = useSelector((state: any) => state.persisted.user.userData);
+
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
@@ -18,7 +21,6 @@ const Aside = () => {
     if (response?.data?.status) {
       dispatch(clearToken());
       toast.success(response?.data?.message);
-      console.log("navigate to login");
       Navigate("/login");
     } else {
       toast.error("Logout error");
@@ -31,15 +33,28 @@ const Aside = () => {
   };
 
   const handleFileChange = async (e: any) => {
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-       const data:any = {
-        file: formData,
-       }
-      // const response = await addProfileImageFunction(data);
-      // console.log(response,"rrrr");
-    }
+    try {
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      const response = await addProfileImageFunction(formData);
+      console.log(response, "RRRSSSSS");
 
+      if (response?.status) {
+        const data = {
+          profile: response?.data?.profile?.profileUrl,
+        };
+        console.log(data, "PROFILEURLK");
+
+        dispatch(addProfileImage(data));
+        toast.success(response?.message);
+        Navigate("/profile");
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
   return (
     <div className="sm:w-96 lg:w-[400px]">
       <div className="sm:ml-0 sm:flex">
@@ -49,19 +64,25 @@ const Aside = () => {
               <div className="w-[100vw] sm:w-64 lg:w-[400px] sm:mt-3 ">
                 <div className="flex justify-center">
                   <img
-                  onClick={addImage}
-
-                    className="w-24 h-24 md:w-32 md:h-32 rounded-full mt-5"
-                    src="https://media.istockphoto.com/id/1146517111/photo/taj-mahal-mausoleum-in-agra.jpg?s=612x612&w=0&k=20&c=vcIjhwUrNyjoKbGbAQ5sOcEzDUgOfCsm9ySmJ8gNeRk="
-                    alt="DP"
+                    onClick={addImage}
+                    className="w-24 h-24 md:w-32 md:h-32 border border-teal-900 rounded-full mt-5"
+                    src={
+                      userData.profile.startsWith("https://graph.facebook.com/")
+                        ? `${userData.profile}`
+                        : userData.profile
+                          ? `http://localhost:3000/profile/${userData.profile}`
+                          : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                    }
+                    alt="Profile Picture"
                   />
-                   <input
-                type="file"
-                name="file"
-                id="fileInput"
-                onChange={handleFileChange}
-                hidden
-              />
+
+                  <input
+                    type="file"
+                    name="file"
+                    id="fileInput"
+                    onChange={handleFileChange}
+                    hidden
+                  />
                 </div>
                 <p className="text-center font-bold text-lg mt-8">Alia Bhatt</p>
                 <p className="text-center mt-3">
@@ -78,7 +99,7 @@ const Aside = () => {
                   <Link
                     to="/settings/editProfile"
                     className={`${
-                      location.pathname === '/settings/editProfile'
+                      location.pathname === "/settings/editProfile"
                         ? "bg-amber-100 rounded-xl text-[#042F2C] font-bold border-b border-teal-900"
                         : "border-white border-b-4"
                     } col-span-12 row-span-2 col-start-1 row-start-1 w-full py-2 md:py-2.5 sm:px-2 mt-1 `}
@@ -88,7 +109,7 @@ const Aside = () => {
                   <Link
                     to="/settings/activity"
                     className={`${
-                      location.pathname =='/settings/activity'
+                      location.pathname == "/settings/activity"
                         ? "bg-amber-100 rounded-xl text-[#042F2C] font-bold border-b border-teal-900"
                         : "border-white border-b-4"
                     } col-span-12 row-span-2 col-start-1 row-start-3 w-full  py-2 md:py-2.5 sm:px-2 mt-1`}
@@ -98,7 +119,7 @@ const Aside = () => {
                   <Link
                     to="/settings/security"
                     className={`${
-                      location.pathname =='/settings/security'
+                      location.pathname == "/settings/security"
                         ? "bg-amber-100 rounded-xl text-[#042F2C] font-bold border-b border-teal-900"
                         : "border-white border-b-4"
                     } col-span-12 row-span-2 col-start-1 row-start-5 w-full py-2 md:py-2.5 sm:px-2 mt-1 `}
@@ -108,7 +129,8 @@ const Aside = () => {
                   <Link
                     to="/settings/notification"
                     className={`${
-                      location.pathname === '/settings/notification'                       ? "bg-amber-100 rounded-xl text-[#042F2C] font-bold border-b border-teal-900"
+                      location.pathname === "/settings/notification"
+                        ? "bg-amber-100 rounded-xl text-[#042F2C] font-bold border-b border-teal-900"
                         : "border-white border-b-4"
                     } col-span-12 row-span-2 col-start-1 row-start-7 w-full py-2 md:py-2.5 sm:px-2 mt-1 `}
                   >
@@ -117,7 +139,7 @@ const Aside = () => {
                   <Link
                     to="/settings/contactUs"
                     className={`${
-                      location.pathname =='/settings/contactUs'
+                      location.pathname == "/settings/contactUs"
                         ? "bg-amber-100 rounded-xl text-[#042F2C] font-bold border-b border-teal-900"
                         : "border-white border-b-4"
                     } col-span-12 row-span-2 col-start-1 row-start-9 w-full py-2 md:py-2.5 sm:px-2 mt-1 `}
@@ -127,9 +149,7 @@ const Aside = () => {
                   {/* <div  className={`${location.pathname === 5 ? "bg-amber-100 rounded-xl text-[#042F2C] font-bold border-b border-teal-900":"border-white border-b-4" } col-span-12 row-span-2 col-start-1 row-start-11 w-full py-2 md:py-2.5 sm:px-2 mt-1`}> */}
                   <div
                     onClick={handleLogout}
-                    className={`${
-                        "border-white border-b-4"
-                    } col-span-12 row-span-2 col-start-1 row-start-11 w-full py-2 md:py-2.5 sm:px-2 mt-1`}
+                    className={`${"border-white border-b-4"} col-span-12 row-span-2 col-start-1 row-start-11 w-full py-2 md:py-2.5 sm:px-2 mt-1`}
                   >
                     Logout
                   </div>

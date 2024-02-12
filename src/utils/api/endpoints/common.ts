@@ -9,16 +9,17 @@ export const SignUp_Api = `${AUTH_URL}/signup`
 export const VerifyOtp_Api = `${AUTH_URL}/verifyOtp`
 export const LoginWithGoogle_Api=`${AUTH_URL}/loginWithGoogle`
 export const LoginWithFacebook_Api=`${AUTH_URL}/loginWithFaceBook`
-export const ChooseInterest_Api=`${USER_URL}/chooseInterest`
 export const ForgotPassword_Api=`${AUTH_URL}/forgotPassword`
 export const ChangePassword_Api=`${AUTH_URL}/changePassword`
 export const RefreshToken_Api=`${AUTH_URL}/refresh`
 
 // USER SERVICE
 
+export const GetUserData_Api=`${USER_URL}/getUserData`
+export const ChooseInterest_Api=`${USER_URL}/chooseInterest`
 export const AddProfile_Api=`${USER_URL}/addProfile`
 export const EditProfile_Api=`${USER_URL}/editProfile`
-
+export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
 
 // STORY SERVICE
 
