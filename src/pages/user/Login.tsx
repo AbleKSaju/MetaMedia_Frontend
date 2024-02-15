@@ -52,8 +52,6 @@ const Login = () => {
   const SignInWithFacebook = async (e: any) => {
     e.preventDefault();
     await FacebookAuth().then(async (data: any) => {
-      console.log(data, "FBDATA");
-
       const userData = {
         profile: data.user.photoURL,
         email: data.user.email,
@@ -67,13 +65,9 @@ const Login = () => {
 
         if (response?.data?.status) {
           console.log(response, "Ressssp");
-
           // setTimeout(() => {
-          //   console.log("INNERsetTimeout");
-
           //   SaveUserDataInRedux(response);
           // }, 3000);
-
           const data: ResponseData = {
             email: response.data.user.email ?? "",
             name: response.data.user.name ?? "",
@@ -157,49 +151,69 @@ const Login = () => {
       if (data.user.email) {
         const response: any = await LoginWithGoogle(userData);
         console.log(response, "KKKKKK");
+          if (response?.data?.status) {
+            console.log(response, "Ressssp");
+            // setTimeout(() => {
+            //   SaveUserDataInRedux(response);
+            // }, 3000);
+            const data: ResponseData = {
+              email: response.data.user.email ?? "",
+              name: response.data.user.name ?? "",
+              userName: response.data.user.userName ?? "",
+              userId: response.data.user._id ?? "",
+              profile: response.data.user.profile ?? "",
+              isGoogle: response.data.user.isGoogle ?? "",
+              isFacebook: response.data.user.isFacebook ?? "",
+              dateOfBirth: response.data.user.dateOfBirth ?? "",
+              gender: response.data.user.gender ?? "",
+              location: response.data.user.location ?? "",
+              phoneNumber: response.data.user.phoneNumber ?? "",
+              interests: response.data.user.interests ?? [],
+              bio: response.data.user.bio ?? "",
+            };
+            console.log(data, "ussssssDATta??????????");
 
-        if (
-          response?.data?.status
-          //   &&
-          //   response?.data?.user?.interest?.length < 2
-          // ) {
-          //     console.log('ENter');
+            dispatch(clearUser());
+            dispatch(addUser(data));
+            dispatch(addToken(response.data.accesstoken));
 
-          //   const data: ResponseData = {
-          //     email: response.data.user.email,
-          //     name: response.data.user.name,
-          //     userId: response.data.user._id,
-          //     profile: response.data.user.profile,
-          //     isGoogle: response.data.user.isGoogle,
-          //     isFacebook: response.data.user.isFacebook,
-          //   };
-          //   console.log(data, "dataaa");
-          //   dispatch(clearUser());
-          //   dispatch(addUser(data));
-          //   dispatch(addToken(response.data.accesstoken))
-          //   if (data) {
-          //     toast.success(response?.data?.message);
-
-          //     Navigate("/chooseinterest");
-          //   }
-          // } else if (response?.data?.status
-        ) {
-          const data: ResponseData = {
-            email: response.data.user.email,
-            name: response.data.user.name,
-            userId: response.data.user._id,
-            profile: response.data.user.profile,
-            isGoogle: response.data.user.isGoogle,
-            isFacebook: response.data.user.isFacebook,
-          };
-          console.log(data, "dataaa");
-          dispatch(clearUser());
-          dispatch(addUser(data));
-          dispatch(addToken(response.data.accesstoken));
-          if (data) {
-            toast.success(response?.data?.message);
-            Navigate("/");
-          }
+            if (response?.data?.newUser) {
+              console.log("IAMnewUSER");
+              toast.success(response?.data?.message);
+              Navigate("/chooseinterest");
+            } else {
+              const userEmail = { email: response?.data?.user?.email };
+              const userData: any = await GetUserDataFunction(userEmail);
+              // setTimeout(() => {
+              //   SaveUserDataInRedux(userData);
+              // }, 100);
+              const data: ResponseData = {
+                email: userData.data.user.email ?? "",
+                name: userData.data.user.name ?? "",
+                userName: userData.data.user.userName ?? "",
+                userId: userData.data.user._id ?? "",
+                profile: userData.data.user.profile ?? "",
+                isGoogle: userData.data.user.isGoogle ?? "",
+                isFacebook: userData.data.user.isFacebook ?? "",
+                dateOfBirth: userData.data.user.dateOfBirth ?? "",
+                gender: userData.data.user.gender ?? "",
+                location: userData.data.user.location ?? "",
+                phoneNumber: userData.data.user.phoneNumber ?? "",
+                interests: userData.data.user.interests ?? [],
+                bio: userData.data.user.bio ?? "",
+              };
+              console.log(data, "ussssssDATta??????????");
+    
+              dispatch(clearUser());
+              dispatch(addUser(data));
+              dispatch(addToken(response.data.accesstoken));
+    
+              // await SaveUserDataInRedux(userData)
+              console.log(userData, "USERDAETAILS");
+  
+              toast.success(response?.data?.message);
+              Navigate("/");
+            }  
         } else {
           toast.error(response?.data?.message);
         }
@@ -219,17 +233,23 @@ const Login = () => {
       toast.error(response?.data?.message);
     } else {
       const data: ResponseData = {
-        email: response.data.user.email,
-        name: response.data.user.name,
-        userId: response.data.user._id,
-        profile: response.data.user.profile,
-        isGoogle: response.data.user.isGoogle,
-        isFacebook: response.data.user.isFacebook,
+        email: response.data.user.email ?? "",
+        name: response.data.user.name ?? "",
+        userName: response.data.user.userName ?? "",
+        userId: response.data.user._id ?? "",
+        profile: response.data.user.profile ?? "",
+        isGoogle: response.data.user.isGoogle ?? "",
+        isFacebook: response.data.user.isFacebook ?? "",
+        dateOfBirth: response.data.user.dateOfBirth ?? "",
+        gender: response.data.user.gender ?? "",
+        location: response.data.user.location ?? "",
+        phoneNumber: response.data.user.phoneNumber ?? "",
+        interests: response.data.user.interests ?? [],
+        bio: response.data.user.bio ?? "",
       };
       dispatch(clearUser());
       dispatch(addUser(data));
       dispatch(addToken(response.data.accesstoken));
-      console.log(response, "RESPONSED");
       if (response?.data?.status) {
         toast.success(response?.data?.message);
         Navigate("/");

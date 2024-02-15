@@ -1,27 +1,63 @@
-import { ImagePlus, X } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
+import ChooseImageComponent from "./ChooseImageComponent";
+import { ArrowLeft, X } from "lucide-react";
+import CropImageComponent from "./CropImageComponent";
+import CreateStoryComponent from "./CreateStoryComponent";
+import { toast } from "sonner";
+import { AddStoryFunction } from "../../../utils/api/methods";
+import { useNavigate } from "react-router-dom";
+
 
 const StoryModal = ({ setAddStory }: any) => {
+  const [caption, setCaption] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      setSelectedFile(files[0]);
+  const [cropImage,setCropImage] = useState(false)
+  const [imageUrl, setImageUrl] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const Navigate=useNavigate()
+  
+  function base64StringToFormDataImageFile(croppedImage:any, fileName:any, fileType:any) {
+    croppedImage = croppedImage.replace(/^data:image\/\w+;base64,/, "");
+    const byteCharacters = atob(croppedImage);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
-  };
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: fileType });
+    const formData = new FormData();
+    formData.append("image", blob, fileName);
+    return formData;
+}
+  
+  // Example usage:
+  // const base64String = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUWFRgVFRYZGRgZHBgYGBwYGhgYGBoYGBgaGhoZGBgcIS4lHB4rIRgYJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHBISGjQh...3000 more characters";
+  
+  const submitHandler=async()=>{
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
+    if(caption && croppedImage){
+      const fileName = "image.jpg";
+      const fileType = "image/jpeg";
+      const formData = base64StringToFormDataImageFile(croppedImage, fileName, fileType);
+      const response: any = await AddStoryFunction({ image: formData, caption: caption });
+      console.log(response,"resssssssss");
+      if(response?.data?.status){
+        setCropImage(false)
+        setCroppedImage(null)
+        setImageUrl(null)
+        setSelectedFile(null)
+        setAddStory(false)
+        Navigate('/')
+        toast.success(response.data.message)
+      }else{
+        toast.error(response.data.message)
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const files = event.dataTransfer.files;
-    if (files && files.length > 0) {
-      setSelectedFile(files[0]);
+      }
+      
+    }else{
+      toast.error("Content not found")
     }
-  };
+  }
   return (
 <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-20">
   <div className="flex justify-center w-full h-full bg-transparent ">
@@ -29,95 +65,19 @@ const StoryModal = ({ setAddStory }: any) => {
     <div className="flex-col w-full  ">
           <div className="w-full  p-4 flex justify-center sm:border-b sm:border-b-teal-900   ">
             <div className="w-full h-full">
-             {!selectedFile && <X
-                className="text-teal-900 absolute right-5 "
-                onClick={() => setAddStory(false)}
-              />}
-              <p className="text-center mb-5 sm:mb-20 md:mb-0 font-sans font-bold sm:font-semibold text-[#042F2C] text-md sm:text-lg">
-                Create new story
-              </p>
+              {cropImage && <ArrowLeft size={30} onClick={()=>{setCropImage(false);setCroppedImage(null);}} className="absolute text-teal-900"/>}
+              {cropImage && !selectedFile && <p onClick={()=>setCropImage(true)} className= "text-teal-900 absolute right-5 font-bold">Next</p> }
+              { caption && croppedImage && <p onClick={submitHandler} className= "text-teal-900 absolute right-5 font-bold">Post</p> }
+              {!selectedFile ? <X onClick={() => setAddStory(false)} className="text-teal-900 absolute right-5"/>: <p onClick={()=>setCropImage(true)} className={`${cropImage?"hidden":" text-teal-900 absolute right-5 font-bold"}`}>Next</p> }
+                <p className="text-center mb-5 sm:mb-20 md:mb-0 font-sans font-bold sm:font-semibold text-[#042F2C] text-md sm:text-lg">
+                  Create new story
+                </p>
             </div>
           </div>
-          <div className="flex justify-center h-[400px] md:h-[600px]">
-            <div
-              className="flex justify-center items-center h-full w-full"
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-            >
-              <div className="rounded-lg shadow-lg w-[500px] h-[450px] flex border border-teal-900 flex-col justify-between relative p-8">
-               {selectedFile && <X size={26} className="absolute right-2 top-2 text-teal-900" onClick={()=>setSelectedFile(null)}/>}
-                {!selectedFile && <p className="text-center text-teal-900">Drag photos and videos here</p> }
-                {!selectedFile && <ImagePlus width={80} height={200} className="self-center text-teal-900"/>}
-                {selectedFile ? (
-                  <>
-                    <p className="mb-4 text-teal-900">File: {selectedFile.name}</p>
-                    {selectedFile.type.startsWith("image") ? (
-                      <div className="flex justify-center">
-
-                        <img
-                          src={URL.createObjectURL(selectedFile)}
-                          alt="Selected"
-                          className=" w-72 h-80"
-                        />
-                      </div>
-                    ) : selectedFile.type.startsWith("video") ? (
-                      <video
-                        src={URL.createObjectURL(selectedFile)}
-                        controls
-                        className="max-w-full h-auto"
-                      />
-                    ) : (
-                      <p className="text-red-800">Unsupported file type</p>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex justify-center">
-
-                  <label
-                    htmlFor="fileInput"
-                    className="cursor-pointer hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 text-center bg-teal-800 bottom-0 text-white font-semibold px-1 w-40 py-2 rounded-lg"
-                  >
-                    Choose File
-                  </label>
-                  </div>
-                )}
-                <input
-                  type="file"
-                  id="fileInput"
-                  className="hidden"
-                  accept="image/*,video/*"
-                  onChange={handleFileChange}
-                />
-              </div>
-            </div>
-            </div>
+          {!cropImage && <ChooseImageComponent selectedFile={selectedFile} setSelectedFile={setSelectedFile} setImageUrl={setImageUrl}/>}
+          {cropImage && !croppedImage && <CropImageComponent selectedFile={selectedFile} imageUrl={imageUrl} setCroppedImage={setCroppedImage}/>}
+          {croppedImage && cropImage && <CreateStoryComponent croppedImage={croppedImage} caption={caption} setCaption={setCaption}/> }
           </div>
-          {/* <div className="flex justify-center sm:pt-5 pt-20 p-10">
-            <div className="flex gap-6 ">
-              <input
-                type="file"
-                name="file"
-                id="fileInput"
-                style={{ display: "none" }}
-                // onChange={getImage}
-                accept="image/*, video/*"
-              />
-              <button
-                className="bg-teal-800 text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40"
-                // onClick={openGallery}
-              >
-                {" "}
-                Select from gallary
-              </button>
-              <button
-                className="bg-teal-800 text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40 "
-                // onClick={openCamara}
-              >
-                Take a picture{" "}
-              </button>
-            </div>
-          </div>
-        </div> */}
         </div>
       </div>
     </div>

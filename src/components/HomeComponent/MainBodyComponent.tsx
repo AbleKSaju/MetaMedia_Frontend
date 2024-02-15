@@ -32,10 +32,6 @@ const MainBody: React.FC<SetSidebarOpenFunction> = ({setSidebarOpen}) => {
             <PostScroll />
             <PostScroll />
             <PostScroll />
-
-
-           
-
            
             </div>
           </div>

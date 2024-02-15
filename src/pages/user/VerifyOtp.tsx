@@ -79,30 +79,39 @@ const dispatch=useDispatch()
     const otp: any = otpNumber.join("");
     if (otp.length == 4) {
       const response: any = await verifyOtpFunction({ otp: otp });
-      if (response?.data?.status) {
+      if (response.data.status == false) {
+        toast.error(response?.data?.message);
+      } else {
         const data: ResponseData = {
-          email: response.data.user.email,
-        name: response.data.user.name,
-        userId: response.data.user._id,
-        profile: response.data.user.profile,
-        isGoogle: response.data.user.isGoogle,
-        isFacebook: response.data.user.isFacebook,
+          email: response.data.user.email ?? "",
+          name: response.data.user.name ?? "",
+          userName: response.data.user.userName ?? "",
+          userId: response.data.user._id ?? "",
+          profile: response.data.user.profile ?? "",
+          isGoogle: response.data.user.isGoogle ?? "",
+          isFacebook: response.data.user.isFacebook ?? "",
+          dateOfBirth: response.data.user.dateOfBirth ?? "",
+          gender: response.data.user.gender ?? "",
+          location: response.data.user.location ?? "",
+          phoneNumber: response.data.user.phoneNumber ?? "",
+          interests: response.data.user.interests ?? [],
+          bio: response.data.user.bio ?? "",
         };
         dispatch(clearUser());
         dispatch(addUser(data));
-        dispatch(addToken(response.data.accesstoken))
-        toast.success(response?.data?.message);
-        
-        Navigate("/chooseinterest");
-      }else{
-        toast.error(response?.data?.message);
+        dispatch(addToken(response.data.accesstoken));
+        if (response?.data?.status) {
+          toast.success(response?.data?.message);
+          Navigate("/chooseinterest");
+        } else {
+          toast.error(response?.data?.message);
+        }
       }
-    } else {
-      toast.error("Otp required");
+    }else{
+      toast.error("Otp Error");
     }
-  };
- 
-  return (
+  }
+    return (
     <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-0 sm:py-12">
       <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
         <form
@@ -162,5 +171,6 @@ const dispatch=useDispatch()
     </div>
   );
 };
+
 
 export default VerifyOtp;

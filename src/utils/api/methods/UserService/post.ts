@@ -22,13 +22,13 @@ export const addProfileImageFunction = async (formData: FormData) => {
     const response = await axios.post(AddProfileImage_Api, formData, {
       withCredentials: true,
       headers: {
-        'Content-Type': 'multipart/form-data' // Set correct content type
+        'Content-Type': 'multipart/form-data'
       }
     });
     return response.data;
   } catch (error) {
     console.error("Error adding profile image:", error);
-    throw error; // Rethrow error to handle it elsewhere if needed
+    throw error;
   }
 }
 

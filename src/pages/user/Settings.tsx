@@ -16,7 +16,7 @@ const Settings: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
       <AsideComponent />
         </div>
       <Routes>
-        <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/" element={<EditProfile />} />
         <Route path="/security" element={<Security />} />
         <Route path="/contactUs" element={<Contactus />} />
         <Route path="/editProfile" element={<EditProfile />} />

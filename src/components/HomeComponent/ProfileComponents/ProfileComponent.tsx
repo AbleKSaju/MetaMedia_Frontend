@@ -43,7 +43,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
                   kendalljenner
                 </p>
                 <p className="ml-3">
-                  <Link to="/settings/editProfile">
+                  <Link to="/settings">
                     <Edit />
                   </Link>
                 </p>

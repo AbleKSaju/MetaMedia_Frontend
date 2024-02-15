@@ -25,7 +25,6 @@ const AddPostModal = () => {
     const getImage = (e:any) => {
         const formData = new FormData();
         formData.append("file", e.target.files[0]);
-        console.log(formData, 'This is formData');
         // Handle the form data here
     };
 
@@ -39,8 +38,7 @@ const AddPostModal = () => {
 
     const handleImageSelect = (selectedImgSrc:any) => {
         setImgSrc(selectedImgSrc);
-        // Handle the selected image here
-        // For example, you can upload it or process it further
+
     };
 
     return (
