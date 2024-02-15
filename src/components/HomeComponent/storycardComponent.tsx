@@ -1,15 +1,24 @@
 
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
 import { useSelector } from "react-redux";
-
-const StoryCard = ({myStory}:any) => {
+import ShowStoryComponent from "./StoryComponent/ShowStoryComponent";
+const StoryCard = ({setShowStory}:any) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
   const isLaptop = useMediaQuery("(min-width: 1025px)");
-
+  
+  const stories = useSelector((state:any)=>state.persisted.story.storyData)
+  console.log(stories,"stories && stories && ");
+  
   const userData = useSelector((state:any)=>state.persisted.user.userData)
-  console.log(userData,"HHSHSHS");
+  
+
+  const showStoryFunction = (num: number) => {
+    console.log("ENTER TO showStoryFunction");
+      setShowStory(0);
+  };
+  
   
 
   const renderSidebar = () => {
@@ -56,18 +65,18 @@ const StoryCard = ({myStory}:any) => {
               <div className="relative mx-auto max-w-lg rounded-lg w-24 h-32 lg:w-32 lg:h-40 "  >
                 <div className="w-full h-full rounded-md">
                   <div className="w-full h-full bg-[#042F2C] relative rounded-lg"
-                  // onClick={showStory}
                   >
                     <img
+                      onClick={()=>showStoryFunction(0)}
                       className="h-28 w-full rounded-lg blur-[1px]"
-                      src= {`${myStory ? "http://localhost:3003/story/1707893491916image.jpg" : "https://i.pinimg.com/736x/f3/72/0e/f3720e26e91ec25f058f76fb769b0b10.jpg"}`}
+                      src= {`${stories[0]?.[0] ? `http://localhost:3003/story/${stories?.[0]?.[0].storyUrl}` : "https://i.pinimg.com/736x/f3/72/0e/f3720e26e91ec25f058f76fb769b0b10.jpg"}`}
                       alt=""
                       />
                     <div className="rounded-full h-16 w-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-50">
                       <img
                         className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                        src= {`${myStory ? `http://localhost:3000/profile/${userData.profile}` : "https://i.pinimg.com/564x/8c/5b/21/8c5b21a8824a4400c72d422711f32f22.jpg"}`}
-                        alt=""
+                        src= {`${stories[0]?.[0] ? `http://localhost:3000/profile/${userData.profile}` : "https://i.pinimg.com/564x/8c/5b/21/8c5b21a8824a4400c72d422711f32f22.jpg"}`}
+                        alt="S"
                       />
                     </div>
                   </div>

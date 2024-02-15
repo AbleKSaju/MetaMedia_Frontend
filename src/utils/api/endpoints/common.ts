@@ -25,4 +25,5 @@ export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
 
 export const AddHighlight_Api=`${STORY_URL}/addHighlight`
 export const AddStory_Api=`${STORY_URL}/addStory`
+export const DeleteStory_Api=`${STORY_URL}/deleteStory`
 

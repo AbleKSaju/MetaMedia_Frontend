@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AddHighlight_Api, AddStory_Api } from "../../endpoints/common";
+import { AddHighlight_Api, AddStory_Api, DeleteStory_Api } from "../../endpoints/common";
 
 export const addHighlightFunction = (data: any) => {
   try {
@@ -24,5 +24,13 @@ export const AddStoryFunction = async (data: { image: FormData, caption: string 
   } catch (error) {
     console.error("Error adding profile image:", error);
     throw error;
+  }
+}
+
+export const deleteStoryFunction = async (data:{})=>{
+  try {
+    return axios.create({ withCredentials: true }).post(DeleteStory_Api, data);
+  } catch (error) {
+    return error;
   }
 }

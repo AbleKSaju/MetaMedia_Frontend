@@ -5,16 +5,18 @@ import tokenSlice from '../Slice/tokenSlice'
 import {combineReducers } from '@reduxjs/toolkit'
 import { persistReducer ,persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import storySlice from '../Slice/storySlice';
 
 
 const persistConfig = {
     key: 'root',
-    whitelist: ['user','token'],
+    whitelist: ['user','token','story'],
     storage,
   };
 
   const reducer= combineReducers({
     user:userSlice,
+    story:storySlice,
     token:tokenSlice
   })
   

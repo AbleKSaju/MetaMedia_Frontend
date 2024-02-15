@@ -23,7 +23,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
 
   return (
     <>
-      <div className={`${ !openFollowings || !openFollowers ? "fixed ml-72" : ""} sm:ml-60 sm:p-7 md:p-2 lg:ml-72`}>
+      <div className={`${ openFollowings || openFollowers ? "fixed left-10" : ""} sm:ml-60 sm:p-7 md:p-2 lg:ml-72`}>
         <div className="p-4 lg:pt-10 lg:flex lg:justify-around">
           <div className="flex justify-center lg:justify-start">
             <div className=" w-32 lg:w-40 lg:h-40 h-32">

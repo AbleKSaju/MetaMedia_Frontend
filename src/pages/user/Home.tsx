@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../../components/HomeComponent/SidebarComponent";
 import MainBody from "../../components/HomeComponent/MainBodyComponent";
 import Search from "../../components/HomeComponent/SearchComponent";
 import Message from "../../components/HomeComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
 import Profile from "../../components/HomeComponent/ProfileComponents/ProfileComponent";
-import Create from "../../components/HomeComponent/CreateComponent";
 import Notification from "../../components/HomeComponent/NotificationComponent";
-import Footer from "../../components/HomeComponent/FooterComponent";
 import Settings from "./Settings";
 import { Route, Routes } from "react-router-dom";
 import AsideComponent from "../../components/HomeComponent/AsideComponent";
-import { useSelector } from "react-redux";
-import StoryModal from "../../components/HomeComponent/CreateCOmponents/StoryModal";
+import StoryModal from "../../components/HomeComponent/StoryComponent/StoryModal";
+import ShowStoryComponent from "../../components/HomeComponent/StoryComponent/ShowStoryComponent";
 
 
 
@@ -22,8 +19,9 @@ export interface SetSidebarOpenFunction {
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [addStory, setAddStory] = useState<boolean>(false);
-
-  console.log(addStory,"addStoryaddStoryaddStoryaddStory");
+  // const [showStoryCount,setShowStoryCount] = useState(-1)
+  const [showStory,setShowStory] = useState(-1)
+  console.log(showStory,"showStoryshowStoryshowStory");
   
  
   return (
@@ -32,10 +30,11 @@ const Home = () => {
 
  {/* {addStory && <StoryModal setAddStory={setAddStory}/>} */}
  {addStory && <StoryModal setAddStory={setAddStory}/>}
+ {showStory >= 0 && <ShowStoryComponent setShowStory={setShowStory}/>}
         <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStory}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
-          <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen}/>} />
+          <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory}/>} />
           <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/message" element={<Message setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />

@@ -99,15 +99,12 @@ const FollowComponent = ({
                   </div>
                 </div>
               ))}
-
             {openFollowings &&
               following.map((val, index) => (
                 <div key={index} className="h-11 mb-2">
                   <div className="flex ">
-                    <div className="w-10 h-10">
-
                     <img
-                      className="w-full h-full rounded-full"
+                      className="w-10 h-10 rounded-full"
                       src={
                         userData.profile.startsWith(
                           "https://graph.facebook.com/"
@@ -119,7 +116,6 @@ const FollowComponent = ({
                       }
                       alt=""
                     />
-                    </div>
                     <p className="ml-2 flex items-center">{val}</p>
                     <div className=" flex items-center w-full justify-end">
                       <button className="border border-teal-900 hover:bg-teal-900 hover:text-amber-50 rounded-full hidden sm:flex px-3">
@@ -127,7 +123,7 @@ const FollowComponent = ({
                       </button>
                       <button className="border border-teal-900 hover:bg-teal-900 rounded-full sm:hidden">
                         <X size={17} />
-                      </button>
+                      </button>{" "}
                     </div>
                   </div>
                 </div>

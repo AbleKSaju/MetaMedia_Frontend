@@ -1,9 +1,10 @@
 import { useState } from "react";
 import StoryCard from "./storycardComponent";
+import { useSelector } from "react-redux";
 
 // const [stories,setStories]=useState([])
-const Story = () => {
-  const [myStory,setMyStory]=useState<any>(true)
+const Story = ({setShowStory}:any) => {
+  const stories = useSelector((state:any)=>state.persisted.story.storyData)
   return (
     <>
       <div className=" pt-3  w-[640px]  md:w-[700px] lg:p-1 lg:w-[1140px]  lg:mt-0 ">
@@ -11,9 +12,7 @@ const Story = () => {
           <div className="relative rounded-xl  ">
             <div className="  shadow-xl   ">
               <div className="flex overflow-y-hidden scrollbar-hide  ">
-                {
-                  myStory && <StoryCard myStory={myStory}/>
-                }
+                { stories[0]?.[0] && <StoryCard setShowStory={setShowStory}/>}
                 <StoryCard />
                 <StoryCard />
                 <StoryCard />
