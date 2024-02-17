@@ -14,13 +14,6 @@ const StoryCard = ({setShowStory}:any) => {
   const userData = useSelector((state:any)=>state.persisted.user.userData)
   
 
-  const showStoryFunction = (num: number) => {
-    console.log("ENTER TO showStoryFunction");
-      setShowStory(0);
-  };
-  
-  
-
   const renderSidebar = () => {
     if (isMobile) {
       return (
@@ -67,7 +60,7 @@ const StoryCard = ({setShowStory}:any) => {
                   <div className="w-full h-full bg-[#042F2C] relative rounded-lg"
                   >
                     <img
-                      onClick={()=>showStoryFunction(0)}
+                      onClick={()=>setShowStory(0)}
                       className="h-28 w-full rounded-lg blur-[1px]"
                       src= {`${stories[0]?.[0] ? `http://localhost:3003/story/${stories?.[0]?.[0].storyUrl}` : "https://i.pinimg.com/736x/f3/72/0e/f3720e26e91ec25f058f76fb769b0b10.jpg"}`}
                       alt=""

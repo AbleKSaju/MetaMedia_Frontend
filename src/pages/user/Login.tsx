@@ -42,10 +42,6 @@ const Login = () => {
   const token = useSelector((state: any) => state.persisted.token.token);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    console.log(userDataFromRedux, "userDataFromRedux");
-  }, [userDataFromRedux]);
-
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
@@ -61,10 +57,9 @@ const Login = () => {
       };
 
       if (data.user.email) {
-        const response: any = await LoginWithFacebook(userData);
+        const response: any = await LoginWithFacebook(userData);        
 
         if (response?.data?.status) {
-          console.log(response, "Ressssp");
           // setTimeout(() => {
           //   SaveUserDataInRedux(response);
           // }, 3000);
@@ -83,14 +78,12 @@ const Login = () => {
             interests: response.data.user.interests ?? [],
             bio: response.data.user.bio ?? "",
           };
-          console.log(data, "ussssssDATta??????????");
 
           dispatch(clearUser());
           dispatch(addUser(data));
           dispatch(addToken(response.data.accesstoken));
 
           if (response?.data?.newUser) {
-            console.log("IAMnewUSER");
             toast.success(response?.data?.message);
             Navigate("/chooseinterest");
           } else {
@@ -99,6 +92,7 @@ const Login = () => {
             // setTimeout(() => {
             //   SaveUserDataInRedux(userData);
             // }, 100);
+
             const data: ResponseData = {
               email: userData.data.user.email ?? "",
               name: userData.data.user.name ?? "",
@@ -113,16 +107,12 @@ const Login = () => {
               phoneNumber: userData.data.user.phoneNumber ?? "",
               interests: userData.data.user.interests ?? [],
               bio: userData.data.user.bio ?? "",
-            };
-            console.log(data, "ussssssDATta??????????");
-  
+            };  
             dispatch(clearUser());
             dispatch(addUser(data));
             dispatch(addToken(response.data.accesstoken));
   
             // await SaveUserDataInRedux(userData)
-            console.log(userData, "USERDAETAILS");
-
             toast.success(response?.data?.message);
             Navigate("/");
           }
@@ -150,9 +140,7 @@ const Login = () => {
 
       if (data.user.email) {
         const response: any = await LoginWithGoogle(userData);
-        console.log(response, "KKKKKK");
           if (response?.data?.status) {
-            console.log(response, "Ressssp");
             // setTimeout(() => {
             //   SaveUserDataInRedux(response);
             // }, 3000);
@@ -171,14 +159,12 @@ const Login = () => {
               interests: response.data.user.interests ?? [],
               bio: response.data.user.bio ?? "",
             };
-            console.log(data, "ussssssDATta??????????");
 
             dispatch(clearUser());
             dispatch(addUser(data));
             dispatch(addToken(response.data.accesstoken));
 
             if (response?.data?.newUser) {
-              console.log("IAMnewUSER");
               toast.success(response?.data?.message);
               Navigate("/chooseinterest");
             } else {
@@ -202,15 +188,12 @@ const Login = () => {
                 interests: userData.data.user.interests ?? [],
                 bio: userData.data.user.bio ?? "",
               };
-              console.log(data, "ussssssDATta??????????");
     
               dispatch(clearUser());
               dispatch(addUser(data));
               dispatch(addToken(response.data.accesstoken));
     
-              // await SaveUserDataInRedux(userData)
-              console.log(userData, "USERDAETAILS");
-  
+              // await SaveUserDataInRedux(userData)  
               toast.success(response?.data?.message);
               Navigate("/");
             }  
@@ -228,10 +211,13 @@ const Login = () => {
 
   //form data set in
   const formsubmit = async (Data: LoginFormData) => {
-    const response: any = await LoginFuntion({ ...Data });
-    if (response.data.status == false) {
-      toast.error(response?.data?.message);
+    const userExist: any = await LoginFuntion({ ...Data });    
+    if (userExist.data.status == false) {
+      toast.error(userExist?.data?.message);
     } else {
+      const userEmail = { email: userExist?.data?.user?.email };      
+      const response: any = await GetUserDataFunction(userEmail);
+      
       const data: ResponseData = {
         email: response.data.user.email ?? "",
         name: response.data.user.name ?? "",
@@ -250,15 +236,15 @@ const Login = () => {
       dispatch(clearUser());
       dispatch(addUser(data));
       dispatch(addToken(response.data.accesstoken));
-      if (response?.data?.status) {
-        toast.success(response?.data?.message);
-        Navigate("/");
-      } else {
-        toast.error(response?.data?.message);
-      }
-    }
-  };
 
+        toast.success(response?.data?.data?.message);
+        Navigate("/");
+
+    }
+    
+  };
+  
+  
   return (
     <>
       <div className="relative flex justify-center md:items-center align-middle bg-gray-50 h-[100vh]">

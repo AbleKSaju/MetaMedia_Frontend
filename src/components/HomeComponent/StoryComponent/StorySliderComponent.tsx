@@ -14,6 +14,8 @@ interface ImageSliderProps {
 const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  durationPerImage = 5000,}) => {
   const stories = useSelector((state: any) => state.persisted.story.storyData);
   console.log(stories[0]?.length, "STTTT");
+  console.log(stories,"storiesstoriesstories");
+  
 
   const [watchedStory, setWatchedStory] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -68,7 +70,6 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  dura
       console.log(stories[0].length,"length" );
       
       if(stories[0].length <= 1){
-        console.log("ENTER to -1");
         setShowStory(-1)
       }
     }else{
@@ -140,7 +141,7 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  dura
           <>
             <img
               key={index}
-              src={`http://localhost:3003/story/${story.storyUrl}`}
+              src={`http://localhost:3003/story/${story?.storyUrl}`}
               alt=""
               className={`w-full h-full border-2 rounded-lg border-teal-800 ${
                 index === currentIndex ? "" : "hidden"

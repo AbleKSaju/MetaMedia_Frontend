@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AddHighlight_Api, AddStory_Api, DeleteStory_Api } from "../../endpoints/common";
+import { AddHighlight_Api, AddStory_Api, DeleteStory_Api } from "../../../endpoints/common";
 
 export const addHighlightFunction = (data: any) => {
   try {

@@ -9,6 +9,7 @@ export const POST_URL = 'http://localhost:3002/api/post';
 
 export const STORY_URL = 'http://localhost:3003/api/story'; 
 
+export const HIGHLIGHT_URL = 'http://localhost:3003/api/highlight'; 
 
 
 

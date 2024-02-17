@@ -1,4 +1,4 @@
-import {AUTH_URL,POST_URL,STORY_URL,USER_URL} from '../baseUrl/axios.baseUrl' 
+import {AUTH_URL,HIGHLIGHT_URL,POST_URL,STORY_URL,USER_URL} from '../baseUrl/axios.baseUrl' 
 
 
 // AUTH SERVICE
@@ -23,7 +23,13 @@ export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
 
 // STORY SERVICE
 
+//Story
+
 export const AddHighlight_Api=`${STORY_URL}/addHighlight`
 export const AddStory_Api=`${STORY_URL}/addStory`
 export const DeleteStory_Api=`${STORY_URL}/deleteStory`
+export const GetStories_Api=`${STORY_URL}/getStories`
 
+//Highlight
+export const AddNewHighlight_Api=`${HIGHLIGHT_URL}/addNewHighlight`
+export const GetHighlightData_Api=`${HIGHLIGHT_URL}/getHighlights`

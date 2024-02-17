@@ -1,14 +1,15 @@
 import { Plus } from 'lucide-react';
 import React from 'react'
 
-const Highlight = ({ extra, setAddHighlight }: { extra: boolean; setAddHighlight: (value: boolean) => void }) => {
+const Highlight = ({setOpenHighlight, index, highlight, extra, setAddHighlight }:any) => {
+  
     return (
         <>
         {!extra ? 
-      <div className="highlight-item">
+      <div className="highlight-item" onClick={()=>setOpenHighlight(index)}>
         <img
-          className="rounded-full border-2 border-teal-900 w-14 h-14 sm:w-16 sm:h-16 md:h-20 md:w-20 lg:w-24 lg:h-24"
-          src="https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/09/instagram-image-size.jpg"
+          className="rounded-full border-2 border-teal-900 w-14 h-14 sm:w-16 sm:h-16 md:h-20 md:w-20 lg:w-24 lg:h-24 opacity-90"
+          src={`http://localhost:3003/story/${highlight.media[0]}`}
           alt="HL"
         />
       </div>

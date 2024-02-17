@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostsComponent from "../../SubHomeComponents/PostsComponent";
-import { Edit, X } from "lucide-react";
-import Highlight from "../HighlightComponent";
-import { addHighlightFunction } from "../../../utils/api/methods";
+import { Edit } from "lucide-react";
+import Highlight from "../HighlightComponent/HighlightComponent";
+import { GetHighlightData } from "../../../utils/api/methods";
 import { SetSidebarOpenFunction } from "src/pages/user/Home";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import AddHighlightcmponent from "./AddHighlightcmponent";
+import { useDispatch, useSelector } from "react-redux";
 import FollowComponent from "./FollowComponent";
+import AddHighlightComponent from "./AddHighlightComponent";
+import HighlightListComponent from "../HighlightComponent/HighlightListComponent";
+import {  } from "../../../utils/api/endpoints/common";
+import { toast } from "sonner";
+import { addHighlights } from "../../../utils/ReduxStore/Slice/highlightSlice";
+import OpenHighlightComponent from "../HighlightComponent/OpenHighlightComponent";
 
 const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
   console.log("I AM PROFILE");
@@ -17,13 +22,34 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
   const [openFollowers,setOpenFollowers] = useState(false)
   const [postComponent, setPostComponent] = useState(false);
   const [otherUser, setOtherUser] = useState(false);
-  const [highlightData, setHighlightData] = useState(["aads", "asdasas"]);
+  const [openHighlight, setOpenHighlight] = useState(-1);
+  const [highlightName, setHighlightName] = useState("");
+  const [highlightList,setHighlightList] = useState(false)
+  const dispatch = useDispatch()
   const userData = useSelector((state: any) => state.persisted.user.userData);
+  const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
   setSidebarOpen(true);
+  // console.log(highlights,"highlightshighlightshighlightshighlightshighlights fro redux");
+  
+
+  useEffect(()=>{
+    (async ()=>{
+     const response:any = await GetHighlightData()
+     if(response?.data?.status){
+      const highlights = response?.data?.data?.highlights
+      dispatch(addHighlights(highlights))
+
+      // setHighlightData(highlights)
+     }else{
+      toast.error(response?.data?.message)
+     }
+    })();
+  },[])
+  
 
   return (
     <>
-      <div className={`${ openFollowings || openFollowers ? "fixed left-10" : ""} sm:ml-60 sm:p-7 md:p-2 lg:ml-72`}>
+      <div className={`${ openFollowings || openFollowers || highlightList ? "fixed left-10" : ""} sm:ml-60 sm:p-7 md:p-2 lg:ml-72`}>
         <div className="p-4 lg:pt-10 lg:flex lg:justify-around">
           <div className="flex justify-center lg:justify-start">
             <div className=" w-32 lg:w-40 lg:h-40 h-32">
@@ -33,14 +59,14 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
                   userData.profile.startsWith("https://graph.facebook.com/")
                     ? `${userData.profile}`
                     : userData.profile
-                    ? `http://localhost:3000/profile/${userData.profile}`
+                    ? `http://localhost:3000/profile/${userData?.profile}`
                     : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
                 }
                 alt="Profile"
               />
               <div className="flex flex-row justify-center text-center font-medium cursor-pointer mt-3 lg:mt-6">
                 <p className="font-extrabold text-lg text-teal-900">
-                  kendalljenner
+                  {userData?.name}
                 </p>
                 <p className="ml-3">
                   <Link to="/settings">
@@ -66,7 +92,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
                 !otherUser ? "mt-8" : "mt-0"
               } flex flex-col w-[90vw] sm:w-[55vw] md:w-[45vw] lg:w-[30vw] col-span-4 row-span-3 row-start-1 ml-4 lg:mt-0`}
             >
-              <p className="underline mb-1 text-xl text-teal-900">Kendall</p>
+              <p className="underline mb-1 text-xl text-teal-900">{userData?.userName}</p>
               {otherUser && (
                 <div className="lg:flex w-64 my-3 justify-between hidden ">
                   <button className="border border-teal-900 px-8 py-1 hover:bg-teal-900 hover:text-amber-50 rounded-3xl">
@@ -107,11 +133,14 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
             <div className="not-prose relative rounded-xl overflow-x-auto scrollbar-hide">
               <div className="mt-3 flex justify-center lg:mt-8">
                 <div className="flex justify-start w-72 sm:w-96 sm:gap-3 md:w-[460px] lg:w-[660px] lg:gap-9">
-                  {highlightData.map((val) => {
+                  {highlights.map((val:any,index:number) => {
                     return (
                       <Highlight
-                        extra={false as boolean}
-                        setAddHighlight={setAddHighlight}
+                      setOpenHighlight={setOpenHighlight}
+                      index={index}
+                      highlight={val}
+                      extra={false as boolean}
+                      setAddHighlight={setAddHighlight}
                       />
                     );
                   })}
@@ -124,11 +153,11 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
             </div>
           </div>
         </div>
-
+        {openHighlight >= 0 && <OpenHighlightComponent openHighlight={openHighlight} setOpenHighlight={setOpenHighlight}/>}
         {openFollowers && <FollowComponent openFollowers={openFollowers} openFollowings={openFollowings} setOpenFollowers={setOpenFollowers} setOpenFollowings={setOpenFollowings} />}
         {openFollowings && <FollowComponent openFollowers={openFollowers} openFollowings={openFollowings} setOpenFollowers={setOpenFollowers} setOpenFollowings={setOpenFollowings} />}
-
-        {addHighlight && <AddHighlightcmponent setAddHighlight={setAddHighlight}/>}
+        {addHighlight && <AddHighlightComponent highlightName={highlightName} setHighlightName={setHighlightName} setHighlightList={setHighlightList}  setAddHighlight={setAddHighlight}/>}
+        {highlightList && <HighlightListComponent highlightName={highlightName} setHighlightList={setHighlightList} setHighlightName={setHighlightName}/>}
         <div className="flex justify-around mt-10 px-10 lg:px-64 font-medium cursor-pointer">
           <p
             onClick={() => setPostComponent(true)}

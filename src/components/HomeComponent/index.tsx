@@ -1,6 +1,6 @@
 import Create from './CreateComponent'
 import Footer from './FooterComponent'
-import Highlight from './HighlightComponent'
+import Highlight from './HighlightComponent/HighlightComponent'
 import MainBody from './MainBodyComponent'
 import Message from './MessageComponent'
 import Notification from './NotificationComponent'

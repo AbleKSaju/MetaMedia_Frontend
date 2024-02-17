@@ -13,6 +13,8 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const Navigate=useNavigate()
   const userData = useSelector((state: any) => state.persisted.user.userData);
+  console.log(userData,"userDatauserDatauserDatauserData");
+  
   const { errors, handleSubmit, register } = useEditProfileValidate({
     fullname: userData?.name,
     username: userData?.userName ?? "",
