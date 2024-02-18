@@ -414,7 +414,7 @@ const Sidebar = ({ open,setAddStory }: any) => {
                 <img
                   className={`w-8 h-8 rounded-full text-black  `}
                   src={
-                    userData.profile.startsWith("https://graph.facebook.com/")
+                    userData.profile?.startsWith("https://graph.facebook.com/")
                       ? `${userData.profile}`
                       : userData.profile
                         ? `http://localhost:3000/profile/${userData.profile}`

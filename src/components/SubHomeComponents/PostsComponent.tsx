@@ -1,6 +1,8 @@
 import React from "react";
 
 const PostsComponent = () => {
+  console.log("ENTTER");
+  
   return (
     <>
       <div className="flex flex-wrap flex-row justify-center mt-5 pb-20">

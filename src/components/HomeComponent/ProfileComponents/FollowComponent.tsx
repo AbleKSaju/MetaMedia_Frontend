@@ -77,7 +77,7 @@ const FollowComponent = ({
                     <img
                       className="w-10 h-10 rounded-full"
                       src={
-                        userData.profile.startsWith(
+                        userData.profile?.startsWith(
                           "https://graph.facebook.com/"
                         )
                           ? `${userData.profile}`
@@ -106,7 +106,7 @@ const FollowComponent = ({
                     <img
                       className="w-10 h-10 rounded-full"
                       src={
-                        userData.profile.startsWith(
+                        userData.profile?.startsWith(
                           "https://graph.facebook.com/"
                         )
                           ? `${userData.profile}`

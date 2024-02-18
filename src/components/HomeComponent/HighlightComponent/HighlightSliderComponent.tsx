@@ -1,39 +1,77 @@
 import { ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { DeleteHighlightFunction } from '../../../utils/api/methods/StoryService/Highlight/post';
+import { toast } from 'sonner';
 
-const HighlightSliderComponent = ({openHighlight}:any) => {
+const HighlightSliderComponent = ({openHighlight,setOpenHighlight,durationPerImage,setHighlightList,setHighlightName,setDeleteHighlight}:any) => {
     const [watchedStory, setWatchedStory] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
     
-    console.log(highlights[openHighlight].name,"highlights[openHighlight]?.length");
-     
+    const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);  
     const userData = useSelector((state: any) => state.persisted.user.userData);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
       };
-
       const nextImage = () => {
         setCurrentIndex((prevIndex) =>
-          prevIndex === highlights[openHighlight].media.length - 1 ? 0 : prevIndex + 1
+          prevIndex === highlights[openHighlight]?.media.length - 1 ? 0 : prevIndex + 1
         );
       };
     
       const prevImage = () => {
         setCurrentIndex((prevIndex) =>
-          prevIndex === 0 ? highlights[openHighlight].media.length - 1 : prevIndex - 1
+          prevIndex === 0 ? highlights[openHighlight]?.media.length - 1 : prevIndex - 1
         );
       };
+      useEffect(() => {
+        if (!isOpen) {
+          setWatchedStory(currentIndex + 1);
+          const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) =>
+              prevIndex === highlights[openHighlight]?.media.length - 1 ? 0 : prevIndex + 1
+            );
+          }, durationPerImage);
+          return () => clearInterval(interval);
+        }
+      }, [isOpen, currentIndex, highlights[openHighlight]?.media.length]);
+
+      const addNewHighlight = async () => {
+        console.log("addNewHighlightaddNewHighlight");
+        
+        const name = highlights[openHighlight].name
+        setHighlightList(true)
+        setHighlightName(name)
+        setIsOpen(false)
+      };  
+
+      const deleteHighlight=async()=>{
+        const name = highlights[openHighlight].name
+        const currentImage = highlights[openHighlight]?.media[currentIndex];
+        const data = {
+          name:name,
+          image:currentImage
+        }
+        console.log(name,"name");
+        console.log(currentImage,"CURR");
+        const response:any = await DeleteHighlightFunction(data)
+        if (response?.data?.status) {
+          toast.success(response?.data?.message);
+        } else {
+          toast.error(response?.data?.message);
+        }
+        setDeleteHighlight(true)
+        setIsOpen(false)        
+      }
+
   return (
     <div className="flex justify-center items-center w-full h-[500px] mt-5 relative">
     <div className="flex justify-center w-full absolute top-2">
       {
-        highlights[openHighlight].media.map((_: any, index: number) => (
+        highlights[openHighlight]?.media.map((_: any, index: number) => (
           <div
             key={index}
             className={`w-full h-2  rounded-full mx-0.5 ${
@@ -46,7 +84,7 @@ const HighlightSliderComponent = ({openHighlight}:any) => {
       <img
         className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
         src={
-          userData.profile.startsWith("https://graph.facebook.com/")
+          userData.profile?.startsWith("https://graph.facebook.com/")
             ? `${userData.profile}`
             : userData.profile
             ? `http://localhost:3000/profile/${userData.profile}`
@@ -59,12 +97,16 @@ const HighlightSliderComponent = ({openHighlight}:any) => {
       {isOpen && (
         <div className="absolute top-6 right-0 w-40 bg-teal-900 rounded-tr-none rounded-lg shadow-lg z-10 border">
           <ul>
+            <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer"
+               onClick={addNewHighlight}>
+              add
+            </li>
             <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
               forward
             </li>
             <li
               className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg cursor-pointer"
-            //   onClick={deleteStory}
+              onClick={deleteHighlight}
             >
               delete
             </li>
@@ -72,7 +114,7 @@ const HighlightSliderComponent = ({openHighlight}:any) => {
         </div>
       )}
     </div>
-    {highlights[openHighlight].media?.length > 1 && (
+    {highlights[openHighlight]?.media?.length > 1 && (
       <button
         className="absolute right-0 top-1/2 transform -translate-y-1/2"
         onClick={nextImage}
@@ -80,7 +122,7 @@ const HighlightSliderComponent = ({openHighlight}:any) => {
         <ChevronRight />
       </button>
     )}
-    {highlights[openHighlight].media?.length > 1 && (
+    {highlights[openHighlight]?.media?.length > 1 && (
       <button
         className="absolute left-0 top-1/2 transform -translate-y-1/2"
         onClick={prevImage}
@@ -89,7 +131,7 @@ const HighlightSliderComponent = ({openHighlight}:any) => {
       </button>
     )}
     {
-      highlights[openHighlight].media.map((highlight: any, index: number) => (
+      highlights[openHighlight]?.media.map((highlight: any, index: number) => (
         <>
           <img
             key={index}

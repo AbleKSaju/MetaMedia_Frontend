@@ -6,6 +6,7 @@ import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { LogoutFunction } from "../../utils/api/methods";
 import { addProfileImageFunction } from "../../utils/api/methods/UserService/post";
 import { addProfileImage } from "../../utils/ReduxStore/Slice/userSlice";
+import { persistor } from "../../utils/ReduxStore/Store/Store";
 
 const Aside = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const Aside = () => {
     } else {
       toast.error("Logout error");
     }
+    persistor.purge();
   };
 
   const addImage = () => {
@@ -64,10 +66,10 @@ const Aside = () => {
                     onClick={addImage}
                     className="w-32 h-32 sm:w-24 sm:h-24 md:w-32 self-center md:h-32 border border-teal-900 rounded-full mt-5"
                     src={
-                      userData.profile.startsWith("https://graph.facebook.com/")
+                      userData.profile?.startsWith("https://graph.facebook.com/")
                         ? `${userData.profile}`
                         : userData.profile
-                          ? `http://localhost:3000/profile/${userData.profile}`
+                          ? `http://localhost:3000/profile/${userData?.profile}`
                           : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
                     }
                     alt="Profile Picture"
@@ -80,11 +82,11 @@ const Aside = () => {
                     onChange={handleFileChange}
                     hidden
                   />
-                <p className="text-center font-bold text-lg mt-8">Alia Bhatt</p>
+                <p className="text-center font-bold text-lg mt-8">{userData?.name}</p>
                 <p className="text-center mt-3 ">
-                  {userData.name} <br />
+                  {userData?.userName} <br />
                   <p className="text-center">
-                    {userData.bio}
+                    {userData?.bio}
                   </p>
                 </p>
                 </div>

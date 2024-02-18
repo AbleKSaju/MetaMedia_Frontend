@@ -54,7 +54,7 @@ const ChooseImageComponent = ({selectedFile,setSelectedFile,setImageUrl}:any) =>
         {selectedFile ? (
           <>
             <p className="mb-4 text-teal-900">File: {selectedFile.name}</p>
-            {selectedFile.type.startsWith("image") ? (
+            {selectedFile.type?.startsWith("image") ? (
               <div className="flex justify-center">
 
                 <img
@@ -63,7 +63,7 @@ const ChooseImageComponent = ({selectedFile,setSelectedFile,setImageUrl}:any) =>
                   className=" w-72 h-80"
                 />
               </div>
-            ) : selectedFile.type.startsWith("video") ? (
+            ) : selectedFile.type?.startsWith("video") ? (
               <video
                 src={URL.createObjectURL(selectedFile)}
                 controls

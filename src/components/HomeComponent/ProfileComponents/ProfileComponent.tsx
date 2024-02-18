@@ -18,6 +18,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
   console.log("I AM PROFILE");
 
   const [addHighlight, setAddHighlight] = useState(false);
+  const [deleteHighlight, setDeleteHighlight] = useState(false);
   const [openFollowings,setOpenFollowings] = useState(false)
   const [openFollowers,setOpenFollowers] = useState(false)
   const [postComponent, setPostComponent] = useState(false);
@@ -28,24 +29,27 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
   const dispatch = useDispatch()
   const userData = useSelector((state: any) => state.persisted.user.userData);
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
-  setSidebarOpen(true);
-  // console.log(highlights,"highlightshighlightshighlightshighlightshighlights fro redux");
-  
-
+  setSidebarOpen(true);  
+  let highlight
   useEffect(()=>{
     (async ()=>{
      const response:any = await GetHighlightData()
      if(response?.data?.status){
-      const highlights = response?.data?.data?.highlights
-      dispatch(addHighlights(highlights))
-
-      // setHighlightData(highlights)
-     }else{
-      toast.error(response?.data?.message)
+      highlight = response?.data?.data?.highlights
+      dispatch(addHighlights(highlight))
      }
     })();
-  },[])
+    setDeleteHighlight(false)
+  },[addHighlight,highlightList,highlight,deleteHighlight])
+  console.log(deleteHighlight,"deleteHighlight");
   
+console.log(highlights,"LENNG");
+console.log(highlights.length,"LENNG");
+useEffect(()=>{
+  if(highlights.length==0){
+    setOpenHighlight(-1)
+  }
+},[highlights])
 
   return (
     <>
@@ -56,7 +60,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
               <img
                 className=" w-full h-full rounded-full border border-teal-900"
                 src={
-                  userData.profile.startsWith("https://graph.facebook.com/")
+                  userData.profile?.startsWith("https://graph.facebook.com/")
                     ? `${userData.profile}`
                     : userData.profile
                     ? `http://localhost:3000/profile/${userData?.profile}`
@@ -68,7 +72,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
                 <p className="font-extrabold text-lg text-teal-900">
                   {userData?.name}
                 </p>
-                <p className="ml-3">
+                <p className="ml-3 hidden lg:flex">
                   <Link to="/settings">
                     <Edit />
                   </Link>
@@ -133,7 +137,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
             <div className="not-prose relative rounded-xl overflow-x-auto scrollbar-hide">
               <div className="mt-3 flex justify-center lg:mt-8">
                 <div className="flex justify-start w-72 sm:w-96 sm:gap-3 md:w-[460px] lg:w-[660px] lg:gap-9">
-                  {highlights.map((val:any,index:number) => {
+                  {highlights.length!=0 && highlights.map((val:any,index:number) => {
                     return (
                       <Highlight
                       setOpenHighlight={setOpenHighlight}
@@ -153,7 +157,8 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
             </div>
           </div>
         </div>
-        {openHighlight >= 0 && <OpenHighlightComponent openHighlight={openHighlight} setOpenHighlight={setOpenHighlight}/>}
+        {/* each round icon of highlight */}
+        {highlights.length!=0 && openHighlight >=0 && <OpenHighlightComponent openHighlight={openHighlight} setOpenHighlight={setOpenHighlight} setHighlightList={setHighlightList} setHighlightName={setHighlightName} setDeleteHighlight={setDeleteHighlight} />}
         {openFollowers && <FollowComponent openFollowers={openFollowers} openFollowings={openFollowings} setOpenFollowers={setOpenFollowers} setOpenFollowings={setOpenFollowings} />}
         {openFollowings && <FollowComponent openFollowers={openFollowers} openFollowings={openFollowings} setOpenFollowers={setOpenFollowers} setOpenFollowings={setOpenFollowings} />}
         {addHighlight && <AddHighlightComponent highlightName={highlightName} setHighlightName={setHighlightName} setHighlightList={setHighlightList}  setAddHighlight={setAddHighlight}/>}

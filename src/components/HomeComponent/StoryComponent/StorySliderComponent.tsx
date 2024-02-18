@@ -7,15 +7,15 @@ import { addStory } from "../../../utils/ReduxStore/Slice/storySlice";
 import { toast } from "sonner";
 
 interface ImageSliderProps {
-  setShowStory:any,
+  setShowStory: any;
   durationPerImage?: number;
 }
 
-const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  durationPerImage = 5000,}) => {
+const StorySliderComponent: React.FC<ImageSliderProps> = ({
+  setShowStory,
+  durationPerImage = 5000,
+}) => {
   const stories = useSelector((state: any) => state.persisted.story.storyData);
-  console.log(stories[0]?.length, "STTTT");
-  console.log(stories,"storiesstoriesstories");
-  
 
   const [watchedStory, setWatchedStory] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +25,12 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  dura
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  useEffect(()=>{
+    if(stories[0].length==0){
+      setShowStory(-1)
+    }
+  },[stories])
+
   const userData = useSelector((state: any) => state.persisted.user.userData);
 
   const nextImage = () => {
@@ -47,12 +53,12 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  dura
           prevIndex === stories[0].length - 1 ? 0 : prevIndex + 1
         );
       }, durationPerImage);
-      
-
       return () => clearInterval(interval);
     }
   }, [isOpen, currentIndex, durationPerImage, stories[0].length]);
 
+  console.log(stories[0].length, "length");
+  console.log(currentIndex, "currentIndex");
   const deleteStory = async () => {
     const data = {
       userId: userData.userId,
@@ -60,41 +66,38 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  dura
     };
 
     const response: any = await deleteStoryFunction(data);
-    console.log(response,"response");
-    
-    if(response.data.data.status){
 
-      toast.success(response.data.data.message)
+    if (response.data.data.status) {
+      toast.success(response.data.data.message);
       dispatch(addStory(response?.data?.data?.story?.content?.story));
       setIsOpen(false);
-      console.log(stories[0].length,"length" );
-      
-      if(stories[0].length <= 1){
-        setShowStory(-1)
+
+      if (stories[0].length >= currentIndex) {
+        console.log("ENTT");
+        setCurrentIndex(0);
       }
-    }else{
-      toast.error(response.data.data.message)
+    } else {
+      toast.error(response.data.data.message);
     }
   };
 
   return (
     <div className="flex justify-center items-center w-full h-[500px] mt-5 relative">
       <div className="flex justify-center w-full absolute top-2">
-        {
-          stories[0].map((_: any, index: number) => (
-            <div
-              key={index}
-              className={`w-full h-2  rounded-full mx-0.5 ${
-                index >= watchedStory ? "bg-amber-50" : "bg-teal-700"
-              }`}
-            ></div>
-          ))}
+        {stories[0].map((_: any, index: number) => (
+          <div
+            key={index}
+            className={`w-full h-2  rounded-full mx-0.5 ${
+              index >= watchedStory ? "bg-amber-50" : "bg-teal-700"
+            }`}
+          ></div>
+        ))}
       </div>
       <Link to="/profile">
         <img
           className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
           src={
-            userData.profile.startsWith("https://graph.facebook.com/")
+            userData.profile?.startsWith("https://graph.facebook.com/")
               ? `${userData.profile}`
               : userData.profile
               ? `http://localhost:3000/profile/${userData.profile}`
@@ -136,28 +139,27 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({  setShowStory,  dura
           <ChevronLeft />
         </button>
       )}
-      {
-        stories[0].map((story: any, index: number) => (
-          <>
-            <img
-              key={index}
-              src={`http://localhost:3003/story/${story?.storyUrl}`}
-              alt=""
-              className={`w-full h-full border-2 rounded-lg border-teal-800 ${
+      {stories[0].map((story: any, index: number) => (
+        <>
+          <img
+            key={index}
+            src={`http://localhost:3003/story/${story?.storyUrl}`}
+            alt=""
+            className={`w-full h-full border-2 rounded-lg border-teal-800 ${
+              index === currentIndex ? "" : "hidden"
+            }`}
+          />
+          <div className="absolute -bottom-8 font-medium shadow-black cursor-pointer">
+            <p
+              className={`text-teal-900  ${
                 index === currentIndex ? "" : "hidden"
               }`}
-            />
-            <div className="absolute -bottom-8 font-medium shadow-black cursor-pointer">
-              <p
-                className={`text-teal-900  ${
-                  index === currentIndex ? "" : "hidden"
-                }`}
-              >
-                {story.caption}
-              </p>
-            </div>
-          </>
-        ))}
+            >
+              {story.caption}
+            </p>
+          </div>
+        </>
+      ))}
     </div>
   );
 };

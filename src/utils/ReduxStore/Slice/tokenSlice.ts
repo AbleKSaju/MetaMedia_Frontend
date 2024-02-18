@@ -12,7 +12,6 @@ const tokenSlice = createSlice({
       }
     },
     clearToken: (state: any) => {
-        console.log("clearing token");
         state.token = "";
     },
   },

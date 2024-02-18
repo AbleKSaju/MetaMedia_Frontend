@@ -58,7 +58,7 @@ const AddProfile = () => {
               <div className="w-20 h-20 md:w-32 md:h-32  mb-0 rounded-full overflow-hidden">
                 <img
                        src={
-                        userData.profile.startsWith("https://graph.facebook.com/")
+                        userData.profile?.startsWith("https://graph.facebook.com/")
                           ? `${userData.profile}`
                           : userData.profile
                             ? `http://localhost:3000/profile/${userData.profile}`
