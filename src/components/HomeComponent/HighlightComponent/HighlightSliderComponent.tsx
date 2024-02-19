@@ -9,10 +9,11 @@ const HighlightSliderComponent = ({openHighlight,setOpenHighlight,durationPerIma
     const [watchedStory, setWatchedStory] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [loading,setLoading] = useState(0)
     
     const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);  
     const userData = useSelector((state: any) => state.persisted.user.userData);
-
+    
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
       };
@@ -20,32 +21,49 @@ const HighlightSliderComponent = ({openHighlight,setOpenHighlight,durationPerIma
         setCurrentIndex((prevIndex) =>
           prevIndex === highlights[openHighlight]?.media.length - 1 ? 0 : prevIndex + 1
         );
+        setLoading(0)
       };
     
       const prevImage = () => {
         setCurrentIndex((prevIndex) =>
           prevIndex === 0 ? highlights[openHighlight]?.media.length - 1 : prevIndex - 1
         );
+        setLoading(0)
       };
+     
       useEffect(() => {
         if (!isOpen) {
-          setWatchedStory(currentIndex + 1);
+          console.log(loading, "loadingloading");
+          const interval = setInterval(() => {
+            setLoading((prevIndex) =>
+              prevIndex == 100 ? 0 : prevIndex + 5.5
+            );
+          }, 250); 
+          return () => clearInterval(interval);
+        }else{
+          setLoading(0)
+        }
+      }, [isOpen, loading]);
+    
+      useEffect(() => {
+        if (!isOpen) {
+          setWatchedStory(currentIndex);
           const interval = setInterval(() => {
             setCurrentIndex((prevIndex) =>
               prevIndex === highlights[openHighlight]?.media.length - 1 ? 0 : prevIndex + 1
             );
-          }, durationPerImage);
+            setLoading(0)
+          }, 5000);
           return () => clearInterval(interval);
         }
       }, [isOpen, currentIndex, highlights[openHighlight]?.media.length]);
-
-      const addNewHighlight = async () => {
-        console.log("addNewHighlightaddNewHighlight");
-        
+ 
+      const addNewHighlight = async () => {        
         const name = highlights[openHighlight].name
         setHighlightList(true)
         setHighlightName(name)
         setIsOpen(false)
+        setLoading(0)
       };  
 
       const deleteHighlight=async()=>{
@@ -55,30 +73,39 @@ const HighlightSliderComponent = ({openHighlight,setOpenHighlight,durationPerIma
           name:name,
           image:currentImage
         }
-        console.log(name,"name");
-        console.log(currentImage,"CURR");
         const response:any = await DeleteHighlightFunction(data)
         if (response?.data?.status) {
           toast.success(response?.data?.message);
         } else {
           toast.error(response?.data?.message);
-        }
+        }        
         setDeleteHighlight(true)
+        setOpenHighlight(-1)
         setIsOpen(false)        
       }
 
   return (
     <div className="flex justify-center items-center w-full h-[500px] mt-5 relative">
     <div className="flex justify-center w-full absolute top-2">
-      {
-        highlights[openHighlight]?.media.map((_: any, index: number) => (
-          <div
-            key={index}
-            className={`w-full h-2  rounded-full mx-0.5 ${
-              index >= watchedStory ? "bg-amber-50" : "bg-teal-700"
-            }`}
-          ></div>
-        ))}
+    {
+  highlights[openHighlight]?.media.map((_: any, index: number) => (
+    <div
+      key={index}
+      className={`w-full h-2 rounded-full mx-0.5 ${
+        index >= watchedStory ? "bg-amber-50" : "bg-teal-700"
+      }`}
+ 
+    >
+   <div
+        className={`h-2 rounded-full ${
+          index === watchedStory ? "bg-teal-700" : ""
+        }`}
+        style={{ width: `${loading}%`, transition: `${loading ? "width 0.5s ease-in-out":""}` }} 
+      ></div>
+    </div>
+  ))
+}
+
     </div>
     <Link to="/profile">
       <img

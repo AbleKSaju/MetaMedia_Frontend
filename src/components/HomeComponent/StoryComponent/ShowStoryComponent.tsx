@@ -8,7 +8,6 @@ const ShowStoryComponent = ({ setShowStory }: any) => {
   //   const [stories,setStories] = useState([])
 
   const stories = useSelector((state:any)=>state.persisted.story.storyData)
-  console.log(stories,"SSR");
   
   return (
     <div className="fixed top-0 left-0 w-full h-[92vh] sm:h-full bg-black bg-opacity-60 z-20">

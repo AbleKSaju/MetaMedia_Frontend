@@ -236,7 +236,6 @@ const Login = () => {
       dispatch(clearUser());
       dispatch(addUser(data));
       dispatch(addToken(response.data.accesstoken));
-
         toast.success(response?.data?.data?.message);
         Navigate("/");
 

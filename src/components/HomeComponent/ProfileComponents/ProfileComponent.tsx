@@ -41,10 +41,8 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
     })();
     setDeleteHighlight(false)
   },[addHighlight,highlightList,highlight,deleteHighlight])
-  console.log(deleteHighlight,"deleteHighlight");
   
-console.log(highlights,"LENNG");
-console.log(highlights.length,"LENNG");
+
 useEffect(()=>{
   if(highlights.length==0){
     setOpenHighlight(-1)

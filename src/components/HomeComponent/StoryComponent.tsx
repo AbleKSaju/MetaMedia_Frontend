@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 
 // const [stories,setStories]=useState([])
 const Story = ({setShowStory}:any) => {
+  console.log("STOR");
+  
   const stories = useSelector((state:any)=>state.persisted.story.storyData)
   return (
     <>

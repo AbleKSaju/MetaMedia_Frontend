@@ -9,7 +9,6 @@ const StoryCard = ({setShowStory}:any) => {
   const isLaptop = useMediaQuery("(min-width: 1025px)");
   
   const stories = useSelector((state:any)=>state.persisted.story.storyData)
-  console.log(stories,"stories && stories && ");
   
   const userData = useSelector((state:any)=>state.persisted.user.userData)
   
