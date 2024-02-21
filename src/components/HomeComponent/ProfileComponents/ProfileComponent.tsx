@@ -10,12 +10,10 @@ import FollowComponent from "./FollowComponent";
 import AddHighlightComponent from "./AddHighlightComponent";
 import HighlightListComponent from "../HighlightComponent/HighlightListComponent";
 import {  } from "../../../utils/api/endpoints/common";
-import { toast } from "sonner";
-import { addHighlights } from "../../../utils/ReduxStore/Slice/highlightSlice";
+import { addHighlights, deleteHighlights } from "../../../utils/ReduxStore/Slice/highlightSlice";
 import OpenHighlightComponent from "../HighlightComponent/OpenHighlightComponent";
 
 const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
-  console.log("I AM PROFILE");
 
   const [addHighlight, setAddHighlight] = useState(false);
   const [deleteHighlight, setDeleteHighlight] = useState(false);
@@ -28,6 +26,7 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
   const [highlightList,setHighlightList] = useState(false)
   const dispatch = useDispatch()
   const userData = useSelector((state: any) => state.persisted.user.userData);
+  
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
   setSidebarOpen(true);  
   let highlight
@@ -37,6 +36,9 @@ const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
      if(response?.data?.status){
       highlight = response?.data?.data?.highlights
       dispatch(addHighlights(highlight))
+     }else{
+      console.log("ENTER TO ELSE");
+      dispatch(deleteHighlights())
      }
     })();
     setDeleteHighlight(false)
@@ -62,7 +64,7 @@ useEffect(()=>{
                     ? `${userData.profile}`
                     : userData.profile
                     ? `http://localhost:3000/profile/${userData?.profile}`
-                    : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                    : "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2220431045.jpg"
                 }
                 alt="Profile"
               />
@@ -136,6 +138,8 @@ useEffect(()=>{
               <div className="mt-3 flex justify-center lg:mt-8">
                 <div className="flex justify-start w-72 sm:w-96 sm:gap-3 md:w-[460px] lg:w-[660px] lg:gap-9">
                   {highlights.length!=0 && highlights.map((val:any,index:number) => {
+                    console.log("ENTER TO HIGH");
+                    
                     return (
                       <Highlight
                       setOpenHighlight={setOpenHighlight}

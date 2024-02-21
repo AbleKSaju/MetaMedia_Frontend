@@ -9,17 +9,15 @@ import ChangePassword from "../pages/user/ChangePassword";
 import AddProfile from "../pages/user/AddProfile";
 import Home from "../pages/user/Home";
 import Mods from "../pages/user/Mods";
-import ProtectedRoute from "./ProtectedRoute";
 import S from "../pages/user/S";
-
-import Settings from "../pages/user/Settings";
 import AddPostModal from "../components/HomeComponent/AddPostcomponent";
 import SizeSelectModal from "../components/HomeComponent/SizeSelectModal";
+import ProtectedAuthRoute from "./ProtectedAuthRoute";
 
 const UserRouter = () => {
   return (
     <Routes>
-      <Route path="/*" element={<Home />} />
+      <Route path="/*" element={<Home/>} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/verifyOtp" element={<VerifyOtp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />

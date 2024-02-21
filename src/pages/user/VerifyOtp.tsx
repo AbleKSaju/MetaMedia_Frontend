@@ -102,7 +102,7 @@ const dispatch=useDispatch()
         dispatch(addToken(response.data.accesstoken));
         if (response?.data?.status) {
           toast.success(response?.data?.message);
-          Navigate("/chooseinterest");
+          Navigate("/chooseinterest",{ replace: true });
         } else {
           toast.error(response?.data?.message);
         }

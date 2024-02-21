@@ -36,10 +36,7 @@ interface ResponseData {
 }
 
 const Login = () => {
-  const userDataFromRedux = useSelector(
-    (state: any) => state.persisted.user.userData
-  );
-  const token = useSelector((state: any) => state.persisted.token.token);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
@@ -85,7 +82,7 @@ const Login = () => {
 
           if (response?.data?.newUser) {
             toast.success(response?.data?.message);
-            Navigate("/chooseinterest");
+            Navigate("/chooseinterest",{ replace: true });
           } else {
             const userEmail = { email: response?.data?.user?.email };
             const userData: any = await GetUserDataFunction(userEmail);
@@ -114,7 +111,7 @@ const Login = () => {
   
             // await SaveUserDataInRedux(userData)
             toast.success(response?.data?.message);
-            Navigate("/");
+            Navigate('/', { replace: true });
           }
         } else {
           toast.error(response?.data?.message);
@@ -166,7 +163,7 @@ const Login = () => {
 
             if (response?.data?.newUser) {
               toast.success(response?.data?.message);
-              Navigate("/chooseinterest");
+              Navigate("/chooseinterest",{ replace: true });
             } else {
               const userEmail = { email: response?.data?.user?.email };
               const userData: any = await GetUserDataFunction(userEmail);
@@ -195,7 +192,7 @@ const Login = () => {
     
               // await SaveUserDataInRedux(userData)  
               toast.success(response?.data?.message);
-              Navigate("/");
+              Navigate("/",{ replace: true });
             }  
         } else {
           toast.error(response?.data?.message);
@@ -215,10 +212,17 @@ const Login = () => {
     if (userExist.data.status == false) {
       toast.error(userExist?.data?.message);
     } else {
-      const userEmail = { email: userExist?.data?.user?.email };      
-      const response: any = await GetUserDataFunction(userEmail);
+      console.log(userExist,"userExistuserExist");
       
-      const data: ResponseData = {
+      const userEmail = { email: userExist?.data?.user?.email };   
+
+        
+      const response: any = await GetUserDataFunction(userEmail);
+
+      console.log(response,"responseData");
+      
+      
+      const userData: ResponseData = {
         email: response.data.user.email ?? "",
         name: response.data.user.name ?? "",
         userName: response.data.user.userName ?? "",
@@ -234,10 +238,10 @@ const Login = () => {
         bio: response.data.user.bio ?? "",
       };
       dispatch(clearUser());
-      dispatch(addUser(data));
+      dispatch(addUser(userData));
       dispatch(addToken(response.data.accesstoken));
         toast.success(response?.data?.data?.message);
-        Navigate("/");
+        Navigate("/",{ replace: true });
 
     }
     

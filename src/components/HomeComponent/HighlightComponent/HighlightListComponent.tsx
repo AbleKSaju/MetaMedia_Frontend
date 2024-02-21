@@ -2,14 +2,19 @@ import { X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { getStoriesFunction,addNewHighlightFunction } from "../../../utils/api/methods";
 import { toast } from "sonner";
+import { getMyAllStoriesForHighLightListFunction } from "../../../utils/api/methods/StoryService/Story/post";
 
 const HighlightListComponent = ({ highlightName, setHighlightList, setHighlightName}: any) => {
+  console.log("HighlightListComponent");
+  
   const [highLightData, setHighLightData] = useState([]);
   const [selectedImages, setSelectedImages] = useState<any[]>([]);
   useEffect(() => {
     (async () => {
-      const response: any = await getStoriesFunction();
-      setHighLightData(response?.data?.data?.content?.story); // Update state with response
+      const response: any = await getMyAllStoriesForHighLightListFunction();
+      console.log(response,"response?.data?.data");
+      
+      // setHighLightData(response?.data?.data); // Update state with response
     })();
   }, []);
 

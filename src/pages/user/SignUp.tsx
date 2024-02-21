@@ -21,26 +21,10 @@ import { Eye, EyeOff } from "lucide-react";
 
 const SignUp = () => {
   const userData=useSelector((state:any)=>state.persisted.user.userData)
-  
   const [showPassword,setShowPassword]=useState(false)
-  
   const dispatch = useDispatch()
   const Navigate = useNavigate();
-
-  // const responseMessage: any = (response: any) => {
-  //   const decode: any = jwtDecode(response.credential);
-  //   console.log(decode);
-  // };
-  // const errorMessage: any = (error: any) => {
-  //   console.log(error);
-  // };
-
   const { errors, handleSubmit, register } = useRegisterValidate();
-
-  // const SignInWithFacebook=()=>{
-  //   const user:any=FacebookAuth()
-  //   console.log("user :",user); 
-  // }
 
     const SignInWithFacebook = async (e: any) => {
       e.preventDefault();
@@ -84,7 +68,7 @@ const SignUp = () => {
             if (response?.data?.newUser) {
               console.log("IAMnewUSER");
               toast.success(response?.data?.message);
-              Navigate("/chooseinterest");
+              Navigate("/chooseinterest",{ replace: true });
             } else {
               const userEmail = { email: response?.data?.user?.email };
               const userData: any = await GetUserDataFunction(userEmail);
@@ -116,7 +100,7 @@ const SignUp = () => {
               console.log(userData, "USERDAETAILS");
   
               toast.success(response?.data?.message);
-              Navigate("/");
+              Navigate("/",{ replace: true });
             }
           } else {
             toast.error(response?.data?.message);
@@ -160,7 +144,7 @@ const SignUp = () => {
          
           if (data) {
             toast.success(response?.data?.message);
-            Navigate("/chooseinterest");
+            Navigate("/chooseinterest",{ replace: true });
           }
         } else if (response?.data?.status) {
           const data: ResponseData = {
@@ -178,7 +162,7 @@ const SignUp = () => {
           dispatch(addToken(response.data.accesstoken))
           if (data) {
             toast.success(response?.data?.message);
-            Navigate("/");
+            Navigate("/",{ replace: true });
           }
         } else {
           toast.error(response?.data?.message);
@@ -191,7 +175,7 @@ const SignUp = () => {
   const formSubmit = async (Data: RegisterFormData) => {
     const response: any = await SignUpFunction({ ...Data });
     if (response?.data?.status) {
-      Navigate("/verifyOtp");
+      Navigate("/verifyOtp",{ replace: true });
     } else {
       toast.error(response?.data?.message);
     }
@@ -220,7 +204,7 @@ const SignUp = () => {
                 className="p-5 outline-noneborder  border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="abc"
                 type="text"
-                value="Able K Saju"
+                // value="Able K Saju"
                 {...register("name")}
               />
               <p className="text-red-600 text-xs text-start">
@@ -235,7 +219,7 @@ const SignUp = () => {
                 className="p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="abc@gmai.com"
                 type="text"
-                value="ableksaju3@gmail.com"
+                // value="ableksaju3@gmail.com"
                 {...register("email")}
               />
               <p className="text-red-600 text-xs text-start">
@@ -249,7 +233,7 @@ const SignUp = () => {
               <input
                 className=" p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
                 placeholder="********"
-                value="1234"
+                // value="1234"
                 type={showPassword ? "text" : "password"}
                 {...register("password")}
               />

@@ -11,12 +11,14 @@ const highlightSlice = createSlice({
     initialState,
     reducers: {
         addHighlights: (state, action: PayloadAction<any>) => {
-            console.log(action.payload, "PAYLOAD");
             state.highlightData=[]
             state.highlightData = action.payload;
+        },
+        deleteHighlights: (state) => {
+            state.highlightData=[]
         }
     }
 })
 
-export const {addHighlights} = highlightSlice.actions
+export const {addHighlights,deleteHighlights} = highlightSlice.actions
 export default highlightSlice.reducer

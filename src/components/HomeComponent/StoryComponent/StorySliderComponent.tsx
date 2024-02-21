@@ -8,28 +8,31 @@ import { toast } from "sonner";
 
 interface ImageSliderProps {
   setShowStory: any;
-  durationPerImage?: number;
+  deleteStory: boolean;
+  setDeleteStory: any;
 }
 
-const StorySliderComponent: React.FC<ImageSliderProps> = ({
+const StorySliderComponent = ({
   setShowStory,
-  durationPerImage = 5000,
-}) => {
+  deleteStory,
+  setDeleteStory,
+}: ImageSliderProps) => {
   const stories = useSelector((state: any) => state.persisted.story.storyData);
 
   const [watchedStory, setWatchedStory] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(0);
+  const durationPerImage = 5000;
 
-  const dispatch = useDispatch();
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  useEffect(()=>{
-    if(stories[0].length==0){
-      setShowStory(-1)
+  useEffect(() => {
+    if (stories[0].length == 0) {
+      setShowStory(-1);
     }
-  },[stories])
+  }, [stories]);
 
   const userData = useSelector((state: any) => state.persisted.user.userData);
 
@@ -37,47 +40,55 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({
     setCurrentIndex((prevIndex) =>
       prevIndex === stories[0].length - 1 ? 0 : prevIndex + 1
     );
+    setLoading(0);
   };
 
   const prevImage = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? stories[0].length - 1 : prevIndex - 1
     );
+    setLoading(0);
   };
 
   useEffect(() => {
     if (!isOpen) {
-      setWatchedStory(currentIndex + 1);
+      const interval = setInterval(() => {
+        setLoading((prevIndex) => (prevIndex == 100 ? 0 : prevIndex + 5.5));
+      }, 250);
+      return () => clearInterval(interval);
+    } else {
+      setLoading(0);
+    }
+  }, [isOpen, loading]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setWatchedStory(currentIndex);
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) =>
           prevIndex === stories[0].length - 1 ? 0 : prevIndex + 1
         );
+        setLoading(0);
       }, durationPerImage);
       return () => clearInterval(interval);
     }
   }, [isOpen, currentIndex, durationPerImage, stories[0].length]);
 
-  console.log(stories[0].length, "length");
-  console.log(currentIndex, "currentIndex");
-  const deleteStory = async () => {
+  const deleteStories: any = async () => {
     const data = {
       userId: userData.userId,
       storyId: stories[0]?.[currentIndex]._id,
     };
-
     const response: any = await deleteStoryFunction(data);
+    setLoading(0);
 
-    if (response.data.data.status) {
-      toast.success(response.data.data.message);
-      dispatch(addStory(response?.data?.data?.story?.content?.story));
+    if (response?.data?.status) {
+      toast.success(response.data.message);
+      setDeleteStory(!deleteStory);
       setIsOpen(false);
-
-      if (stories[0].length >= currentIndex) {
-        console.log("ENTT");
-        setCurrentIndex(0);
-      }
+      setCurrentIndex(0);
     } else {
-      toast.error(response.data.data.message);
+      toast.error(response.data.message);
     }
   };
 
@@ -87,10 +98,20 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({
         {stories[0].map((_: any, index: number) => (
           <div
             key={index}
-            className={`w-full h-2  rounded-full mx-0.5 ${
+            className={`w-full h-2 rounded-full mx-0.5 ${
               index >= watchedStory ? "bg-amber-50" : "bg-teal-700"
             }`}
-          ></div>
+          >
+            <div
+              className={`h-2 rounded-full ${
+                index === watchedStory ? "bg-teal-700" : ""
+              }`}
+              style={{
+                width: `${loading}%`,
+                transition: `${loading ? "width 0.5s ease-in-out" : ""}`,
+              }}
+            ></div>
+          </div>
         ))}
       </div>
       <Link to="/profile">
@@ -115,7 +136,7 @@ const StorySliderComponent: React.FC<ImageSliderProps> = ({
               </li>
               <li
                 className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg cursor-pointer"
-                onClick={deleteStory}
+                onClick={deleteStories}
               >
                 delete
               </li>

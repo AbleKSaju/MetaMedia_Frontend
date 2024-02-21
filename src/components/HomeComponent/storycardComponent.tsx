@@ -1,17 +1,17 @@
-
 import { MouseEventHandler, useState } from "react";
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
 import { useSelector } from "react-redux";
 import ShowStoryComponent from "./StoryComponent/ShowStoryComponent";
-const StoryCard = ({setShowStory}:any) => {
+const StoryCard = ({ setShowStory }: any) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
   const isLaptop = useMediaQuery("(min-width: 1025px)");
-  
-  const stories = useSelector((state:any)=>state.persisted.story.storyData)
-  
-  const userData = useSelector((state:any)=>state.persisted.user.userData)
-  
+
+  const myStory = useSelector((state: any) => state.persisted.story.storyData);
+  const userData = useSelector((state: any) => state.persisted.user.userData);
+  const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
+
+
 
   const renderSidebar = () => {
     if (isMobile) {
@@ -51,32 +51,83 @@ const StoryCard = ({setShowStory}:any) => {
     } else if (isLaptop) {
       return (
         <>
-        <div className="flex-none px-2 scrollbar-hide ">
-          <div className="flex flex-col items-center justify-center lg:gap-x-5 w-36 h-40 ">
-            <div className="relative flex min-h-screen flex-col justify-center overflow-hidden lg:py-6 sm:py-1 scrollbar-hide ">
-              <div className="relative mx-auto max-w-lg rounded-lg w-24 h-32 lg:w-32 lg:h-40 "  >
-                <div className="w-full h-full rounded-md">
-                  <div className="w-full h-full bg-[#042F2C] relative rounded-lg"
-                  >
-                    <img
-                      onClick={()=>setShowStory(0)}
-                      className="h-28 w-full rounded-lg blur-[1px]"
-                      src= {`${stories[0]?.[0] ? `http://localhost:3003/story/${stories?.[0]?.[0].storyUrl}` : "https://i.pinimg.com/736x/f3/72/0e/f3720e26e91ec25f058f76fb769b0b10.jpg"}`}
-                      alt=""
-                      />
-                    <div className="rounded-full h-16 w-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-50">
+        {myStory?.[0]?.[0]?.storyUrl && 
+          <div className="flex-none px-2 scrollbar-hide ">
+            <div className="flex flex-col items-center justify-center lg:gap-x-5 w-36 h-40 ">
+              <div className="relative flex min-h-screen flex-col justify-center overflow-hidden lg:py-6 sm:py-1 scrollbar-hide ">
+                <div className="relative mx-auto max-w-lg rounded-lg w-24 h-32 lg:w-32 lg:h-40 ">
+                  <div className="w-full h-full rounded-md">
+                    <div className="w-full h-full bg-[#042F2C] relative rounded-lg">
                       <img
-                        className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                        src= {`${stories[0]?.[0] ? `http://localhost:3000/profile/${userData.profile}` : "https://i.pinimg.com/564x/8c/5b/21/8c5b21a8824a4400c72d422711f32f22.jpg"}`}
-                        alt="S"
+                        onClick={() => setShowStory(0)}
+                        className="h-28 w-full rounded-lg blur-[1px]"
+                        src={`${
+                          myStory[0]?.[0]
+                            ? `http://localhost:3003/story/${myStory?.[0]?.[0]?.storyUrl}`
+                            : "https://i.pinimg.com/736x/f3/72/0e/f3720e26e91ec25f058f76fb769b0b10.jpg"
+                        }`}
+                        alt=""
                       />
+                      <div className="rounded-full h-16 w-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-50">
+                        <img
+                          className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                          src={`${
+                            myStory[0]?.[0] && userData.profile
+                              ? `http://localhost:3000/profile/${userData.profile}`
+                              : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
+                          }`}
+                          alt="S"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+    }
+          {stories[0].length!==0 &&
+            stories[0].map((value: any, index: number) => {
+              console.log(value,"val");
+              
+              return (
+                <div className="flex-none px-2 scrollbar-hide ">
+                  <div className="flex flex-col items-center justify-center lg:gap-x-5 w-36 h-40 ">
+                    <div className="relative flex min-h-screen flex-col justify-center overflow-hidden lg:py-6 sm:py-1 scrollbar-hide ">
+                      <div className="relative mx-auto max-w-lg rounded-lg w-24 h-32 lg:w-32 lg:h-40 ">
+                        <div className="w-full h-full rounded-md">
+                          <div className="w-full h-full bg-[#042F2C] relative rounded-lg">
+                            <div>
+                              <img
+                                onClick={() => setShowStory(0)}
+                                className="h-28 w-full rounded-lg blur-[1px]"
+                                src={`${
+                                  stories
+                                    ? `http://localhost:3003/story/${value.data[0]?.storyUrl}`
+                                    : "https://i.pinimg.com/736x/f3/72/0e/f3720e26e91ec25f058f76fb769b0b10.jpg"
+                                }`}
+                                alt=""
+                              />
+                              <div className="rounded-full h-16 w-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-50">
+                                <img
+                                  className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                  src={`${
+                                    stories && userData.profile
+                                      ? `http://localhost:3000/profile/${value.profile}`
+                                      : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
+                                  }`}
+                                  alt="S"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
         </>
       );
     }

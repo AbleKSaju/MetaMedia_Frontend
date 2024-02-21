@@ -35,10 +35,24 @@ const Aside = () => {
 
   const handleFileChange = async (e: any) => {
     try {
+      const file = e.target.files[0];
+  
+      // Check if a file is selected
+      if (!file) {
+        toast.error("Please select a file.");
+        return;
+      }
+  
+      // Check if the selected file is an image
+      if (!file.type.startsWith('image/')) {
+        toast.error("Please select an image file.");
+        return;
+      }
+  
       const formData = new FormData();
-      formData.append("file", e.target.files[0]);
-      console.log(formData,"FORMDATA");
-      
+      formData.append("file", file);
+      console.log(formData, "FORMDATA");
+  
       const response = await addProfileImageFunction(formData);
       if (response?.status) {
         const data = {
@@ -54,6 +68,7 @@ const Aside = () => {
       console.error("Error uploading file:", error);
     }
   };
+  
   return (
     <div className="sm:w-96 lg:w-[400px]">
       <div className="sm:ml-0 sm:flex">

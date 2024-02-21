@@ -60,6 +60,8 @@ const HighlightSliderComponent = ({openHighlight,setOpenHighlight,durationPerIma
  
       const addNewHighlight = async () => {        
         const name = highlights[openHighlight].name
+        console.log(name,"namename");
+        
         setHighlightList(true)
         setHighlightName(name)
         setIsOpen(false)

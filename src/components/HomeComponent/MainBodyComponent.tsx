@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
 import PostScroll from "./PostScrollComponent";
 import Story from "./StoryComponent";
 import Suggestion from "./SuggestionComponent";
 import { SetSidebarOpenFunction } from "src/pages/user/Home";
 import ShowStoryComponent from "./StoryComponent/ShowStoryComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllStoriesFunction } from "../../utils/api/methods/StoryService/Story/get";
+import { addOtherUserStories } from "../../utils/ReduxStore/Slice/storySlice";
 
 interface MainBodyProps {
   setSidebarOpen: (value: boolean) => void;
@@ -13,6 +15,28 @@ interface MainBodyProps {
   // other props if any
 }
 const MainBody = ({setSidebarOpen,setShowStory}:MainBodyProps) => {
+  const dispatch = useDispatch()
+  
+  useEffect(() => {
+    (async ()=>{
+      console.log("getStoriesFunction");
+     const response:any = await getAllStoriesFunction()
+
+    console.log(response?.data?.data,"response?.data.data?Array");
+    if(response){
+      dispatch(addOtherUserStories(response?.data?.data))
+    }else{
+      dispatch(addOtherUserStories([]))
+    }
+    })();
+  },[])
+  
+  const myStory = useSelector((state: any) => state.persisted.story.storyData);
+  const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
+
+  console.log(myStory,"myStory");
+  console.log(stories,"stories");
+  
   setSidebarOpen(true)
 
   // const [myStory,setMyStory] = useState(false)  

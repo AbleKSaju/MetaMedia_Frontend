@@ -28,6 +28,8 @@ export const AddHighlight_Api=`${STORY_URL}/addHighlight`
 export const AddStory_Api=`${STORY_URL}/addStory`
 export const DeleteStory_Api=`${STORY_URL}/deleteStory`
 export const GetStories_Api=`${STORY_URL}/getStories`
+export const GetAllStories_Api=`${STORY_URL}/getAllStories`
+export const getMyAllStoriesForHighLightList_Api=`${STORY_URL}/getMyAllStoriesForHighLigh`
 
         //Highlight
 export const AddNewHighlight_Api=`${HIGHLIGHT_URL}/addNewHighlight`

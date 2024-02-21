@@ -3,11 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import StorySliderComponent from "./StorySliderComponent";
 
-const ShowStoryComponent = ({ setShowStory }: any) => {
+const ShowStoryComponent = ({ setShowStory,deleteStory,setDeleteStory }: any) => {
 
   //   const [stories,setStories] = useState([])
 
-  const stories = useSelector((state:any)=>state.persisted.story.storyData)
+  // const stories = useSelector((state:any)=>state.persisted.story.storyData)
   
   return (
     <div className="fixed top-0 left-0 w-full h-[92vh] sm:h-full bg-black bg-opacity-60 z-20">
@@ -26,7 +26,7 @@ const ShowStoryComponent = ({ setShowStory }: any) => {
             </div>
             <div className="flex justify-center w-full h-[560px]">
               <div className="">
-                <StorySliderComponent setShowStory={setShowStory} durationPerImage = {5000}  />
+                <StorySliderComponent setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}  />
               </div>
             </div>
           </div>

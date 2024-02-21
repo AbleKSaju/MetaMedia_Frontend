@@ -6,15 +6,28 @@ const ProtectedAuthRoute = ({ children }: { children: any }) => {
     console.log("I AM PROTECTED ROUTE");
     const token = useSelector((state: any) => state.persisted.token.token);
     console.log(token, "udaaaaa");
+    console.log(children, "children");
   
     if (token) {
       console.log("Yes TOKEN");
-      Navigate('/');
-      return null; // Add this line to prevent rendering children
+      return Navigate('/',{replace : true});
+    }else{
+      Navigate('/login',{replace : true});
+      return children
     }
-  
-    return children;
+
   };
   
   export default ProtectedAuthRoute;
   
+//   const ProtectedRoute = ({children}:{children:any}) => {
+//     const user = useSelector((stor:any) => stor?.token?.token); 
+//     if(!user) {
+//         UseSomthingWentWrong()
+//         return <Navigate to="/tutor/login"  />
+//     }
+//  return children
+
+// };
+
+// export default ProtectedRoute;

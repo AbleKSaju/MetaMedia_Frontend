@@ -11,7 +11,7 @@ import AsideComponent from "../../components/HomeComponent/AsideComponent";
 import StoryModal from "../../components/HomeComponent/StoryComponent/StoryModal";
 import ShowStoryComponent from "../../components/HomeComponent/StoryComponent/ShowStoryComponent";
 import { useDispatch } from "react-redux";
-import { addStory } from "../../utils/ReduxStore/Slice/storySlice";
+import { addStory, deleteAllStory } from "../../utils/ReduxStore/Slice/storySlice";
 import { getStoriesFunction } from "../../utils/api/methods";
 
 
@@ -22,28 +22,25 @@ export interface SetSidebarOpenFunction {
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [addStories, setAddStories] = useState<boolean>(false);
-  // const [showStoryCount,setShowStoryCount] = useState(-1)
+  const [deleteStory, setDeleteStory] = useState<boolean>(false);
   const [showStory,setShowStory] = useState(-1)
   const dispatch = useDispatch()
-  console.log(showStory,"showStoryshowStoryshowStory");
   
   useEffect(()=>{
     (async ()=>{
      const response:any = await getStoriesFunction()
-     console.log(response,"responseresponse");
-     console.log(response?.data?.data?.content?.story,"responseresponse");
-     
      if(response?.data?.status){
-      dispatch(addStory(response?.data?.data?.content?.story));
+      dispatch(addStory(response?.data?.data));
+     }else{
+      dispatch(deleteAllStory());
      }
     })();
-  },[])
+  },[addStories,deleteStory])
  
   return (
     <>
-
  {addStories && <StoryModal setAddStory={setAddStories}/>}
- {showStory >= 0 && <ShowStoryComponent setShowStory={setShowStory}/>}
+ {showStory >= 0 && <ShowStoryComponent setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
         <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}

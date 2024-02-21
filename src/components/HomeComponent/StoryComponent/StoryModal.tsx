@@ -11,13 +11,15 @@ import { addStory } from "../../../utils/ReduxStore/Slice/storySlice";
 
 
 const StoryModal = ({ setAddStory }: any) => {
+  console.log("i am StoryModal");
+  
   const [caption, setCaption] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [cropImage,setCropImage] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const Navigate = useNavigate()
-  const dispatch = useDispatch();
+  const userData = useSelector((state: any) => state.persisted.user.userData);
   // console.log(storyData,"storyDatastoryDatastoryData");
   
   function base64StringToFormDataImageFile(croppedImage:any, fileName:any, fileType:any) {
@@ -33,34 +35,31 @@ const StoryModal = ({ setAddStory }: any) => {
     formData.append("image", blob, fileName);
     return formData;
 }
-  
   // Example usage:
   // const base64String = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUWFRgVFRYZGRgZHBgYGBwYGhgYGBoYGBgaGhoZGBgcIS4lHB4rIRgYJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHBISGjQh...3000 more characters";
   
+  console.log(userData ,"userData.profile ");
+  console.log(userData.profile ,"userData.profile ");
   const submitHandler=async()=>{
+    
     if(caption && croppedImage){
       const fileName = "image.jpg";
       const fileType = "image/jpeg";
       const formData = base64StringToFormDataImageFile(croppedImage, fileName, fileType);
-      const response: any = await AddStoryFunction({ image: formData, caption: caption });
-      console.log(response,"resswwwsssssss");
-      console.log(response.data,"resswwwsssssss");
-      console.log(response.data.story,"STORresswwwsssssss");
-      console.log(response.data.story.content,"conSTORresswwwsssssss");
-      const data = response.data.story.content.story
-      console.log(data,"IAMDATA");
+      const response: any = await AddStoryFunction({ image: formData, caption: caption, profile: userData.profile });
+      console.log(response,"responseresponseresponseresponse");
       
-      if(response?.data?.status){
+
+      if(response?.status){
         setCropImage(false)
         setCroppedImage(null)
         setImageUrl(null)
         setSelectedFile(null)
         setAddStory(false)
-        dispatch(addStory(data))
         Navigate('/')
-        toast.success(response.data.message)
+        toast.success(response.message)
       }else{
-        toast.error(response.data.message)
+        toast.error(response.message)
       }
     }else{
       toast.error("Content not found")
