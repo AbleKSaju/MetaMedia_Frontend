@@ -28,6 +28,8 @@
     "embla-carousel-react": "^8.0.0-rc21",
     "firebase": "^10.7.2",
     "framer-motion": "^11.0.3",
+    "javascript-time-ago": "^2.5.9",
+    "js-base64": "^3.7.7",
     "jwt-decode": "^4.0.0",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.314.0",

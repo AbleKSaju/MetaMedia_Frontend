@@ -19,6 +19,9 @@ export const ChooseInterest_Api=`${USER_URL}/chooseInterest`
 export const AddProfile_Api=`${USER_URL}/addProfile`
 export const EditProfile_Api=`${USER_URL}/editProfile`
 export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
+export const GetAllUsers_Api=`${USER_URL}/getAllUsers`
+export const getUsersByName_Api=`${USER_URL}/getUsersByname`
+export const getuserById_Api=`${USER_URL}/getUserById`
 
 // STORY SERVICE
 
@@ -32,6 +35,18 @@ export const GetAllStories_Api=`${STORY_URL}/getAllStories`
 export const getMyAllStoriesForHighLightList_Api=`${STORY_URL}/getMyAllStoriesForHighLigh`
 
         //Highlight
+
 export const AddNewHighlight_Api=`${HIGHLIGHT_URL}/addNewHighlight`
 export const DeleteHighlight_Api=`${HIGHLIGHT_URL}/deleteHighlight`
 export const GetHighlightData_Api=`${HIGHLIGHT_URL}/getHighlights`
+
+//POST
+
+export const AddPost_Api=`${POST_URL}/addPost`
+export const SearchLocation_Api=`${POST_URL}/searchLocation`
+export const getLatAndLong_Api=`${POST_URL}/getLatandLog`
+export const getUserPosts_Api=`${POST_URL}/getAllPost`
+export const showAllPost_Api=`${POST_URL}/showAllPost`
+export const likePost_Api=`${POST_URL}/likePost`
+export const AddComent_Api=`${POST_URL}/addComment`
+

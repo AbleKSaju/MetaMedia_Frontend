@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PostsComponent from "../../SubHomeComponents/PostsComponent";
+import PostsComponent from "../PostComponent/PostsComponent";
 import { Edit } from "lucide-react";
 import Highlight from "../HighlightComponent/HighlightComponent";
 import { GetHighlightData } from "../../../utils/api/methods";
@@ -13,7 +13,7 @@ import {  } from "../../../utils/api/endpoints/common";
 import { addHighlights, deleteHighlights } from "../../../utils/ReduxStore/Slice/highlightSlice";
 import OpenHighlightComponent from "../HighlightComponent/OpenHighlightComponent";
 
-const Profile: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
+const Profile = ({ setSidebarOpen,render,setRender}:any) => {
 
   const [addHighlight, setAddHighlight] = useState(false);
   const [deleteHighlight, setDeleteHighlight] = useState(false);
@@ -188,8 +188,8 @@ useEffect(()=>{
           </p>
         </div>
         <div className="lg:px-16">
-          {postComponent && <PostsComponent />}
-          {!postComponent && <PostsComponent />}
+          {postComponent && <PostsComponent setRender={setRender} render={render}/>}
+          {!postComponent && <PostsComponent setRender={setRender} render={render}/>}
         </div>
       </div>
     </>

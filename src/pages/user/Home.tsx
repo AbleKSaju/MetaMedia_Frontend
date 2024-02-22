@@ -13,17 +13,20 @@ import ShowStoryComponent from "../../components/HomeComponent/StoryComponent/Sh
 import { useDispatch } from "react-redux";
 import { addStory, deleteAllStory } from "../../utils/ReduxStore/Slice/storySlice";
 import { getStoriesFunction } from "../../utils/api/methods";
+import MainModalBorderPost from "../../components/HomeComponent/PostComponent/Modal/mainModalBorderPost";
 
 
 
 export interface SetSidebarOpenFunction {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const Home = () => {
+const Home = ({ render,setRender}:any) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [addStories, setAddStories] = useState<boolean>(false);
   const [deleteStory, setDeleteStory] = useState<boolean>(false);
   const [showStory,setShowStory] = useState(-1)
+  const [isAddPost,setIsAddPost] = useState(false)
+  const [addPost,setAddPost] = useState(false)
   const dispatch = useDispatch()
   
   useEffect(()=>{
@@ -41,14 +44,19 @@ const Home = () => {
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory >= 0 && <ShowStoryComponent setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
-        <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}/>
+        <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/>
+       {isAddPost && (
+        <>
+        <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost}  />
+        </>
+       )}
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
           <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory} setAddStory={setAddStories}/>} />
           <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/message" element={<Message setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
-          <Route path="/profile" element={<Profile setSidebarOpen={setSidebarOpen}/>} />
+          <Route path="/profile" element={<Profile setSidebarOpen={setSidebarOpen} setRender={setRender} render={render}/>} />
           <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/settings/*" element={<Settings setSidebarOpen={setSidebarOpen} />} />
       {/* </Route> */}

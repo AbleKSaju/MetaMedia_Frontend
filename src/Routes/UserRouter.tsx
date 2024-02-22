@@ -13,11 +13,29 @@ import S from "../pages/user/S";
 import AddPostModal from "../components/HomeComponent/AddPostcomponent";
 import SizeSelectModal from "../components/HomeComponent/SizeSelectModal";
 import ProtectedAuthRoute from "./ProtectedAuthRoute";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { isSinglePostModalClose } from "../utils/ReduxStore/Slice/singlePostSlice";
+import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePostModal";
 
 const UserRouter = () => {
-  return (
+  const isSinglePostModal = useSelector((state: any) => state.persisted.singlePost.isSinglePostModal);
+  const dispach=useDispatch()
+  const [render,setRender]:any=useState(false)
+  useEffect(() => {
+    if(isSinglePostModal==undefined){
+     dispach(isSinglePostModalClose())
+    }
+   }, [isSinglePostModal]);
+   return (
+    <>
+    {isSinglePostModal && (
+      <>
+         <SinglePostModal setRender={setRender} render={render} />
+      </>
+     )}
     <Routes>
-      <Route path="/*" element={<Home/>} />
+      <Route path="/*" element={<Home setRender={setRender} render={render}/>} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/verifyOtp" element={<VerifyOtp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -27,13 +45,13 @@ const UserRouter = () => {
       <Route path="/addprofile" element={<AddProfile />} />
       <Route path="/selectMod" element={<Mods />} />
       <Route path="/s" element={<S />} />
-      <Route path="/post" element={<AddPostModal/>} />
       <Route path="/size" element={<SizeSelectModal/>} />
-
+      <Route path="/selectPost" element={<SinglePostModal/>} />
 
       {/* <Route path="/logout"/> */}
 
     </Routes>
+    </>
   );
 };
 

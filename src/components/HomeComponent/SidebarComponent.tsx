@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = ({ open,setAddStory }: any) => {
+const Sidebar = ({ open,setAddStory,setIsAddPost,isAddPost }: any) => {
   const location = useLocation();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -46,13 +46,12 @@ const Sidebar = ({ open,setAddStory }: any) => {
     setIsOpen(!isOpen);
   };
 
-  const handlePostClick = (e: any) => {
-    e.preventDefault();
-  };
 
   const CreateNewMedia=(media:string)=>{
     if(media=="Story"){
       setAddStory(true)
+    }else if (media == "Post"){
+      setIsAddPost(!isAddPost);
     }
     
 
@@ -209,12 +208,13 @@ const Sidebar = ({ open,setAddStory }: any) => {
 
           {/* post  */}
 
-          <li
+          <Link to="/post"
             className={`flex mt-5 rounded-md p-2 cursor-pointer  text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${3 === 3 && "bg-light-white"} ${
               location.pathname === "/post" &&
               "bg-amber-50 rounded-xl text-[#042F2C] "
             }`}
+
           >
             <motion.div
               whileHover={{
@@ -241,7 +241,7 @@ const Sidebar = ({ open,setAddStory }: any) => {
                 <div> Posts</div>
               )}
             </span>
-          </li>
+          </Link>
 
           {/* create  */}
           <li
@@ -284,7 +284,7 @@ const Sidebar = ({ open,setAddStory }: any) => {
               <div className=" bg-amber-50 w-full h-44 rounded-md flex flex-col justify-center  items-center border border-[#042F2C] p-1 ">
                 <div
                   className="p-3 border w-full rounded-md flex justify-center"
-                  onClick={(e) => handlePostClick(e)}
+                  onClick={()=>CreateNewMedia("Post")}
                 >
                   <p className="text-center font-roboto text-lg  font-semibold text-[#042F2C]">
                     Post

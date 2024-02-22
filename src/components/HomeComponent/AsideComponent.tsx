@@ -3,7 +3,7 @@ import Sidebar from "../../components/HomeComponent/SidebarComponent";
 import Footer from "../../components/HomeComponent/FooterComponent";
 
 
-const AsideComponent = ({sidebarOpen,setAddStory}:any) => {
+const AsideComponent = ({sidebarOpen,setAddStory,isAddPost,setIsAddPost}:any) => {
 
   return (
        <>
@@ -11,6 +11,8 @@ const AsideComponent = ({sidebarOpen,setAddStory}:any) => {
           <Sidebar
             open={sidebarOpen}
             setAddStory={setAddStory}
+            isAddPost={isAddPost}
+            setIsAddPost={setIsAddPost}
           />
         </div>
         <Footer/>

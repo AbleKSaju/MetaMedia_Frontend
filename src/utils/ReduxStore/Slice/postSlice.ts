@@ -1,26 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
-const postSlice=createSlice({
-    name:'post',
-    initialState :{
-        imageUrl:"",
-        imageSize:""
+
+const postSlice = createSlice({
+    name: 'post',
+    initialState: {
+        images: [],
+        videos: [],
+        aspectRatio: null // Stores the selected aspect ratio for cropping
     },
-    reducers:{
-        addImageUrl:(state:any,action:any)=>{
+    reducers: {
+        addImage: (state:any, action:any):any => {
             if (action.payload) {
-                return { ...state, imageUrl: action.payload };
-              }
+              
+                console.log(action.payload,"HHHHHH");
+                
+                state.images.push(action.payload);
+            }
         },
-        clearImageUrl:(state:any,action:any)=>{
-            state.imageUrl=""
+        removeImage: (state:any, action:any) => {
+            state.images = state.images.filter((image :any) => image !== action.payload);
         },
-        addImageSize:(state:any,action:any)=>{
+        clearImages: (state:any) => {
+            state.images = [];
+        },
+        addVideo: (state:any, action:any) => {
             if (action.payload) {
-                return { ...state, imageSize: action.payload };
-              }
+                state.videos.push(action.payload);
+            }
         },
-        cleareImageSize:(state:any,action:any)=>{
-                state.imageSize=""
+        removeVideo: (state:any, action:any) => {
+            state.videos = state.videos.filter((video :any) => video !== action.payload);
+        },
+        clearVideos: (state:any) => {
+            state.videos = [];
+        },
+        setAspectRatio: (state, action) => {
+            state.aspectRatio = action.payload;
+        },
+        clearAspectRatio:(state:any)=>{
+            state.aspectRatio=null
         }
+
     }
-})
+});
+
+export const { addImage, removeImage, clearImages, addVideo, removeVideo, clearVideos, setAspectRatio ,clearAspectRatio} = postSlice.actions;
+export default postSlice.reducer;
