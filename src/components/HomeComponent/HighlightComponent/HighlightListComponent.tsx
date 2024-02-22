@@ -1,26 +1,45 @@
 import { X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { getStoriesFunction,addNewHighlightFunction } from "../../../utils/api/methods";
+import {
+  getStoriesFunction,
+  addNewHighlightFunction,
+} from "../../../utils/api/methods";
 import { toast } from "sonner";
 import { getMyAllStoriesForHighLightListFunction } from "../../../utils/api/methods/StoryService/Story/post";
+import { useSelector } from "react-redux";
 
-const HighlightListComponent = ({ highlightName, setHighlightList, setHighlightName}: any) => {
+const HighlightListComponent = ({
+  highlightName,
+  setHighlightList,
+  setHighlightName,
+}: any) => {
   console.log("HighlightListComponent");
-  
+
   const [highLightData, setHighLightData] = useState([]);
   const [selectedImages, setSelectedImages] = useState<any[]>([]);
+  const addedHighLightData = useSelector((state: any) => state.persisted.highlight.highlightData);
   useEffect(() => {
     (async () => {
       const response: any = await getMyAllStoriesForHighLightListFunction();
-      console.log(response,"response?.data?.data");
-      
-      // setHighLightData(response?.data?.data); // Update state with response
+      console.log(response,"RRR");
+      if (response.data.status) {
+        setHighLightData(response?.data?.data);
+      } else {
+        setHighLightData([]);
+      }
     })();
   }, []);
+  const resp = addedHighLightData.map((val: any, index: number) => val.media).flat()
+  console.log(resp, "resp");
+
+  console.log(highLightData,"highLightData");
+
 
   const handleClick = (id: string, imgUrl: string) => {
+    console.log(id,imgUrl,"DATAS");
+    
     if (selectedImages.some((item) => item.id === id)) {
-      setSelectedImages(selectedImages.filter((item) => item.id !== id));
+      setSelectedImages(selectedImages?.filter((item) => item.id !== id));
     } else {
       const newData = { id: id, imgUrl: imgUrl };
       setSelectedImages([...selectedImages, newData]);
@@ -32,13 +51,13 @@ const HighlightListComponent = ({ highlightName, setHighlightList, setHighlightN
       name: highlightName,
       selectedImages,
     };
-    const response:any = await addNewHighlightFunction(data);
-    setHighlightName("")
-    if(response?.data?.status){
-      toast.success(response?.data?.message)
-      setHighlightList(false)
-    }else{
-      toast.error(response?.data?.message)
+    const response: any = await addNewHighlightFunction(data);
+    setHighlightName("");
+    if (response?.data?.status) {
+      toast.success(response?.data?.message);
+      setHighlightList(false);
+    } else {
+      toast.error(response?.data?.message);
     }
   };
 
@@ -71,12 +90,12 @@ const HighlightListComponent = ({ highlightName, setHighlightList, setHighlightN
                         key={index}
                         className={`max-w-64 ${
                           selectedImages.some(
-                            (selectedItem) => selectedItem.id === item?._id
+                            (selectedItem) => selectedItem.id === item?.id
                           )
                             ? "border border-teal-950 opacity-60"
                             : ""
                         }`}
-                        onClick={() => handleClick(item?._id, item?.storyUrl)}
+                        onClick={() => handleClick(item?.id, item?.storyUrl)}
                       >
                         <img
                           src={`http://localhost:3003/story/${item?.storyUrl}`}
