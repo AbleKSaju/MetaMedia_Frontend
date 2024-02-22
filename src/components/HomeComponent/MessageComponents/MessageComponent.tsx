@@ -127,7 +127,6 @@ const MessageComponent = () => {
       </div>
       <span className="time">1 hour ago</span>
     </div>
-    </div>
   <div className="content">
     <header>
     <img src="https://picsum.photos/200/300" alt="" />
@@ -139,6 +138,7 @@ const MessageComponent = () => {
         <a href="javascript:;">UP</a>
       </div>
     </header>
+    </div>
     <div className="message-wrap">
       <div className="message-list">
         <div className="msg">
