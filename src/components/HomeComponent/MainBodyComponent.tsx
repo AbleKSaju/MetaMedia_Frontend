@@ -12,9 +12,10 @@ import { addOtherUserStories } from "../../utils/ReduxStore/Slice/storySlice";
 interface MainBodyProps {
   setSidebarOpen: (value: boolean) => void;
   setShowStory: (value: number) => void;
+  setAddStory: (value: boolean) => void;
   // other props if any
 }
-const MainBody = ({setSidebarOpen,setShowStory}:MainBodyProps) => {
+const MainBody = ({setSidebarOpen,setShowStory,setAddStory}:MainBodyProps) => {
   const dispatch = useDispatch()
   
   useEffect(() => {
@@ -31,11 +32,8 @@ const MainBody = ({setSidebarOpen,setShowStory}:MainBodyProps) => {
     })();
   },[])
   
-  const myStory = useSelector((state: any) => state.persisted.story.storyData);
-  const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
-
-  console.log(myStory,"myStory");
-  console.log(stories,"stories");
+  // const myStory = useSelector((state: any) => state.persisted.story.storyData);
+  // const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
   
   setSidebarOpen(true)
 
@@ -50,7 +48,7 @@ const MainBody = ({setSidebarOpen,setShowStory}:MainBodyProps) => {
       <div className="sm:ml-60 sm:p-7 md:p-2 lg:ml-72 h-[99vh] scrollbar-hide overflow-hidden">
       <div className="w-full overflow-hidden ">
         {/* status */}
-        <Story setShowStory={setShowStory}/>       
+        <Story setShowStory={setShowStory} setAddStory={setAddStory}/>       
         {/* sub div for post and suggestion */}
         <div className="lg:mt-5 lg:w-full lg:h-full flex overflow-y-hidden ">
           {/* post */}

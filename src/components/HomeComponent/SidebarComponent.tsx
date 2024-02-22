@@ -54,8 +54,6 @@ const Sidebar = ({ open,setAddStory }: any) => {
     if(media=="Story"){
       setAddStory(true)
     }
-    console.log("ENTERED");
-    console.log(media);
     
 
   }
@@ -307,7 +305,6 @@ const Sidebar = ({ open,setAddStory }: any) => {
                 onClick={()=>CreateNewMedia("Story")}
                 >
                   <p className=" text-center font-roboto text-lg  font-semibold text-[#042F2C]">
-                    {" "}
                     Story
                   </p>
                   <div className="pl-4 pt-1">

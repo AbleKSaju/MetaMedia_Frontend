@@ -44,7 +44,7 @@ const Home = () => {
         <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
-          <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory}/>} />
+          <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory} setAddStory={setAddStories}/>} />
           <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/message" element={<Message setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />

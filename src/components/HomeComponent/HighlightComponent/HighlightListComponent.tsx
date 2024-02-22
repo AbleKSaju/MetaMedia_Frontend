@@ -21,20 +21,17 @@ const HighlightListComponent = ({
   useEffect(() => {
     (async () => {
       const response: any = await getMyAllStoriesForHighLightListFunction();
-      console.log(response,"RRR");
       if (response.data.status) {
-        setHighLightData(response?.data?.data);
+        const data=response?.data?.data
+        const addedStoryUrls = addedHighLightData.map((val: any) => val.media).flat();
+        const filteredHighLightData = data.filter((dataItem:any) => !addedStoryUrls.includes(dataItem.storyUrl));
+        setHighLightData(filteredHighLightData)
       } else {
         setHighLightData([]);
       }
     })();
   }, []);
-  const resp = addedHighLightData.map((val: any, index: number) => val.media).flat()
-  console.log(resp, "resp");
-
-  console.log(highLightData,"highLightData");
-
-
+  
   const handleClick = (id: string, imgUrl: string) => {
     console.log(id,imgUrl,"DATAS");
     
@@ -60,9 +57,11 @@ const HighlightListComponent = ({
       toast.error(response?.data?.message);
     }
   };
+  console.log(highlightName.length,"highlightName.length");
+  
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-20">
+    <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50">
       <div className="flex justify-center w-full h-full bg-transparent">
         <div className="fixed top-24 h-[500px] md:h-[700px] w-full sm:w-[500px] md:w-[600px] md:top-10 z-30 flex justify-center border text-white rounded-lg border-teal-900  bg-white">
           <div className="absolute left-3 top-3">
@@ -85,7 +84,7 @@ const HighlightListComponent = ({
               <div className="w-full h-full">
                 <div className=" flex flex-wrap flex-row justify-center">
                   <div className="grid grid-cols-3 gap-0.5 md:gap-3">
-                    {highLightData.map((item: any, index: number) => (
+                    {highLightData.length ? highLightData.map((item: any, index: number) => (
                       <div
                         key={index}
                         className={`max-w-64 ${
@@ -102,7 +101,7 @@ const HighlightListComponent = ({
                           alt=""
                         />
                       </div>
-                    ))}
+                    )): <p className="text-3xl text-black col-start-2 row-start-10 ">No Highlights.</p> }
                   </div>
                 </div>
               </div>

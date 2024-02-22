@@ -53,7 +53,7 @@ useEffect(()=>{
 
   return (
     <>
-      <div className={`${ openFollowings || openFollowers || highlightList ? "fixed left-10" : ""} sm:ml-60 sm:p-7 md:p-2 lg:ml-72`}>
+      <div className={`${ openFollowings || openFollowers || highlightList ? "fixed left-10" : ""} sm:ml-60 sm:p-7 md:p-2 lg:ml-72 z-10`}>
         <div className="p-4 lg:pt-10 lg:flex lg:justify-around">
           <div className="flex justify-center lg:justify-start">
             <div className=" w-32 lg:w-40 lg:h-40 h-32">
