@@ -11,7 +11,7 @@ import { addOtherUserStories } from "../../utils/ReduxStore/Slice/storySlice";
 
 interface MainBodyProps {
   setSidebarOpen: (value: boolean) => void;
-  setShowStory: (value: number) => void;
+  setShowStory: (value: string) => void;
   setAddStory: (value: boolean) => void;
   // other props if any
 }
@@ -22,8 +22,6 @@ const MainBody = ({setSidebarOpen,setShowStory,setAddStory}:MainBodyProps) => {
     (async ()=>{
       console.log("getStoriesFunction");
      const response:any = await getAllStoriesFunction()
-
-    console.log(response?.data?.data,"response?.data.data?Array");
     if(response){
       dispatch(addOtherUserStories(response?.data?.data))
     }else{
@@ -32,15 +30,10 @@ const MainBody = ({setSidebarOpen,setShowStory,setAddStory}:MainBodyProps) => {
     })();
   },[])
   
-  // const myStory = useSelector((state: any) => state.persisted.story.storyData);
-  // const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
-  
   setSidebarOpen(true)
 
-  // const [myStory,setMyStory] = useState(false)  
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
-
 
   return (
     <>
@@ -48,7 +41,7 @@ const MainBody = ({setSidebarOpen,setShowStory,setAddStory}:MainBodyProps) => {
       <div className="sm:ml-60 sm:p-7 md:p-2 lg:ml-72 h-[99vh] scrollbar-hide overflow-hidden">
       <div className="w-full overflow-hidden ">
         {/* status */}
-        <Story setShowStory={setShowStory} setAddStory={setAddStory}/>       
+        <Story   setShowStory={setShowStory} setAddStory={setAddStory}/>       
         {/* sub div for post and suggestion */}
         <div className="lg:mt-5 lg:w-full lg:h-full flex overflow-y-hidden ">
           {/* post */}

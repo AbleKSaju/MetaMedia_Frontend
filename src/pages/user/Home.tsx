@@ -23,7 +23,7 @@ const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [addStories, setAddStories] = useState<boolean>(false);
   const [deleteStory, setDeleteStory] = useState<boolean>(false);
-  const [showStory,setShowStory] = useState(-1)
+  const [showStory,setShowStory] = useState("")
   const dispatch = useDispatch()
   
   useEffect(()=>{
@@ -40,7 +40,7 @@ const Home = () => {
   return (
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
- {showStory >= 0 && <ShowStoryComponent setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
+ {showStory.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
         <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}

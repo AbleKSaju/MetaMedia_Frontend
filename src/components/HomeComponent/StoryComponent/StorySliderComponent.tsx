@@ -10,42 +10,66 @@ interface ImageSliderProps {
   setShowStory: any;
   deleteStory: boolean;
   setDeleteStory: any;
+  showStory: string;
 }
 
 const StorySliderComponent = ({
+  showStory,
   setShowStory,
   deleteStory,
   setDeleteStory,
 }: ImageSliderProps) => {
-  const stories = useSelector((state: any) => state.persisted.story.storyData);
-
+  console.log(showStory,"showStoryshowStory");
+  
   const [watchedStory, setWatchedStory] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(0);
+  const [currentStory,setCurrentStory] = useState([])
   const durationPerImage = 5000;
+  
+  const userData = useSelector((state: any) => state.persisted.user.userData);
+  const myStory = useSelector((state: any) => state.persisted.story.storyData);
+  const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
+
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };
-  useEffect(() => {
-    if (stories[0].length == 0) {
-      setShowStory(-1);
-    }
-  }, [stories]);
+  }
 
-  const userData = useSelector((state: any) => state.persisted.user.userData);
+  if(!myStory.length){
+    
+  }
+
+  
+  useEffect(() => {
+    if (myStory[0]?.length == 0 && stories[0]?.length == 0) {
+      setShowStory("");
+    }else{
+      const story = stories[0]?.filter((value:any)=>value.userId == showStory)  
+      
+      if (story?.length) {
+        setCurrentStory(story[0].data);
+      }else{
+        setCurrentStory(myStory[0])
+      } 
+    }
+  }, [myStory,stories,currentIndex]);
 
   const nextImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === stories[0].length - 1 ? 0 : prevIndex + 1
-    );
-    setLoading(0);
-  };
 
+    if (currentIndex < currentStory?.length - 1) {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === currentStory.length - 1 ? 0 : prevIndex + 1
+      );
+      setLoading(0);
+    } else {
+      setShowStory("");
+    }
+  };
   const prevImage = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? stories[0].length - 1 : prevIndex - 1
+      prevIndex === 0 ? currentStory.length - 1 : prevIndex - 1
     );
     setLoading(0);
   };
@@ -61,27 +85,26 @@ const StorySliderComponent = ({
     }
   }, [isOpen, loading]);
 
+
   useEffect(() => {
     if (!isOpen) {
       setWatchedStory(currentIndex);
       const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) =>
-          prevIndex === stories[0].length - 1 ? 0 : prevIndex + 1
-        );
+        nextImage()
         setLoading(0);
       }, durationPerImage);
       return () => clearInterval(interval);
     }
-  }, [isOpen, currentIndex, durationPerImage, stories[0].length]);
+  }, [isOpen, currentIndex, durationPerImage,currentStory, myStory, stories]);
+
 
   const deleteStories: any = async () => {
     const data = {
       userId: userData.userId,
-      storyId: stories[0]?.[currentIndex]._id,
+      storyId: myStory[0]?.[currentIndex]._id,
     };
     const response: any = await deleteStoryFunction(data);
     setLoading(0);
-
     if (response?.data?.status) {
       toast.success(response.data.message);
       setDeleteStory(!deleteStory);
@@ -90,18 +113,28 @@ const StorySliderComponent = ({
     } else {
       toast.error(response.data.message);
     }
-  };
+  };  
 
   return (
     <div className="flex justify-center items-center w-full h-[500px] mt-5 relative">
       <div className="flex justify-center w-full absolute top-2">
-        {stories[0].map((_: any, index: number) => (
+        {currentStory.map((_: any, index: number) => (
           <div
             key={index}
             className={`w-full h-2 rounded-full mx-0.5 ${
               index >= watchedStory ? "bg-amber-50" : "bg-teal-700"
             }`}
           >
+              <Link to="/profile" onClick={()=>setShowStory("")}>
+                <img
+                  className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
+                  src={
+                       stories[0]?.[0].profile
+                      ? `http://localhost:3000/profile/${stories[0]?.[0].profile}`
+                      : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                  }
+                />
+              </Link>
             <div
               className={`h-2 rounded-full ${
                 index === watchedStory ? "bg-teal-700" : ""
@@ -114,18 +147,6 @@ const StorySliderComponent = ({
           </div>
         ))}
       </div>
-      <Link to="/profile">
-        <img
-          className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
-          src={
-            userData.profile?.startsWith("https://graph.facebook.com/")
-              ? `${userData.profile}`
-              : userData.profile
-              ? `http://localhost:3000/profile/${userData.profile}`
-              : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
-          }
-        />
-      </Link>
       <div className="absolute top-7 right-1">
         <MoreVertical onClick={toggleDropdown} className="text-amber-50 mr-3" />
         {isOpen && (
@@ -134,17 +155,27 @@ const StorySliderComponent = ({
               <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
                 forward
               </li>
+              {userData.userId == showStory ? 
+
               <li
                 className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg cursor-pointer"
                 onClick={deleteStories}
               >
                 delete
               </li>
+             :    
+             <li
+             className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg cursor-pointer"
+             onClick={deleteStories}
+           >
+             Download
+           </li>
+            }
             </ul>
           </div>
         )}
       </div>
-      {stories[0]?.length > 1 && (
+      {currentStory?.length > 1 && (
         <button
           className="absolute right-0 top-1/2 transform -translate-y-1/2"
           onClick={nextImage}
@@ -152,7 +183,7 @@ const StorySliderComponent = ({
           <ChevronRight />
         </button>
       )}
-      {stories[0]?.length > 1 && (
+      {currentStory?.length > 1 && (
         <button
           className="absolute left-0 top-1/2 transform -translate-y-1/2"
           onClick={prevImage}
@@ -160,8 +191,9 @@ const StorySliderComponent = ({
           <ChevronLeft />
         </button>
       )}
-      {stories[0].map((story: any, index: number) => (
-        <>
+      {currentStory?.map((story: any, index: number) =>{
+         return( 
+         <>
           <img
             key={index}
             src={`http://localhost:3003/story/${story?.storyUrl}`}
@@ -180,7 +212,8 @@ const StorySliderComponent = ({
             </p>
           </div>
         </>
-      ))}
+      )
+      } )} 
     </div>
   );
 };

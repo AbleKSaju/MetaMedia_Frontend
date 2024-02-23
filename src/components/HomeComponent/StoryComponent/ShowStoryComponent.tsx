@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import StorySliderComponent from "./StorySliderComponent";
 
-const ShowStoryComponent = ({ setShowStory,deleteStory,setDeleteStory }: any) => {
+const ShowStoryComponent = ({ showStory,setShowStory,deleteStory,setDeleteStory }: any) => {
 
   //   const [stories,setStories] = useState([])
 
@@ -19,14 +19,14 @@ const ShowStoryComponent = ({ setShowStory,deleteStory,setDeleteStory }: any) =>
                 <div className="flex justify-end">
                   <X
                     className="text-amber-50"
-                    onClick={() => setShowStory(-1)}
+                    onClick={() => setShowStory("")}
                   />
                 </div>
               </div>
             </div>
             <div className="flex justify-center w-full h-[560px]">
               <div className="">
-                <StorySliderComponent setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}  />
+                <StorySliderComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}  />
               </div>
             </div>
           </div>
