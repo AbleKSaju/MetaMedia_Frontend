@@ -24,6 +24,7 @@ import { color } from "framer-motion";
 import { LikePostFuntion } from "../../../utils/api/methods/PostService/Post/likePost";
 import { toast } from "sonner";
 import { AddCommentFunction } from "../../../utils/api/methods/PostService/Post/addComment";
+import { ReportPostFunction } from "../../../utils/api/methods/PostService/Post/reportPost";
 const SinglePostModal = ({ render, setRender }: any) => {
   TimeAgo.addDefaultLocale(en);
   const timeAgo = new TimeAgo("en-US");
@@ -43,11 +44,12 @@ const SinglePostModal = ({ render, setRender }: any) => {
   const [postCretedDate, setPostCreaetedDate]: any = useState(
     singlePost.createdAt
   );
+  const [dotModal,setDotModal]=useState(false)
   const [images, setImages] = useState(singlePost.mediaUrl);
   const [postUser, setPostUser] = useState(postUserData);
   const [liked, setLiked] = useState(false);
   const [text, setText] = useState("");
-
+const [isReportModal,setIsReportModal]=useState(false)
   const imageRightClick = () => {
     setImageIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -106,7 +108,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
   };
 
   const handleComment=async()=>{
-    toast.success('k')
+   
     const data = { 
         postId:singlePost._id,
          userId:userData.userId,
@@ -117,7 +119,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
 
          const responce =await AddCommentFunction(data)
          if(responce.status){
-            toast.success('sucesss')
+            
             setText('')
             dispatch(clearPostData());
       dispatch(clearPostUserData());
@@ -129,7 +131,33 @@ const SinglePostModal = ({ render, setRender }: any) => {
 
 
   }
-  
+
+  const handleDot=()=>{
+    setDotModal(!dotModal)
+  }
+
+  const hanndleReport=()=>{
+    setIsReportModal(!isReportModal)
+  }
+
+  const reportApiCal=async(text:any)=>{
+
+const data={
+    postId:singlePost._id,
+    userId:userData.userId,
+    content:text ,
+}
+
+const responce =await ReportPostFunction(data)
+if(responce.status){
+    toast.success('report added')
+    setDotModal(false)
+    setIsReportModal(false)
+}else{
+    toast.error("api call fail")
+}
+  }
+
 
   return (
     <>
@@ -137,16 +165,35 @@ const SinglePostModal = ({ render, setRender }: any) => {
         <div className="w-full h-10 flex justify-end ">
           <X className="text-white cursor-pointer" onClick={handleModalClose} />
         </div>
+        {dotModal && (
+             <div className=" fixed  w-5/6 flex top-24 justify-end ">
+             <div className="flex bg-white border  rounded-lg shadow-xl w-64 h-52 flex-col justify-evenly cursor-pointer">
+                 <div className="w-full border h-14 flex items-center justify-center font-medium text-sm " onClick={hanndleReport}>Report</div>
+                 <div className="w-full border h-14 flex items-center justify-center font-medium text-sm">Go to Post</div>
+                 <div className="w-full border h-14 flex items-center justify-center font-medium text-sm">Share To</div>
+                 <div className="w-full border h-14 flex items-center justify-center font-medium text-sm" onClick={handleDot}>Cansel</div>
+             
+             
+             
+             </div>
+                     </div>
+        )}
+       
         <div className="w-full h-full flex justify-between ">
+            
           <div className="h-full w-10 flex items-center ">
             <button className="w-9 h-9 p-1.5 opacity-100 bg-white rounded-full">
               <ChevronLeft />
             </button>
           </div>
           <div className="h-full w-full flex justify-center items-center p-6  rounded-sm  ">
+            
             <div className="w-5/6 h-full flex  rounded">
+                
               <div className="h-full w-1/2 flex justify-center items-center bg-white">
+                
                 <div className="relative w-full h-full flex object-cover items-center ">
+                    
                   <div className="flex justify-start" onClick={imageLeftClick}>
                     <button className="absolute  text-black w-6 rounded-full h-6 bg-white bg-opacity-50 p-0.5">
                       <ChevronLeft size={20} />
@@ -158,6 +205,8 @@ const SinglePostModal = ({ render, setRender }: any) => {
                     alt=""
                   />
 
+                 
+
                   <div className="flex justify-end " onClick={imageRightClick}>
                     <button className="absolute text-black w-6 rounded-full h-6 bg-white p-0.5 bg-opacity-50">
                       <ChevronRight size={20} />
@@ -165,6 +214,26 @@ const SinglePostModal = ({ render, setRender }: any) => {
                   </div>
                 </div>
               </div>
+              {isReportModal && (
+                <>
+                 <div className="fixed  w-screen h-screen  bg-black bg-opacity-70  flex justify-center pt-20 right-4  ">
+                <div className=" w-96 h-96 flex flex-col   bg-white border rounded-lg  shadow-lg cursor-pointer">
+                    <div className="p-2 border-b w-full h-1/6 flex  justify-center items-center font-bold text-sm rounded">Why are you reporting this post?</div>
+
+<div className="p-2 border-b w-full h-1/6 flex justify-center items-center  text-sm rounded" onClick={()=>reportApiCal('its a spam .?')}>its a spam .?</div>
+<div className="p-2 border-b w-full h-1/6 flex justify-center items-center  text-sm rounded" onClick={()=>reportApiCal('Suicide, self-injury guidelines')}>Suicide, self-injury guidelines</div>
+<div className="p-2 border-b w-full h-1/6 flex justify-center items-center  text-sm rounded" onClick={()=>reportApiCal('being bullied or harassed?')}>being bullied or harassed?</div>
+<div className="p-2 border-b w-full h-1/6 flex justify-center items-center  text-sm rounded" onClick={()=>reportApiCal('Nudity or sexual activity')}>Nudity or sexual activity</div>
+<div className="p-2 border-b w-full h-1/6 flex justify-center items-center  text-sm rounded" onClick={hanndleReport}>Cansel</div>
+
+
+
+
+                </div>
+              </div>
+                </>
+              )}
+             
               <div className="h-full w-1/2 bg-white border flex flex-col justify-between rounded-sm">
                 <div className="w-full  h-1/6 flex justify-between border-b border-gray-100 shadow-sm">
                   <div className="h-full w-1/6 flex items-center justify-center">
@@ -183,10 +252,11 @@ const SinglePostModal = ({ render, setRender }: any) => {
                     </div>
                   </div>
                   <div className="h-full w-1/6  flex justify-center items-center">
-                    <div className="text-sm">
+                    <div className="text-sm" onClick={handleDot}>
                       <MoreHorizontal />
                     </div>
                   </div>
+              
                 </div>
                 <div className=" w-full  h-full overflow-y-auto flex flex-col p-1">
                   {/* one comment  */}

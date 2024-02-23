@@ -1,8 +1,8 @@
-import client,{axiosPrivet} from '../../../baseUrl/axios.baseUrl'
+
 import axios from 'axios'
 import {AddPost_Api} from '../../../endpoints/common'
 import { PostData } from 'src/utils/interface/postInterface';
-import {BASE_URL} from '../../../baseUrl/axios.baseUrl'
+
 export const AddPostFuntion = async ( data : any) => {
     try {
         const formData = new FormData();

@@ -49,4 +49,4 @@ export const getUserPosts_Api=`${POST_URL}/getAllPost`
 export const showAllPost_Api=`${POST_URL}/showAllPost`
 export const likePost_Api=`${POST_URL}/likePost`
 export const AddComent_Api=`${POST_URL}/addComment`
-
+export const ReportPost_Api=`${POST_URL}/reportPost`

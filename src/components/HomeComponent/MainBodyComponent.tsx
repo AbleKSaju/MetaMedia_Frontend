@@ -3,11 +3,15 @@ import useMediaQuery from "../../utils/costumHook/mediaqueri";
 import PostScroll from "./PostScrollComponent";
 import Story from "./StoryComponent";
 import Suggestion from "./SuggestionComponent";
-import { SetSidebarOpenFunction } from "src/pages/user/Home";
+import { SetSidebarOpenFunction } from "../../pages/user/Home";
 import ShowStoryComponent from "./StoryComponent/ShowStoryComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllStoriesFunction } from "../../utils/api/methods/StoryService/Story/get";
 import { addOtherUserStories } from "../../utils/ReduxStore/Slice/storySlice";
+
+import { showAllPostFuntion } from "../..//utils/api/methods/PostService/get/showAllPost";
+import { toast } from "sonner";
+import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 
 interface MainBodyProps {
   setSidebarOpen: (value: boolean) => void;
@@ -17,7 +21,8 @@ interface MainBodyProps {
 }
 const MainBody = ({setSidebarOpen,setShowStory,setAddStory}:MainBodyProps) => {
   const dispatch = useDispatch()
-  
+  const [render,setRender]=useState(false)
+  const [postData,setPostData]=useState([])
   useEffect(() => {
     (async ()=>{
       console.log("getStoriesFunction");
@@ -31,7 +36,37 @@ const MainBody = ({setSidebarOpen,setShowStory,setAddStory}:MainBodyProps) => {
     }
     })();
   },[])
+
+
   
+  useEffect(()=>{
+   (async ()=>{
+
+    const responce:any =await showAllPostFuntion()
+    if(responce.status){
+
+
+      const postsWithData:any = await Promise.all(responce?.data?.map(async (post:any) => {
+        const userDataResponse = await getUserByIdFuntion(post.userId);
+        if (userDataResponse.status) {
+          const postDataWithUserData = { ...post, userData: userDataResponse.data };
+          return postDataWithUserData;
+        } else {
+          // Handle error while fetching user data
+          return null;
+        }
+      }));
+
+      const filteredPosts = postsWithData.filter((post:any) => post !== null);
+
+      setPostData(filteredPosts);
+
+    }else{
+      toast.error("Responce error")
+    }
+
+   })()
+  },[render])
   // const myStory = useSelector((state: any) => state.persisted.story.storyData);
   // const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
   
@@ -55,9 +90,21 @@ const MainBody = ({setSidebarOpen,setShowStory,setAddStory}:MainBodyProps) => {
           <div className="lg:w-3/4 lg:h-[600px]   overflow-y-auto scrollbar-hide flex items-center    flex-col">
             <div className=" lg:mt-0 md:mt-0    ">
 
-            <PostScroll />
-            <PostScroll />
-            <PostScroll />
+{postData.length > 0 && (
+ <>
+ {postData.map((item:any)=>{
+   return (
+     
+     <>
+     <PostScroll setRender={setRender} render={render}  data={item} />
+     </>
+     )
+ })}
+ </>
+
+)}
+          
+           
            
             </div>
           </div>
