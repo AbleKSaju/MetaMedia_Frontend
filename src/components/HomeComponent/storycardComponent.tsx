@@ -1,8 +1,7 @@
 import { MouseEventHandler, useState } from "react";
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
 import { useSelector } from "react-redux";
-import ShowStoryComponent from "./StoryComponent/ShowStoryComponent";
-import { Plus, PlusCircle } from "lucide-react";
+
 const StoryCard = ({ setShowStory, setAddStory }: any) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
@@ -14,16 +13,6 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
     (state: any) => state.persisted.story.otherUsersStoryData
   );
 
-  const handleClick = () => {
-    console.log(myStory?.[0]?.[0]);
-    if (myStory.length) {
-      console.log("IFF");
-      setShowStory(0);
-    } else {
-      console.log("Ell");
-      setAddStory(true);
-    }
-  };
 
   const renderSidebar = () => {
     if (isMobile) {
@@ -70,8 +59,12 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                   <div className="relative mx-auto max-w-lg rounded-lg w-24 h-32 lg:w-32 lg:h-40 ">
                     <div className="w-full h-full rounded-md">
                       <div className="w-full h-full bg-[#042F2C] relative rounded-lg">
-                        <img
-                          onClick={handleClick}
+                      <div
+  onClick={() =>
+    !myStory.length ? setAddStory(true) : setShowStory(userData.userId)
+  }
+>
+                        <img                     
                           className="h-28 w-full rounded-lg blur-[1px]"
                           src={`${
                             myStory[0]?.[0]
@@ -82,6 +75,7 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                           }`}
                           alt=""
                         />
+                        </div>
                         <div className="rounded-full h-16 w-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-50">
                           <img
                             className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -102,7 +96,6 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
           }
           {stories[0].length !== 0 &&
             stories[0].map((value: any) => {
-              console.log(value.profile, "valaa");
 
               return (
                 <div className="flex-none px-2 scrollbar-hide ">
@@ -113,7 +106,7 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                           <div className="w-full h-full bg-[#042F2C] relative rounded-lg">
                             <div>
                               <img
-                                onClick={() => setShowStory(0)}
+                                onClick={() => setShowStory(value.userId)}
                                 className="h-28 w-full rounded-lg blur-[1px]"
                                 src={`${
                                   stories
