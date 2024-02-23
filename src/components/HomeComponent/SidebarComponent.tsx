@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
 const Sidebar = ({ open,setAddStory,setIsAddPost,isAddPost }: any) => {
   const location = useLocation();
@@ -48,10 +49,11 @@ const Sidebar = ({ open,setAddStory,setIsAddPost,isAddPost }: any) => {
 
 
   const CreateNewMedia=(media:string)=>{
+    
     if(media=="Story"){
       setAddStory(true)
     }else if (media == "Post"){
-      setIsAddPost(!isAddPost);
+      setIsAddPost(true);
     }
     
 

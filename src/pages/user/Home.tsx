@@ -43,9 +43,9 @@ const Home = ({ render,setRender}:any) => {
   return (
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
-
+{isAddPost && <MainModalBorderPost setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} render={render}setRender={setRender} /> }
  {showStory.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
-        <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}/>
+        <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories} setAddPost={setAddPost} isAddPost={isAddPost}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
           <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory} setAddStory={setAddStories}/>} />
