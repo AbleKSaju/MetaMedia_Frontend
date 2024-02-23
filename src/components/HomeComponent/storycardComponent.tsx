@@ -13,7 +13,6 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
     (state: any) => state.persisted.story.otherUsersStoryData
   );
 
-
   const renderSidebar = () => {
     if (isMobile) {
       return (
@@ -59,22 +58,24 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                   <div className="relative mx-auto max-w-lg rounded-lg w-24 h-32 lg:w-32 lg:h-40 ">
                     <div className="w-full h-full rounded-md">
                       <div className="w-full h-full bg-[#042F2C] relative rounded-lg">
-                      <div
-  onClick={() =>
-    !myStory.length ? setAddStory(true) : setShowStory(userData.userId)
-  }
->
-                        <img                     
-                          className="h-28 w-full rounded-lg blur-[1px]"
-                          src={`${
-                            myStory[0]?.[0]
-                              ? `http://localhost:3003/story/${myStory?.[0]?.[0]?.storyUrl}`
-                              : userData.profile
-                              ? `http://localhost:3000/profile/${userData.profile}`
-                              : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
-                          }`}
-                          alt=""
-                        />
+                        <div
+                          onClick={() =>
+                            !myStory.length
+                              ? setAddStory(true)
+                              : setShowStory(userData.userId)
+                          }
+                        >
+                          <img
+                            className="h-28 w-full rounded-lg blur-[1px]"
+                            src={`${
+                              myStory[0]?.[0]
+                                ? `http://localhost:3003/story/${myStory?.[0]?.[0]?.storyUrl}`
+                                : userData.profile
+                                ? `http://localhost:3000/profile/${userData.profile}`
+                                : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
+                            }`}
+                            alt=""
+                          />
                         </div>
                         <div className="rounded-full h-16 w-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-50">
                           <img
@@ -96,7 +97,6 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
           }
           {stories[0].length !== 0 &&
             stories[0].map((value: any) => {
-
               return (
                 <div className="flex-none px-2 scrollbar-hide ">
                   <div className="flex flex-col items-center justify-center lg:gap-x-5 w-36 h-40 ">

@@ -110,6 +110,13 @@ const StorySliderComponent = ({
       setDeleteStory(!deleteStory);
       setIsOpen(false);
       setCurrentIndex(0);
+      if (currentIndex < currentStory?.length - 1) {
+        setCurrentIndex((prevIndex) =>
+          prevIndex === currentStory.length - 1 ? 0 : prevIndex + 1
+        );
+      } else {
+        setShowStory("");
+      }
     } else {
       toast.error(response.data.message);
     }
