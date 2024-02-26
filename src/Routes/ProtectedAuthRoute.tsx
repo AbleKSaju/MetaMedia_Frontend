@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const ProtectedAuthRoute = ({ children }: { children: any }) => {
-    const Navigate = useNavigate();
+    // const Navigate = useNavigate();
     console.log("I AM PROTECTED ROUTE");
     const token = useSelector((state: any) => state.persisted.token.token);
     console.log(token, "udaaaaa");
@@ -10,10 +10,11 @@ const ProtectedAuthRoute = ({ children }: { children: any }) => {
   
     if (token) {
       console.log("Yes TOKEN");
-      return Navigate('/',{replace : true});
-    }else{
-      Navigate('/login',{replace : true});
       return children
+    }else{
+      console.log("I AM ELSE");
+      return <Navigate to="/login"  />
+     
     }
 
   };

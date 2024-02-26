@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {RegisterFormData,useRegisterValidate,} from "../../utils/formValidation/SignUpValidation";
 import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
-import { addToken,clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
+import { addToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { useDispatch,useSelector } from "react-redux";
 import {
   GetUserDataFunction,
@@ -20,7 +20,6 @@ import { Eye, EyeOff } from "lucide-react";
 
 
 const SignUp = () => {
-  const userData=useSelector((state:any)=>state.persisted.user.userData)
   const [showPassword,setShowPassword]=useState(false)
   const dispatch = useDispatch()
   const Navigate = useNavigate();
@@ -59,7 +58,6 @@ const SignUp = () => {
               interests: response.data.user.interests ?? [],
               bio: response.data.user.bio ?? "",
             };
-            console.log(data, "ussssssDATta??????????");
   
             dispatch(clearUser());
             dispatch(addUser(data));
@@ -90,15 +88,11 @@ const SignUp = () => {
                 interests: userData.data.user.interests ?? [],
                 bio: userData.data.user.bio ?? "",
               };
-              console.log(data, "ussssssDATta??????????");
     
               dispatch(clearUser());
               dispatch(addUser(data));
               dispatch(addToken(response.data.accesstoken));
-    
-              // await SaveUserDataInRedux(userData)
-              console.log(userData, "USERDAETAILS");
-  
+      
               toast.success(response?.data?.message);
               Navigate("/",{ replace: true });
             }

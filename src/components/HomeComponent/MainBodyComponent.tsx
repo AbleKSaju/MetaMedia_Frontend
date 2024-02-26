@@ -31,6 +31,8 @@ const MainBody = ({
     (async () => {
       console.log("getStoriesFunction");
       const response: any = await getAllStoriesFunction();
+      console.log(response,"getAllStoriesFunction");
+      
       if (response) {
         dispatch(addOtherUserStories(response?.data?.data));
       } else {

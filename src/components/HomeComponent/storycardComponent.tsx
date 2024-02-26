@@ -12,6 +12,8 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
   const stories = useSelector(
     (state: any) => state.persisted.story.otherUsersStoryData
   );
+  console.log(myStory,"myStory");
+  
 
   const renderSidebar = () => {
     if (isMobile) {
@@ -70,8 +72,8 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                             src={`${
                               myStory[0]?.[0]
                                 ? `http://localhost:3003/story/${myStory?.[0]?.[0]?.storyUrl}`
-                                : userData.profile
-                                ? `http://localhost:3000/profile/${userData.profile}`
+                                : userData?.profile
+                                ? `http://localhost:3000/profile/${userData?.profile}`
                                 : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
                             }`}
                             alt=""
@@ -81,8 +83,8 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                           <img
                             className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                             src={`${
-                              userData.profile
-                                ? `http://localhost:3000/profile/${userData.profile}`
+                              userData?.profile
+                                ? `http://localhost:3000/profile/${userData?.profile}`
                                 : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
                             }`}
                             alt="S"
@@ -96,9 +98,9 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
             </div>
           }
           {stories[0].length !== 0 &&
-            stories[0].map((value: any) => {
+            stories[0].map((value: any,index:number) => {
               return (
-                <div className="flex-none px-2 scrollbar-hide ">
+                <div className="flex-none px-2 scrollbar-hide" key={index}>
                   <div className="flex flex-col items-center justify-center lg:gap-x-5 w-36 h-40 ">
                     <div className="relative flex min-h-screen flex-col justify-center overflow-hidden lg:py-6 sm:py-1 scrollbar-hide ">
                       <div className="relative mx-auto max-w-lg rounded-lg w-24 h-32 lg:w-32 lg:h-40 ">
@@ -120,7 +122,7 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                                   className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                                   src={`${
                                     stories
-                                      ? `http://localhost:3000/profile/${value.profile}`
+                                      ? `http://localhost:3000/profile/${value?.profile}`
                                       : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
                                   }`}
                                   alt="S"

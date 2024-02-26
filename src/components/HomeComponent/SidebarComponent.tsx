@@ -174,7 +174,7 @@ const Sidebar = ({ open,setAddStory,setIsAddPost,isAddPost }: any) => {
           </Link>
 
           {/* message  */}
-          <li
+          <Link to="/message"
             className={`flex mt-5 rounded-md p-2 cursor-pointer  text-amber-50 text-xl font-sans font-semibold items-center gap-x-4
          ${2 === 2 && "bg-light-white"} ${
               location.pathname === "/message" &&
@@ -206,7 +206,7 @@ const Sidebar = ({ open,setAddStory,setIsAddPost,isAddPost }: any) => {
                 <div> Message</div>
               )}
             </span>
-          </li>
+            </Link >
 
           {/* post  */}
 

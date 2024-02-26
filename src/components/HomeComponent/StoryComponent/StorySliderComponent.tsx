@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
+import { ChevronLeft, ChevronLeftCircle, ChevronRight, ChevronRightCircle, MoreVertical } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -19,54 +19,88 @@ const StorySliderComponent = ({
   deleteStory,
   setDeleteStory,
 }: ImageSliderProps) => {
-  console.log(showStory,"showStoryshowStory");
   
   const [watchedStory, setWatchedStory] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(0);
   const [currentStory,setCurrentStory] = useState([])
+  const [currentProfile,setCurrentProfile] = useState("")
   const durationPerImage = 5000;
   
   const userData = useSelector((state: any) => state.persisted.user.userData);
   const myStory = useSelector((state: any) => state.persisted.story.storyData);
   const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
 
-
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   }
 
-  if(!myStory.length){
-    
-  }
-
-  
   useEffect(() => {
     if (myStory[0]?.length == 0 && stories[0]?.length == 0) {
       setShowStory("");
     }else{
       const story = stories[0]?.filter((value:any)=>value.userId == showStory)  
-      
       if (story?.length) {
         setCurrentStory(story[0].data);
+        setCurrentProfile(story[0]?.profile);
       }else{
         setCurrentStory(myStory[0])
+        setCurrentProfile(userData?.profile);
       } 
     }
-  }, [myStory,stories,currentIndex]);
+  }, [myStory,stories,currentIndex,showStory]);
+
+  const nextUser = () => {
+    setShowStory("")
+    const index = stories[0]?.findIndex((value:any) => value.userId === showStory);
+    if (index !== -1 && index + 1 < stories[0]?.length) {
+        const nextUserId = stories[0][index + 1].userId; 
+        setShowStory(nextUserId)
+        setLoading(0)
+        setCurrentIndex(0)
+      }
+    }
+    const prevUser = () => {
+      setShowStory("")
+      const index = stories[0]?.findIndex((value:any) => value.userId === showStory);      
+    if (index !== -1 && index - 1 < stories[0]?.length) {      
+        const nextUserId = stories[0][index - 1].userId;         
+        setShowStory(nextUserId)
+        setLoading(0)
+        setCurrentIndex(0)
+    }
+  }
 
   const nextImage = () => {
-
+    
     if (currentIndex < currentStory?.length - 1) {
       setCurrentIndex((prevIndex) =>
         prevIndex === currentStory.length - 1 ? 0 : prevIndex + 1
       );
       setLoading(0);
     } else {
-      setShowStory("");
+      const index = stories[0]?.findIndex((value:any) => value.userId === showStory);
+      console.log(index , index + 1 ,"<<<<", stories[0]?.length);
+      
+      if (index !== 0 && index + 1 < stories[0]?.length) {
+        if(index== -1 ){
+          setCurrentIndex(0)
+        }else{
+
+          const nextUserId = stories[0][index + 1].userId; 
+          setShowStory(nextUserId)
+          setLoading(0)
+          setCurrentIndex(0)
+        }
+      }else{
+        console.log("I AM ELSE");
+        
+        setCurrentIndex(0)
+      }
     }
   };
+
   const prevImage = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? currentStory.length - 1 : prevIndex - 1
@@ -136,8 +170,8 @@ const StorySliderComponent = ({
                 <img
                   className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
                   src={
-                       stories[0]?.[0].profile
-                      ? `http://localhost:3000/profile/${stories[0]?.[0].profile}`
+                    currentProfile
+                      ? `http://localhost:3000/profile/${currentProfile}`
                       : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
                   }
                 />
@@ -182,6 +216,23 @@ const StorySliderComponent = ({
           </div>
         )}
       </div>
+
+      
+      <button
+          className="fixed right-20 top-1/2 transform -translate-y-1/2"
+          onClick={nextUser}
+        >
+          <ChevronRightCircle size={30} className="text-white"/>
+        </button>
+
+        <button
+          className="fixed left-20 top-1/2 transform -translate-y-1/2"
+          onClick={prevUser}
+        >
+          <ChevronLeftCircle size={30} className="text-white"/>
+        </button>
+
+        
       {currentStory?.length > 1 && (
         <button
           className="absolute right-0 top-1/2 transform -translate-y-1/2"

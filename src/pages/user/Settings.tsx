@@ -10,18 +10,17 @@ const Settings: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
   setSidebarOpen(false);
   return (
     <>
-        <div className= "sm:ml-0 flex sm:flex">
-    <div className="flex w-[400px]  overflow-hidden ">
-   
-      <AsideComponent />
+      <div className="sm:ml-0 flex sm:flex">
+        <div className="flex w-[400px]  overflow-hidden ">
+          <AsideComponent />
         </div>
-      <Routes>
-        <Route path="/" element={<EditProfile />} />
-        <Route path="/security" element={<Security />} />
-        <Route path="/contactUs" element={<Contactus />} />
-        <Route path="/editProfile" element={<EditProfile />} />
-      </Routes>
-         </div>
+        <Routes>
+          <Route path="/" element={<EditProfile />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="/contactUs" element={<Contactus />} />
+          <Route path="/editProfile" element={<EditProfile />} />
+        </Routes>
+      </div>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MainBody from "../../components/HomeComponent/MainBodyComponent";
 import Search from "../../components/HomeComponent/SearchComponent";
-import Message from "../../components/HomeComponent/MessageComponent";
+import Message from "../../components/HomeComponent/MessageComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
 import Profile from "../../components/HomeComponent/ProfileComponents/ProfileComponent";
 import Notification from "../../components/HomeComponent/NotificationComponent";
@@ -33,6 +33,7 @@ const Home = ({ render,setRender}:any) => {
     (async ()=>{
      const response:any = await getStoriesFunction()
      if(response?.data?.status){
+      response.data.data.myStory=true
       dispatch(addStory(response?.data?.data));
      }else{
       dispatch(deleteAllStory());
@@ -43,16 +44,9 @@ const Home = ({ render,setRender}:any) => {
   return (
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
-{isAddPost && <MainModalBorderPost setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} render={render}setRender={setRender} /> }
+
  {showStory.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
-
- <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/>
-       {isAddPost && (
-        <>
-        <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost}  />
-        </>
-       )}
-
+        <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}/>
     <Routes>
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
           <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory} setAddStory={setAddStories}/>} />

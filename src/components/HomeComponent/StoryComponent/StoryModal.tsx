@@ -6,9 +6,7 @@ import CreateStoryComponent from "./CreateStoryComponent";
 import { toast } from "sonner";
 import { AddStoryFunction } from "../../../utils/api/methods";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addStory } from "../../../utils/ReduxStore/Slice/storySlice";
-
+import { useSelector } from "react-redux";
 
 const StoryModal = ({ setAddStory }: any) => {
   console.log("i am StoryModal");
@@ -20,8 +18,7 @@ const StoryModal = ({ setAddStory }: any) => {
   const [croppedImage, setCroppedImage] = useState(null);
   const Navigate = useNavigate()
   const userData = useSelector((state: any) => state.persisted.user.userData);
-  // console.log(storyData,"storyDatastoryDatastoryData");
-  
+
   function base64StringToFormDataImageFile(croppedImage:any, fileName:any, fileType:any) {
     croppedImage = croppedImage.replace(/^data:image\/\w+;base64,/, "");
     const byteCharacters = atob(croppedImage);
@@ -35,20 +32,13 @@ const StoryModal = ({ setAddStory }: any) => {
     formData.append("image", blob, fileName);
     return formData;
 }
-  // Example usage:
-  // const base64String = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUWFRgVFRYZGRgZHBgYGBwYGhgYGBoYGBgaGhoZGBgcIS4lHB4rIRgYJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHBISGjQh...3000 more characters";
-  
-  console.log(userData ,"userData.profile ");
-  console.log(userData.profile ,"userData.profile ");
+
   const submitHandler=async()=>{
-    
     if(caption && croppedImage){
       const fileName = "image.jpg";
       const fileType = "image/jpeg";
       const formData = base64StringToFormDataImageFile(croppedImage, fileName, fileType);
-      const response: any = await AddStoryFunction({ image: formData, caption: caption, profile: userData.profile });
-      console.log(response,"responseresponseresponseresponse");
-      
+      const response: any = await AddStoryFunction({ image: formData, caption: caption, profile: userData.profile });      
 
       if(response?.status){
         setCropImage(false)
@@ -65,6 +55,7 @@ const StoryModal = ({ setAddStory }: any) => {
       toast.error("Content not found")
     }
   }
+
   return (
 <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-20">
   <div className="flex justify-center w-full h-full bg-transparent ">

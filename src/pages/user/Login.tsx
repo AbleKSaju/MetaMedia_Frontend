@@ -7,7 +7,7 @@ import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { addToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { LoginWithGoogle } from "../../utils/api/methods/AuthService/post";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import mongoose from "mongoose";
 import {
@@ -16,8 +16,7 @@ import {
 } from "../../utils/formValidation/LoginValidation";
 import { FacebookAuth, GoogleAuth } from "../../utils/firebase/firebase";
 import { Eye, EyeOff } from "lucide-react";
-import { useEffect, useState } from "react";
-import SaveUserDataInRedux from "../../helper/ReduxHelper/SaveUserInRedux";
+import {  useState } from "react";
 
 interface ResponseData {
   email?: string;
@@ -105,6 +104,8 @@ const Login = () => {
               interests: userData.data.user.interests ?? [],
               bio: userData.data.user.bio ?? "",
             };  
+            console.log(response.data.accesstoken,"response.data.accesstoken)");
+            
             dispatch(clearUser());
             dispatch(addUser(data));
             dispatch(addToken(response.data.accesstoken));
@@ -239,12 +240,13 @@ const Login = () => {
       };
       dispatch(clearUser());
       dispatch(addUser(userData));
-      dispatch(addToken(response.data.accesstoken));
+      console.log(userExist.data,"userExist");
+      
+      console.log(userExist.data.accesstoken,"response.data.accesstoken)");
+      dispatch(addToken(userExist.data.accesstoken));
         toast.success(response?.data?.data?.message);
         Navigate("/",{ replace: true });
-
     }
-    
   };
   
   

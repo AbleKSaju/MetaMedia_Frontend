@@ -35,7 +35,7 @@ const UserRouter = () => {
       </>
      )}
     <Routes>
-      <Route path="/*" element={<Home setRender={setRender} render={render}/>} />
+      <Route path="/*" element={<ProtectedAuthRoute><Home setRender={setRender} render={render}/> </ProtectedAuthRoute> }/>
       <Route path="/signup" element={<SignUp />} />
       <Route path="/verifyOtp" element={<VerifyOtp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />

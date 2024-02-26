@@ -65,8 +65,6 @@ setLiked(false)
 
   return (
     <>
-    {console.log(data,'this si daatttaa')
-    }
 
       <div className=" md:p-5  sm:p-3 p-7 w-screen sm:w-full flex justify-center  sm:pl-0   lg:p-4   ">
         <div className=" flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[464px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
