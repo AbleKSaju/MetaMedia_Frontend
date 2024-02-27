@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
-      <div className="fixed bottom-0 border-y border-teal-900 sm:hidden w-full flex justify-around items-center p-4 z-10 bg-white">
+      <div className="fixed bottom-0 border-y border-teal-900 sm:hidden w-full flex justify-around items-center p-3 z-10 bg-white">
         <Link to="/">
           <Home />
         </Link>

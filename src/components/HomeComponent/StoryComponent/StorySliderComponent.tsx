@@ -93,9 +93,7 @@ const StorySliderComponent = ({
           setLoading(0)
           setCurrentIndex(0)
         }
-      }else{
-        console.log("I AM ELSE");
-        
+      }else{        
         setCurrentIndex(0)
       }
     }

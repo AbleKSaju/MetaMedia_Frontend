@@ -38,8 +38,7 @@ const StoryModal = ({ setAddStory }: any) => {
       const fileName = "image.jpg";
       const fileType = "image/jpeg";
       const formData = base64StringToFormDataImageFile(croppedImage, fileName, fileType);
-      const response: any = await AddStoryFunction({ image: formData, caption: caption, profile: userData.profile });      
-
+      const response: any = await AddStoryFunction({ image: formData, caption: caption, profile: userData.profile });
       if(response?.status){
         setCropImage(false)
         setCroppedImage(null)

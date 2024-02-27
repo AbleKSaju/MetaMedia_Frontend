@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import Sidebar from "../../components/HomeComponent/SidebarComponent";
 import Footer from "../../components/HomeComponent/FooterComponent";
+import { useLocation } from 'react-router-dom';
 
 
 const AsideComponent = ({sidebarOpen,setAddStory,isAddPost,setIsAddPost}:any) => {
-
+  const location = useLocation();
+  const currentPath = location.pathname;
+  console.log(currentPath,"currentPath");
+  
   return (
        <>
         <div className="fixed sm:z-10 h-screen hidden sm:flex ">
@@ -15,7 +19,7 @@ const AsideComponent = ({sidebarOpen,setAddStory,isAddPost,setIsAddPost}:any) =>
             setIsAddPost={setIsAddPost}
           />
         </div>
-        <Footer/>
+        {currentPath!='/message' &&  <Footer/> }
     </>
   )
 }

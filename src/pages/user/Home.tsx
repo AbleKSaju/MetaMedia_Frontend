@@ -24,8 +24,6 @@ const Home = ({ render,setRender}:any) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [addStories, setAddStories] = useState<boolean>(false);
   const [deleteStory, setDeleteStory] = useState<boolean>(false);
-  const [isAddPost,setIsAddPost] = useState(false)
-  const [addPost,setAddPost] = useState(false)
   const [showStory,setShowStory] = useState("")
   const dispatch = useDispatch()
   
@@ -51,7 +49,7 @@ const Home = ({ render,setRender}:any) => {
       {/* <Route path="/" element={<AsideComponent setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} sidebaropen={sidebaropen}/>} > */}
           <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory} setAddStory={setAddStories}/>} />
           <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
-          <Route path="/message" element={<Message setSidebarOpen={setSidebarOpen}/>} />
+          <Route path="/message/*" element={<Message setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
           <Route path="/profile" element={<Profile setSidebarOpen={setSidebarOpen} setRender={setRender} render={render}/>} />
           <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />

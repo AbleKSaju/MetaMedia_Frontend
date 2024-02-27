@@ -29,13 +29,9 @@ const UserRouter = () => {
    }, [isSinglePostModal]);
    return (
     <>
-    {isSinglePostModal && (
-      <>
-         <SinglePostModal setRender={setRender} render={render} />
-      </>
-     )}
+    {isSinglePostModal && ( <> <SinglePostModal setRender={setRender} render={render} /> </> )}
     <Routes>
-      <Route path="/*" element={<ProtectedAuthRoute><Home setRender={setRender} render={render}/> </ProtectedAuthRoute> }/>
+      <Route path="/*" element={<ProtectedAuthRoute> <Home setRender={setRender} render={render}/> </ProtectedAuthRoute> }/>
       <Route path="/signup" element={<SignUp />} />
       <Route path="/verifyOtp" element={<VerifyOtp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -47,8 +43,6 @@ const UserRouter = () => {
       <Route path="/s" element={<S />} />
       <Route path="/size" element={<SizeSelectModal/>} />
       <Route path="/selectPost" element={<SinglePostModal/>} />
-
-      {/* <Route path="/logout"/> */}
 
     </Routes>
     </>
