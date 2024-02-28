@@ -1,9 +1,11 @@
 import { ArrowLeft, Image, Mic, MoreVertical, Phone, Video } from 'lucide-react'
 import React, { useState } from 'react'
 
-const ChatComponent = () => {
+const ChatComponent = ({messages}:any) => {
     const [message,setMessage] = useState<string>("")
     const [isOpen,setIsOpen] = useState<boolean>(false)
+    console.log(messages,"messagesmessagesmessagesmessagesmessages");
+    
   return (
     <div className="flex flex-col w-full">
     <header className="w-full flex items-center p-2 sm:p-3 border-b border-gray-300">

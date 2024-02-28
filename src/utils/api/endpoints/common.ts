@@ -1,4 +1,4 @@
-import {AUTH_URL,HIGHLIGHT_URL,POST_URL,STORY_URL,USER_URL} from '../baseUrl/axios.baseUrl' 
+import {AUTH_URL,CHAT_URL,HIGHLIGHT_URL,POST_URL,STORY_URL,USER_URL} from '../baseUrl/axios.baseUrl' 
 
 // AUTH SERVICE
 
@@ -15,6 +15,7 @@ export const RefreshToken_Api=`${AUTH_URL}/refresh`
 // USER SERVICE
 
 export const GetUserData_Api=`${USER_URL}/getUserData`
+export const GetUsersData_Api=`${USER_URL}/getUsersDataById`
 export const ChooseInterest_Api=`${USER_URL}/chooseInterest`
 export const AddProfile_Api=`${USER_URL}/addProfile`
 export const EditProfile_Api=`${USER_URL}/editProfile`
@@ -50,3 +51,9 @@ export const showAllPost_Api=`${POST_URL}/showAllPost`
 export const likePost_Api=`${POST_URL}/likePost`
 export const AddComent_Api=`${POST_URL}/addComment`
 export const ReportPost_Api=`${POST_URL}/reportPost`
+
+//CHAT
+
+export const GetConversations_Api=`${CHAT_URL}/conversations`
+export const GetMessages_Api=`${CHAT_URL}/getMessages`
+export const SendMessage_Api=`${CHAT_URL}/message`
