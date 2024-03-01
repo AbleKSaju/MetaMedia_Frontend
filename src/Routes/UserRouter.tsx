@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { isSinglePostModalClose } from "../utils/ReduxStore/Slice/singlePostSlice";
 import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePostModal";
+import NewModel from "../pages/user/newModle";
 
 const UserRouter = () => {
   const isSinglePostModal = useSelector((state: any) => state.persisted.singlePost.isSinglePostModal);
@@ -43,6 +44,8 @@ const UserRouter = () => {
       <Route path="/s" element={<S />} />
       <Route path="/size" element={<SizeSelectModal/>} />
       <Route path="/selectPost" element={<SinglePostModal/>} />
+      <Route path="/new" element={<NewModel/>} />
+
 
     </Routes>
     </>

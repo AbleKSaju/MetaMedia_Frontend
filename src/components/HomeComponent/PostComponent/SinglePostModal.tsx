@@ -25,6 +25,7 @@ import { LikePostFuntion } from "../../../utils/api/methods/PostService/Post/lik
 import { toast } from "sonner";
 import { AddCommentFunction } from "../../../utils/api/methods/PostService/Post/addComment";
 import { ReportPostFunction } from "../../../utils/api/methods/PostService/Post/reportPost";
+import { AddReplayToCommentFunction } from "../../../utils/api/methods/PostService/Post/addReplayToComment";
 const SinglePostModal = ({ render, setRender }: any) => {
   TimeAgo.addDefaultLocale(en);
   const timeAgo = new TimeAgo("en-US");
@@ -39,8 +40,10 @@ const SinglePostModal = ({ render, setRender }: any) => {
   const postUserData = useSelector(
     (state: any) => state.persisted.singlePost.postUserData
   );
+  const [commentId,setCommentId]=useState('')
   const [imageIndex, setImageIndex] = useState(0);
   const [date, setDate] = useState("");
+  const [isReplay,setIsReplay]=useState(false)
   const [postCretedDate, setPostCreaetedDate]: any = useState(
     singlePost.createdAt
   );
@@ -132,6 +135,10 @@ const [isReportModal,setIsReportModal]=useState(false)
 
   }
 
+ const  handleReplay=()=>{
+    
+ }
+
   const handleDot=()=>{
     setDotModal(!dotModal)
   }
@@ -158,6 +165,30 @@ if(responce.status){
 }
   }
 
+
+  const handleReplayToComment=async()=>{
+    const data={
+        postId:singlePost._id,
+        commentId:commentId,
+        content:text,
+        userId:userData.userId
+    }
+    const responce =await AddReplayToCommentFunction(data)
+    if(responce.status){
+       
+        setText('')
+        dispatch(clearPostData());
+  dispatch(addPostData(responce.data));
+  dispatch(isSinglePostModalOpen());
+    }
+  }
+
+  const replayClick=(item:any)=>{
+  
+    setIsReplay(true)
+    setCommentId(item._id)
+    setText(`@${item.userName}:`)
+  }
 
   return (
     <>
@@ -319,11 +350,26 @@ if(responce.status){
                         </div>
                         <div className="flex  w-3/6  h-full justify-between items-center">
                           <p className="text-[13px]">{timeAgo.format(new Date(item.createdAt))}</p>
-                          <div className="font-medium text-sm">Replay</div>
+                          <div className="font-medium text-sm" onClick={()=>replayClick(item)}>Replay</div>
                           <div>
                             <MoreHorizontal className="w-5 " />
                           </div>
                         </div>
+                        {item.replay.length >0 && (
+                            <>
+                            {item.replay.map((item:any)=>{
+                                return (
+                                    <>
+                                   <div className="flex flex-col  ">
+                                   <div className=" h-7  ml-5  "> {item.content}</div>
+                                   </div>
+                                    </>
+                                )
+                            })}
+                            
+                            </>
+                        )
+ }
                       </div>
                       <div className="h-full w-1/6 flex justify-center items-start p-1 pt-2">
                         <Heart className="w-4" />
@@ -386,7 +432,12 @@ if(responce.status){
                       value={text}
                       onChange={(e)=>setText(e.target.value)}
                     />
-                    {text.length != 0 ? ( <> <p className="text-sm font-semibold p-2"onClick={handleComment}>post</p></>):(<div></div>)}
+                    {isReplay ? (<>
+                        {text?.length != 0 ? ( <> <p className="text-sm font-semibold p-2"onClick={handleReplayToComment}>replay</p></>):(<div></div>)}
+                    </>):(<>
+                        {text?.length != 0 ? ( <> <p className="text-sm font-semibold p-2"onClick={handleComment}>post</p></>):(<div></div>)}
+                    </>) }
+                   
                    
                   </div>
                 </div>
