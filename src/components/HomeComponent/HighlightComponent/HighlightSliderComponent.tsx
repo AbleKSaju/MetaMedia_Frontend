@@ -66,6 +66,7 @@ const HighlightSliderComponent = ({openHighlight,setOpenHighlight,durationPerIma
         setHighlightName(name)
         setIsOpen(false)
         setLoading(0)
+        setOpenHighlight(-1)
       };  
 
       const deleteHighlight=async()=>{

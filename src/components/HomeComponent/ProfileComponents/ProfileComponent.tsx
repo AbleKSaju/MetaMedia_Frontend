@@ -4,6 +4,7 @@ import { Edit } from "lucide-react";
 import Highlight from "../HighlightComponent/HighlightComponent";
 import { GetHighlightData } from "../../../utils/api/methods";
 import { SetSidebarOpenFunction } from "src/pages/user/Home";
+import profile from '../../../assets/profile.webp'
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FollowComponent from "./FollowComponent";
@@ -64,7 +65,7 @@ useEffect(()=>{
                     ? `${userData.profile}`
                     : userData.profile
                     ? `http://localhost:3000/profile/${userData?.profile}`
-                    : "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2220431045.jpg"
+                    : `${profile}`
                 }
                 alt="Profile"
               />
@@ -108,11 +109,8 @@ useEffect(()=>{
                 </div>
               )}
 
-              <p className="font-light text-sm">
-                dsjsdkhh jsdjkhdjshk jhdsjkdsd jkfjdsfdbj gdgdfggd hdgsfdsfssd
-                sddsaffdssdfdfs sddsfsdddsffdssdfd dsjsdkhh jsdjkhdjshk
-                jhdsjkdsd jkfjdsfdbj gdgdfggd hdgsfdsfssd sddsaffdssdfdfs
-                sddsfsdddsffdssdfd
+              <p className=" text-sm mt-3 w-full h-20">
+               {userData?.bio}
               </p>
             </div>
 
@@ -137,9 +135,7 @@ useEffect(()=>{
             <div className="not-prose relative rounded-xl overflow-x-auto scrollbar-hide">
               <div className="mt-3 flex justify-center lg:mt-8">
                 <div className="flex justify-start w-72 sm:w-96 sm:gap-3 md:w-[460px] lg:w-[660px] lg:gap-9">
-                  {highlights.length!=0 && highlights.map((val:any,index:number) => {
-                    console.log("ENTER TO HIGH");
-                    
+                  {highlights.length!=0 && highlights.map((val:any,index:number) => {                    
                     return (
                       <Highlight
                       setOpenHighlight={setOpenHighlight}

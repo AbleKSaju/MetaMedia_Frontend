@@ -1,6 +1,7 @@
 import { MouseEventHandler, useState } from "react";
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
 import { useSelector } from "react-redux";
+import profile from '../../assets/profile.webp'
 
 const StoryCard = ({ setShowStory, setAddStory }: any) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -13,6 +14,9 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
     (state: any) => state.persisted.story.otherUsersStoryData
   );
   console.log(myStory,"myStory");
+  console.log(myStory?.[0]?.[0]?.storyUrl.startsWith('https://'),"myStory?.[0]?.[0]?.storyUrl.startsWith('video/'");
+  console.log(userData?.profile,"userData?.profile");
+  
   
 
   const renderSidebar = () => {
@@ -69,12 +73,13 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                         >
                           <img
                             className="h-28 w-full rounded-lg blur-[1px]"
-                            src={`${
-                              myStory[0]?.[0]
+                            src={myStory?.[0]?.[0]?.storyUrl.startsWith('https://') && userData?.profile ? 
+                            `http://localhost:3000/profile/${userData?.profile}`
+                            :`${
+                              !myStory?.[0]?.[0]?.storyUrl.startsWith('https://')
                                 ? `http://localhost:3003/story/${myStory?.[0]?.[0]?.storyUrl}`
-                                : userData?.profile
-                                ? `http://localhost:3000/profile/${userData?.profile}`
-                                : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
+                                : profile
+                               
                             }`}
                             alt=""
                           />
@@ -85,7 +90,7 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                             src={`${
                               userData?.profile
                                 ? `http://localhost:3000/profile/${userData?.profile}`
-                                : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
+                                : `${profile}`
                             }`}
                             alt="S"
                           />
@@ -111,9 +116,9 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                                 onClick={() => setShowStory(value.userId)}
                                 className="h-28 w-full rounded-lg blur-[1px]"
                                 src={`${
-                                  stories
+                                  stories && !value.data[0]?.storyUrl.startsWith('https://')
                                     ? `http://localhost:3003/story/${value.data[0]?.storyUrl}`
-                                    : "https://i.pinimg.com/736x/f3/72/0e/f3720e26e91ec25f058f76fb769b0b10.jpg"
+                                    : `http://localhost:3000/profile/${value?.profile}`
                                 }`}
                                 alt=""
                               />

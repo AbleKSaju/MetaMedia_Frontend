@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AddHighlight_Api, AddStory_Api, DeleteStory_Api, getMyAllStoriesForHighLightList_Api } from "../../../endpoints/common";
+import { AddHighlight_Api, AddStory_Api, AddVideos_Api, DeleteStory_Api, getMyAllStoriesForHighLightList_Api } from "../../../endpoints/common";
 
 export const addHighlightFunction = (data: any) => {
   try {
@@ -39,6 +39,13 @@ export const deleteStoryFunction = async (data:{})=>{
 export const getMyAllStoriesForHighLightListFunction = async ()=>{
   try {
     return axios.create({ withCredentials: true }).get(getMyAllStoriesForHighLightList_Api);
+  } catch (error) {
+    return error;
+  }
+}
+export const AddVideoToStoryFunction = async (data:any)=>{
+  try {
+    return axios.create({ withCredentials: true }).post(AddVideos_Api,data);
   } catch (error) {
     return error;
   }

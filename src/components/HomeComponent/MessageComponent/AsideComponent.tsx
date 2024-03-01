@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ChatComponent from "./ChatComponent";
+import { io } from 'socket.io-client'
 import useMediaQuery from "../../../utils/costumHook/mediaqueri";
 import { useSelector } from "react-redux";
 import {
@@ -15,16 +16,39 @@ import {
   Phone,
   Video,
 } from "lucide-react";
+import profile from "../../../assets/profile.webp";
 import { sendMessageFunction } from "../../../utils/api/methods/ChatService/post/post";
+import { getAllUsersFunction } from "../../../utils/api/methods/UserService/get";
+import { toast } from "sonner";
 
 const AsideComponent = () => {
   const [conversations, setConversations] = useState<any>();
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<any>({});
+  const [users, setUsers] = useState([]);
+  const [socket, setSocket] = useState<any>(null)
   const isMobile = useMediaQuery("(max-width: 425px)");
   const userData = useSelector((state: any) => state.persisted.user.userData);
 
+  useEffect(() => {
+		setSocket(io('http://localhost:8080'))
+	}, [])
+
+  useEffect(() => {
+    socket?.emit('addUser', userData?.userId);
+		// socket?.emit('addUser', user?.id);
+		// socket?.on('getUsers', users => {
+		// 	console.log('activeUsers :>> ', users);
+		// })
+	// 	socket?.on('getMessage', data => {
+	// 		setMessages(prev => ({
+	// 			...prev,
+	// 			messages: [...prev.messages, { user: data.user, message: data.message }]
+	// 		}))
+	// 	})
+	}, [socket])
+  
   useEffect(() => {
     const fetchConversations = async () => {
       const response: any = await GetConversationsFunction();
@@ -48,8 +72,25 @@ const AsideComponent = () => {
     fetchConversations();
   }, []);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await getAllUsersFunction();
+      if (response.status) {
+        const filteredUsers = response.data.filter(
+          (user: any) =>
+              !conversations.some((conversation: any) => conversation.email === user.email) &&
+              user.email !== userData.email
+      );
+        setUsers(filteredUsers);
+      } else {
+        toast.error("Users not found");
+      }
+    };
+    fetchUsers();
+  }, [conversations]);
+
   const fetchMessages = async (data: any) => {
-    console.log(data, "datadatadata");
+    console.log(data, "DATAAAAAAAA");
 
     const messages: any = await getMessagesFunction(data);
     if (messages.data.status) {
@@ -61,26 +102,23 @@ const AsideComponent = () => {
   };
 
   const sendMessage = async () => {
-		// setMessage('')
-		// socket?.emit('sendMessage', {
-		// 	senderId: user?.id,
-		// 	receiverId: messages?.receiver?.receiverId,
-		// 	message,
-		// 	conversationId: messages?.conversationId
-		// });
-    const data={
-      conversationId: messages?.data?.conversationId,
+    // setMessage('')
+    // socket?.emit('sendMessage', {
+    // 	senderId: user?.id,
+    // 	receiverId: messages?.receiver?.receiverId,
+    // 	message,
+    // 	conversationId: messages?.conversationId
+    // });
+    const data = {
+      conversationId: messages?.data?.conversationId || "new",
       senderId: userData?.userId,
       message,
-      receiverId: messages?.data?.receiverId
-    }
-    setMessage("")
-    const response = await sendMessageFunction(data)
-    console.log(response,"responseresponseresponse");
-    
-
-		
-	}
+      receiverId: messages?.data?.receiverId,
+    };
+    setMessage("");
+    const response = await sendMessageFunction(data);
+    console.log(response, "responseresponseresponse");
+  };
 
   return (
     <>
@@ -104,8 +142,12 @@ const AsideComponent = () => {
                   key={index}
                 >
                   <img
-                    src={`http://localhost:3000/profile/${data?.profile}`}
-                    alt=""
+                    src={
+                      data?.profile
+                        ? `http://localhost:3000/profile/${data?.profile}`
+                        : `${profile}`
+                    }
+                    alt="P"
                     className="rounded-full mr-2 w-[50px] h-[50px]"
                   />
                   <div
@@ -114,10 +156,10 @@ const AsideComponent = () => {
                   >
                     <div className="flex flex-col">
                       <span className=" font-bold">{data?.name}</span>
-                      <span className="font-light text-sm">{data?.email}</span>
+                      <span className="font-light text-sm">{data?.email?.slice(0,20)}...</span>
                     </div>
                   </div>
-                  <span className="time text-gray-600">now</span>
+                  <span className=" text-gray-600">now</span>
                 </div>
               );
             })
@@ -125,92 +167,92 @@ const AsideComponent = () => {
             <p className="text-center mt-10 font-bold">No Conversations</p>
           )}
 
-          <div className="list flex cursor-pointer border-b border-gray-300 hover:bg-gray-100 transition-all p-2 items-center h-[70px]">
-            <img
-              src="https://media.istockphoto.com/id/1225173869/photo/house-boat-anchored-in-lake-with-jungle-background-backwaters-kerala-india.jpg?s=612x612&w=0&k=20&c=uo-bsRQjhlT9AgeWBs_pkSvHQwStCelMC75EUpzwjHU="
-              alt=""
-              className="rounded-full mr-2 w-[50px] h-[50px]"
-            />
-            <div className="info flex-1">
-              <div className="flex flex-col">
-                <span className=" font-bold">Taylor Swift</span>
-                <span className="font-light text-sm">Good night.</span>
-              </div>
-            </div>
-            <span className="time text-gray-600">now</span>
-          </div>
-          <div className="list flex cursor-pointer border-b border-gray-300 hover:bg-gray-100 transition-all p-2 items-center h-[70px]">
-            <img
-              src="https://media.istockphoto.com/id/1225173869/photo/house-boat-anchored-in-lake-with-jungle-background-backwaters-kerala-india.jpg?s=612x612&w=0&k=20&c=uo-bsRQjhlT9AgeWBs_pkSvHQwStCelMC75EUpzwjHU="
-              alt=""
-              className="rounded-full mr-2 w-[50px] h-[50px]"
-            />
-            <div className="info flex-1">
-              <div className="flex flex-col">
-                <span className=" font-bold">Taylor Swift</span>
-                <span className="font-light text-sm">Good night.</span>
-              </div>
-            </div>
-            <span className="time text-gray-600">now</span>
-          </div>
-          <div className="list flex cursor-pointer border-b border-gray-300 hover:bg-gray-100 transition-all p-2 items-center h-[70px]">
-            <img
-              src="https://media.istockphoto.com/id/1225173869/photo/house-boat-anchored-in-lake-with-jungle-background-backwaters-kerala-india.jpg?s=612x612&w=0&k=20&c=uo-bsRQjhlT9AgeWBs_pkSvHQwStCelMC75EUpzwjHU="
-              alt=""
-              className="rounded-full mr-2 w-[50px] h-[50px]"
-            />
-            <div className="info flex-1">
-              <div className="flex flex-col">
-                <span className="font-bold">Taylor Swift</span>
-                <span className="font-light text-sm">Good night.</span>
-              </div>
-            </div>
-            <span className="time text-gray-600">now</span>
-          </div>
+          {users?.length ? (
+            users
+              ?.filter((user: any) => user.id !== userData.userId)
+              .map((data: any, index: number) => {
+                console.log(data, "USERS");
+
+                return (
+                  <div
+                    className="list flex cursor-pointer border-b border-gray-300 hover:bg-gray-100 transition-all p-2 items-center h-[70px]"
+                    key={index}
+                  >
+                    <img
+                      src={
+                        data?.profile
+                          ? `http://localhost:3000/profile/${data?.profile}`
+                          : `${profile}`
+                      }
+                      alt="P"
+                      className="rounded-full mr-2 w-[50px] h-[50px]"
+                    />
+                    <div
+                      className="info flex-1"
+                      onClick={() => fetchMessages(data)}
+                    >
+                      <div className="flex flex-col">
+                        <span className=" font-bold">{data?.name}</span>
+                        <span className="font-light text-sm">
+                          {data?.email.slice(0, 25)}...
+                        </span>
+                      </div>
+                    </div>
+                    <span className=" text-gray-600">now</span>
+                  </div>
+                );
+              })
+          ) : (
+            <p className="text-center mt-10 font-bold">No Conversations</p>
+          )}
         </div>
       </div>
       {/* {!isMobile && <ChatComponent />} */}
       <div className="flex flex-col w-full">
-        {messages?.data?.name &&
-        <header className="w-full flex items-center p-2 sm:p-3 border-b border-gray-300">
-          <ArrowLeft className="mr-3 sm:hidden" />
-          <img
-            src={`http://localhost:3000/profile/${conversations?.[0]?.profile}`}
-            alt=""
-            className="rounded-full mr-4 w-[35px] h-[35px]"
-          />
-          <div className="flex flex-col">
-            <p className="font-medium md:font-bold">
-              {conversations?.[0]?.name}
-            </p>
-            <p className="font-light text-sm">5 min ago</p>
-          </div>
-          <div className=" text-gray-600 ml-auto flex gap-2 sm:gap-5">
-            <Phone className="mt-0.5 size-4 lg:size-6" />
-            <Video className="ml-2 size-5 lg:size-7" />
-            <MoreVertical
-              onClick={() => setIsOpen(!isOpen)}
-              className="size-4 lg:size-7"
+        {messages?.data?.name && (
+          <header className="w-full flex items-center p-2 sm:p-3 border-b border-gray-300">
+            <ArrowLeft className="mr-3 sm:hidden" />
+            <img
+              src={
+                messages?.data?.profile
+                  ? `http://localhost:3000/profile/${messages?.data?.profile}`
+                  : `${profile}`
+              }
+              alt=""
+              className="rounded-full mr-4 w-[35px] h-[35px]"
             />
-          </div>
-          {isOpen && (
-            <div className="absolute top-14 right-6 w-40 bg-teal-900 rounded-tr-none rounded-lg shadow-lg z-10 border">
-              <ul>
-                <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
-                  Profile
-                </li>
-                <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
-                  Search
-                </li>
-                <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg cursor-pointer">
-                  {" "}
-                  Block
-                </li>
-              </ul>
+            <div className="flex flex-col">
+              <p className="font-medium md:font-bold">
+                {messages?.data?.name}
+              </p>
+              <p className="font-light text-sm">5 min ago</p>
             </div>
-          )}
-        </header>
-        }
+            <div className=" text-gray-600 ml-auto flex gap-2 sm:gap-5">
+              <Phone className="mt-0.5 size-4 lg:size-6" />
+              <Video className="ml-2 size-5 lg:size-7" />
+              <MoreVertical
+                onClick={() => setIsOpen(!isOpen)}
+                className="size-4 lg:size-7"
+              />
+            </div>
+            {isOpen && (
+              <div className="absolute top-14 right-6 w-40 bg-teal-900 rounded-tr-none rounded-lg shadow-lg z-10 border">
+                <ul>
+                  <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
+                    Profile
+                  </li>
+                  <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
+                    Search
+                  </li>
+                  <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg cursor-pointer">
+                    {" "}
+                    Block
+                  </li>
+                </ul>
+              </div>
+            )}
+          </header>
+        )}
         <div
           id="messages"
           className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-hide"
@@ -274,7 +316,12 @@ const AsideComponent = () => {
               <Image className="size-5 lg:size-6" />
             </>
           ) : (
-            <p className="hover:text-teal-800 font-bold cursor-pointer" onClick={() => sendMessage()}>Send</p>
+            <p
+              className="hover:text-teal-800 font-bold cursor-pointer"
+              onClick={() => sendMessage()}
+            >
+              Send
+            </p>
           )}
         </div>
       </div>

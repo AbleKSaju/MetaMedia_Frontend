@@ -20,7 +20,7 @@ export const ChooseInterest_Api=`${USER_URL}/chooseInterest`
 export const AddProfile_Api=`${USER_URL}/addProfile`
 export const EditProfile_Api=`${USER_URL}/editProfile`
 export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
-export const GetAllUsers_Api=`${USER_URL}/getAllUsers`
+export const GetAllUsers_Api=`${USER_URL}/getAllUsersForChat`
 export const getUsersByName_Api=`${USER_URL}/getUsersByname`
 export const getuserById_Api=`${USER_URL}/getUserById`
 
@@ -30,6 +30,7 @@ export const getuserById_Api=`${USER_URL}/getUserById`
 
 export const AddHighlight_Api=`${STORY_URL}/addHighlight`
 export const AddStory_Api=`${STORY_URL}/addStory`
+export const AddVideos_Api=`${STORY_URL}/addVideos`
 export const DeleteStory_Api=`${STORY_URL}/deleteStory`
 export const GetStories_Api=`${STORY_URL}/getStories`
 export const GetAllStories_Api=`${STORY_URL}/getAllStories`

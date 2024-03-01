@@ -7,7 +7,7 @@ const ChooseImageComponent = ({selectedFile,setSelectedFile,setImageUrl}:any) =>
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file:any = e?.target?.files?.[0];
     if (file) {
-      
+      console.log(file,"FILEEE");
       const formData = new FormData();
       setSelectedFile(file);       
       formData.append("file", file);

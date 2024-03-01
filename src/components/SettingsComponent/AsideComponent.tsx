@@ -7,6 +7,8 @@ import { LogoutFunction } from "../../utils/api/methods";
 import { addProfileImageFunction } from "../../utils/api/methods/UserService/post";
 import { addProfileImage } from "../../utils/ReduxStore/Slice/userSlice";
 import { persistor } from "../../utils/ReduxStore/Store/Store";
+import profile from '../../assets/profile.webp'
+
 
 const Aside = () => {
   const location = useLocation();
@@ -85,7 +87,7 @@ const Aside = () => {
                         ? `${userData.profile}`
                         : userData.profile
                           ? `http://localhost:3000/profile/${userData?.profile}`
-                          : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                          : `${profile}`
                     }
                     alt="Profile Picture"
                   />

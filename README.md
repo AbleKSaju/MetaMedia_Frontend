@@ -30,3 +30,32 @@ export default {
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
 npm install @hookform/resolvers/zod --legacy-peer-deps
+
+
+
+      if (file.type.startsWith("video")) {
+        const data = new FormData()
+        data.append("file", file);
+        data.append("upload_preset" , 'videos_preset')
+        data.append("timestamp", timestamp);
+        data.append("signature", signature);
+        try {
+             // Get signature for Image upload
+
+      // Get signature for video upload
+
+
+          const cloudName="dton3lr3o"
+          let resourceType='video'
+          let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`
+          const res = await axios.post(api,data)
+          console.log(res.data,"res.datares.data");
+          const { secure_url } = res.data
+
+          // await axios.post("http://localhost:3003/api/story/addStoryVideo",{secure_url})
+          console.log("File upload success ...");
+          setLoading(false)
+        } catch (error) {
+          console.log(error,"er");
+        }
+      } 

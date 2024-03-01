@@ -43,6 +43,8 @@ const CropImageComponent = ({ selectedFile ,imageUrl,setCroppedImage}: any) => {
         );
     
         const croppedImageBase64:any = canvas.toDataURL('image/jpeg');
+        console.log(croppedImageBase64,"croppedImageBase64croppedImageBase64");
+        
         setCroppedImage(croppedImageBase64)
   }
 
