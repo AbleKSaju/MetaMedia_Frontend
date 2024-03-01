@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatComponent from "./ChatComponent";
 import { io } from 'socket.io-client'
 import useMediaQuery from "../../../utils/costumHook/mediaqueri";
@@ -26,34 +26,48 @@ const AsideComponent = () => {
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<any>({});
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<any>([]);
   const [socket, setSocket] = useState<any>(null)
   const isMobile = useMediaQuery("(max-width: 425px)");
   const userData = useSelector((state: any) => state.persisted.user.userData);
+  const messageRef = useRef<any>(null)
+
 
   useEffect(() => {
 		setSocket(io('http://localhost:8080'))
 	}, [])
 
+  console.log(messages,"MESSSSSSSSS");
+  
+
   useEffect(() => {
     socket?.emit('addUser', userData?.userId);
-		// socket?.emit('addUser', user?.id);
-		// socket?.on('getUsers', users => {
-		// 	console.log('activeUsers :>> ', users);
-		// })
-	// 	socket?.on('getMessage', data => {
-	// 		setMessages(prev => ({
-	// 			...prev,
-	// 			messages: [...prev.messages, { user: data.user, message: data.message }]
-	// 		}))
-	// 	})
+		socket?.on('getUsers', (users:any) => {
+			console.log('activeUsers :>> ', users);
+		})
+		socket?.on('getMessage', (data:any) => {
+      console.log(data,"getMessagegetMessagegetMessagegetMessagegetMessagegetMessage");
+      
+      console.log(messages,"MMMMMMMM before");
+      
+      setMessages((prev:any) => ({
+        ...prev,
+        messages: [...prev.messages, data] // Assuming data contains the new message object
+      }));
+      console.log(messages,"MMMMMMMM After");
+		})
 	}, [socket])
+
+  	useEffect(() => {
+		messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
+	}, [messages?.data])
   
   useEffect(() => {
     const fetchConversations = async () => {
       const response: any = await GetConversationsFunction();
       if (response.data.data) {
         const userId = { ids: response.data.data };
+        
         const userData: any = await GetUsersDataByIdFunction(userId);
         const users: any = [];
         userData.data.data.map((data: any) => {
@@ -64,6 +78,7 @@ const AsideComponent = () => {
             profile: data.user.profile,
             receiverId: data.user.receiverId,
           };
+          
           users.push(userDetails);
         });
         setConversations(users);
@@ -76,10 +91,13 @@ const AsideComponent = () => {
     const fetchUsers = async () => {
       const response = await getAllUsersFunction();
       if (response.status) {
-        const filteredUsers = response.data.filter(
-          (user: any) =>
-              !conversations.some((conversation: any) => conversation.email === user.email) &&
+        
+        const filteredUsers = response?.data.filter(
+          (user: any) =>{
+          
+             return !conversations?.some((conversation: any) => conversation.email === user.email) &&
               user.email !== userData.email
+          }
       );
         setUsers(filteredUsers);
       } else {
@@ -89,13 +107,16 @@ const AsideComponent = () => {
     fetchUsers();
   }, [conversations]);
 
-  const fetchMessages = async (data: any) => {
-    console.log(data, "DATAAAAAAAA");
+  const fetchMessages = async (data: any) => {    
+    const response: any = await getMessagesFunction(data);
+    const sender = response?.data?.data[0]?.senderId
+    const receiver =data?.receiverId
 
-    const messages: any = await getMessagesFunction(data);
-    if (messages.data.status) {
+    console.log(sender,"sender");
+    console.log(receiver,"receiver");    
+    if (response.data.status) {
       setMessages({
-        messages: messages.data.data,
+        messages: response.data.data,
         data: data,
       });
     }
@@ -103,12 +124,16 @@ const AsideComponent = () => {
 
   const sendMessage = async () => {
     // setMessage('')
-    // socket?.emit('sendMessage', {
-    // 	senderId: user?.id,
-    // 	receiverId: messages?.receiver?.receiverId,
-    // 	message,
-    // 	conversationId: messages?.conversationId
-    // });
+    console.log(messages,"messages for hpooo");
+    
+    socket?.emit('sendMessage', {
+			senderId: userData?.userId,
+			receiverId: messages?.data?.receiverId,
+			message,
+			conversationId: messages?.data?.conversationId
+		});
+
+    
     const data = {
       conversationId: messages?.data?.conversationId || "new",
       senderId: userData?.userId,
@@ -118,7 +143,9 @@ const AsideComponent = () => {
     setMessage("");
     const response = await sendMessageFunction(data);
     console.log(response, "responseresponseresponse");
+    await fetchMessages(data)
   };
+
 
   return (
     <>
@@ -142,14 +169,16 @@ const AsideComponent = () => {
                   key={index}
                 >
                   <img
-                    src={
-                      data?.profile
-                        ? `http://localhost:3000/profile/${data?.profile}`
-                        : `${profile}`
-                    }
-                    alt="P"
-                    className="rounded-full mr-2 w-[50px] h-[50px]"
-                  />
+                      src={
+                        data?.profile.startsWith('https://')
+                          ? `${data?.profile}`
+                          :  data?.profile 
+                          ? `http://localhost:3000/profile/${data?.profile}`
+                          : `${profile}`
+                      }
+                      alt="P"
+                      className="rounded-full mr-2 w-[50px] h-[50px]"
+                    />
                   <div
                     className="info flex-1"
                     onClick={() => fetchMessages(data)}
@@ -163,15 +192,13 @@ const AsideComponent = () => {
                 </div>
               );
             })
-          ) : (
-            <p className="text-center mt-10 font-bold">No Conversations</p>
-          )}
+          ) : ("")}
 
           {users?.length ? (
             users
               ?.filter((user: any) => user.id !== userData.userId)
               .map((data: any, index: number) => {
-                console.log(data, "USERS");
+                // console.log(data, "USERS");
 
                 return (
                   <div
@@ -180,7 +207,9 @@ const AsideComponent = () => {
                   >
                     <img
                       src={
-                        data?.profile
+                        data?.profile.startsWith('https://')
+                          ? `${data?.profile}`
+                          :  data?.profile 
                           ? `http://localhost:3000/profile/${data?.profile}`
                           : `${profile}`
                       }
@@ -203,7 +232,7 @@ const AsideComponent = () => {
                 );
               })
           ) : (
-            <p className="text-center mt-10 font-bold">No Conversations</p>
+           ""
           )}
         </div>
       </div>
@@ -214,7 +243,9 @@ const AsideComponent = () => {
             <ArrowLeft className="mr-3 sm:hidden" />
             <img
               src={
-                messages?.data?.profile
+                messages?.data?.profile.startsWith('https://')
+                ? `${messages?.data?.profile}`
+                : messages?.data?.profile
                   ? `http://localhost:3000/profile/${messages?.data?.profile}`
                   : `${profile}`
               }
@@ -255,11 +286,10 @@ const AsideComponent = () => {
         )}
         <div
           id="messages"
-          className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-hide"
+          className="flex flex-col mb-12 space-y-4 p-3 overflow-y-auto scrollbar-hide"
         >
           {messages?.messages?.length > 0 ? (
             messages.messages.map((data: any) => {
-              console.log(data.message, "dataaaaa");
 
               return data.senderId !== userData.userId ? (
                 <div className="chat-message" key={data.id}>
@@ -269,6 +299,7 @@ const AsideComponent = () => {
                         <span className="px-4 py-2 rounded-lg text-sm md:text-base inline-block rounded-bl-none bg-gray-300 text-gray-600">
                           {data.message}
                         </span>
+                        <div ref={messageRef}></div>
                       </div>
                     </div>
                     <img
@@ -286,6 +317,7 @@ const AsideComponent = () => {
                         <span className="px-4 py-2 rounded-lg text-sm md:text-base inline-block rounded-br-none bg-blue-600 text-white ">
                           {data.message}
                         </span>
+                        <div ref={messageRef}></div>
                       </div>
                     </div>
                   </div>
