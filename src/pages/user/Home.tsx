@@ -52,7 +52,9 @@ console.log(user_id,"user_iduser_iduser_iduser_id");
 
  {showStory.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
  <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/>
-         {isAddPost && (
+
+        {isAddPost && (
+
         <>
         <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost}  />
         </>
