@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 const AsideComponent = ({sidebarOpen,setAddStory,isAddPost,setIsAddPost}:any) => {
   const location = useLocation();
   const currentPath = location.pathname;
-  console.log(currentPath,"currentPath");
   
   return (
        <>

@@ -20,7 +20,13 @@ import { getLatAndLogFuntion } from "../../../../utils/api/methods/PostService/P
 import { useNavigate } from "react-router-dom";
 import { getUsersByNameFunction } from "../../../../utils/api/methods/UserService/post";
 
-const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}: any) => {
+const AddPostDetailsBody = ({
+  setPostState,
+  addPost,
+  setAddPost,
+  render,
+  setRender,
+}: any) => {
   const post = useSelector((state: any) => state.persisted.post);
   const user = useSelector((state: any) => state.persisted.user);
   console.log("LLL", post);
@@ -44,7 +50,7 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
   const [selectedLocationlatAndLog, setSelectedLocationlatAndLog]: any =
     useState("");
   const [isSelected, setIsSelcted] = useState(false);
-  const [tagedUserData,setTagedUserData]:any=useState([])
+  const [tagedUserData, setTagedUserData]: any = useState([]);
   const maxLength = 500;
 
   useEffect(() => {
@@ -62,11 +68,9 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
     }
   };
 
-  useEffect(()=>{
-
-    console.log(tagedUserData.length ,"BBBBBBBBBBBBBBbbbbbbbbbb");
-    
-  },[tagedUserData])
+  useEffect(() => {
+    console.log(tagedUserData.length, "BBBBBBBBBBBBBBbbbbbbbbbb");
+  }, [tagedUserData]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -196,7 +200,9 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
     } else {
       console.log(user.userDara, "htia is is ");
       toast.success("here");
-      const tagedUserIds = tagedUserData.map((userData: any) => userData.userId);
+      const tagedUserIds = tagedUserData.map(
+        (userData: any) => userData.userId
+      );
       const data: PostData = {
         userId: user.userData.userId,
         description: text,
@@ -216,11 +222,11 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
       const res: any = await AddPostFuntion({ data });
       console.log(res, "THIS is responce from the server");
       if (res.status) {
-        setRender(!render)
-        setAddPost(!addPost)
+        setRender(!render);
+        setAddPost(!addPost);
         setPostState(false);
         toast.success("the status from the responce is true");
-        navigate("/profile");
+        navigate(`/profile/${user?.userData?.userId}`);  
       }
     }
   };
@@ -236,24 +242,24 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
 
     // Check if userId already exists in tagedUserData array
     if (!tagedUserData.some((data: any) => data.userId === userId)) {
-        const data = {
-            userId: userId,
-            name: user.basicInformation.fullName,
-            profile: user.profile.profileUrl
-        };
-        toast.success(`Tagged ${user.basicInformation.fullName}`);
-        setTagedUserData((prevState: any) => [...prevState, data]);
+      const data = {
+        userId: userId,
+        name: user.basicInformation.fullName,
+        profile: user.profile.profileUrl,
+      };
+      toast.success(`Tagged ${user.basicInformation.fullName}`);
+      setTagedUserData((prevState: any) => [...prevState, data]);
     } else {
-        toast.error("This user is already selected");
+      toast.error("This user is already selected");
     }
-}
-const deselectTagPeople = (userId: any) => {
-  
-  const updatedTagedUserData = tagedUserData.filter((user: any) => user.userId !== userId);
-  
-  
-  setTagedUserData(updatedTagedUserData);
-}
+  };
+  const deselectTagPeople = (userId: any) => {
+    const updatedTagedUserData = tagedUserData.filter(
+      (user: any) => user.userId !== userId
+    );
+
+    setTagedUserData(updatedTagedUserData);
+  };
   return (
     <>
       <div className="fixed top-32 md:h-5/6 w-full md:top-16 z-10 sm:ml-4  sm:w-4/6   flex justify-center border text-white rounded-lg border-gray-500  bg-white">
@@ -408,36 +414,36 @@ const deselectTagPeople = (userId: any) => {
                       {/* Dropdown */}
                       <div className="relative">
                         <div className="flex justify-between">
-                        <button
-                          id="dropdownToggleButton"
-                          onClick={tagToggleDropdown}
-                          className="text-black   focus:outline-none  font-medium rounded-lg text-sm  pl-2 text-center inline-flex items-center"
-                          type="button"
-                        >
-                          Tag People
-                          <svg
-                            className="w-2.5 h-2.5 ms-3"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 10 6"
+                          <button
+                            id="dropdownToggleButton"
+                            onClick={tagToggleDropdown}
+                            className="text-black   focus:outline-none  font-medium rounded-lg text-sm  pl-2 text-center inline-flex items-center"
+                            type="button"
                           >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="m1 1 4 4 4-4"
-                            />
-                          </svg>
-                        </button>
-                        <div className="pl-36">
-
-                        <p className=" border rounded-full w-5 h-5 flex items-center text-center p-1 bg-teal-600 text-white   ">{tagedUserData.length }</p>
+                            Tag People
+                            <svg
+                              className="w-2.5 h-2.5 ms-3"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 10 6"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="m1 1 4 4 4-4"
+                              />
+                            </svg>
+                          </button>
+                          <div className="pl-36">
+                            <p className=" border rounded-full w-5 h-5 flex items-center text-center p-1 bg-teal-600 text-white   ">
+                              {tagedUserData.length}
+                            </p>
+                          </div>
                         </div>
 
-                        </div>
-                       
                         {/* Dropdown menu */}
                         <div
                           id="dropdownToggle"
@@ -445,63 +451,82 @@ const deselectTagPeople = (userId: any) => {
                             isTagOpen ? "" : "hidden"
                           } bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border top-full left-0 mt-1`}
                         >
-                          
                           <ul
-  className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800 overflow-y-auto h-48"
-  aria-labelledby="dropdownToggleButton"
->
-  {/* Render selected tagged users */}
-  <p>Tagged</p>
-  <li className="border-gray-100 border  rounded">
-    {tagedUserData.length > 0 && (
-      <>
-      
-        {tagedUserData.map((user: any, index:any) => (
-          <li key={index} className="border-b overflow-auto shadow-md rounded">
-           
-            <div className="flex items-center justify-between px-4 py-2">
-              <img
-                className="w-6 h-6  rounded-full"
-                src={user.profile}
-                alt={`image`}
-              />
-              {user.name}
-              {/* Add a button or icon to deselect the user */}
-              <button className=" text-black font-bold p-1" onClick={() => deselectTagPeople(user.userId)}>X</button>
-            </div>
-          </li>
-        ))}
-      </>
-    )}
-  </li>
+                            className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800 overflow-y-auto h-32"
+                            aria-labelledby="dropdownToggleButton"
+                          >
+                            {/* Render selected tagged users */}
+                            <p>Tagged</p>
+                            <li className="border-gray-100 border  rounded">
+                              {tagedUserData.length > 0 && (
+                                <>
+                                  {tagedUserData.map(
+                                    (user: any, index: any) => {
+                                      console.log(user,"USSS");
+                                      
+                                      return (
+                                      <li
+                                        key={index}
+                                        className="border-b overflow-auto shadow-md rounded"
+                                      >
+                                        <div className="flex items-center justify-between px-4 py-2">
+                                          <img
+                                            className="w-6 h-6  rounded-full"
+                                            src={user?.profile?.startsWith('https://graph')
+                                            ? `${user?.profile}`
+                                            : `http://localhost:3000/profile/${user?.profile}`}
+                                            alt={`image`}
+                                          />
+                                          {user.name}
+                                          {/* Add a button or icon to deselect the user */}
+                                          <button
+                                            className=" text-black font-bold p-1"
+                                            onClick={() =>
+                                              deselectTagPeople(user.userId)
+                                            }
+                                          >
+                                            X
+                                          </button>
+                                        </div>
+                                      </li>
+                                    )}
+                                  )}
+                                </>
+                              )}
+                            </li>
 
-  {/* Render remaining users */}
-  <li>
-  <p>Select user</p>
-    {resTagUser && resTagUser.length > 0 && (
-      <>
-        {resTagUser.map((user: any, index) => (
-          <li key={index} className="border-b " onClick={() => selectTagPeople(user)}>
-            <a href="#" className="flex items-center px-4 py-2">
-              <img
-                className="w-6 h-6 me-2 rounded-full"
-                src={user.profile.profileUrl}
-                alt={`image`}
-              />
-              {user.basicInformation.fullName}
-            </a>
-          </li>
-        ))}
-      </>
-    )}
-  </li>
-</ul>
+                            {/* Render remaining users */}
+                            <li>
+                              <p>Select user</p>
+                              {resTagUser && resTagUser.length > 0 && (
+                                <>
+                                  {resTagUser.map((user: any, index) => (
+                                    <li
+                                      key={index}
+                                      className="border-b "
+                                      onClick={() => selectTagPeople(user)}
+                                    >
+                                      <a
+                                        href="#"
+                                        className="flex items-center px-4 py-2"
+                                      >
+                                        <img
+                                          className="w-6 h-6 me-2 rounded-full"
+                                          src={user.profile.profileUrl}
+                                          alt={`image`}
+                                        />
+                                        {user.basicInformation.fullName}
+                                      </a>
+                                    </li>
+                                  ))}
+                                </>
+                              )}
+                            </li>
+                          </ul>
                           <a
                             href="#"
                             className="flex items-center p-3 text-sm font-medium  border-t  rounded-b-lg bg-gray-50   hover:underline"
                           >
-                            
-
                             <input
                               type="text"
                               className="w-full h-full p-1 outline-none bg-gray-50 hover:underline "

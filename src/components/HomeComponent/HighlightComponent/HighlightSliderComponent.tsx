@@ -110,7 +110,7 @@ const HighlightSliderComponent = ({openHighlight,setOpenHighlight,durationPerIma
 }
 
     </div>
-    <Link to="/profile">
+    <Link to={`/profile/${userData?.userId}`}>
       <img
         className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
         src={

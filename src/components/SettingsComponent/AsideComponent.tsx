@@ -62,7 +62,7 @@ const Aside = () => {
         };
         dispatch(addProfileImage(data));
         toast.success(response?.message);
-        Navigate("/profile");
+        Navigate(`/profile/${userData?.userId}`);  
       } else {
         toast.error(response?.message);
       }

@@ -5,12 +5,11 @@ import Highlight from "../HighlightComponent/HighlightComponent";
 import { GetHighlightData } from "../../../utils/api/methods";
 import { SetSidebarOpenFunction } from "src/pages/user/Home";
 import profile from '../../../assets/profile.webp'
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FollowComponent from "./FollowComponent";
 import AddHighlightComponent from "./AddHighlightComponent";
 import HighlightListComponent from "../HighlightComponent/HighlightListComponent";
-import {  } from "../../../utils/api/endpoints/common";
 import { addHighlights, deleteHighlights } from "../../../utils/ReduxStore/Slice/highlightSlice";
 import OpenHighlightComponent from "../HighlightComponent/OpenHighlightComponent";
 
@@ -27,6 +26,12 @@ const Profile = ({ setSidebarOpen,render,setRender}:any) => {
   const [highlightList,setHighlightList] = useState(false)
   const dispatch = useDispatch()
   const userData = useSelector((state: any) => state.persisted.user.userData);
+  let { user_id } = useParams();
+  console.log("ENTTTTT");
+  
+  console.log(user_id,"USER IDDDDDDDD");
+  
+
   
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
   setSidebarOpen(true);  

@@ -57,8 +57,7 @@ useEffect(()=>{
 const data=response.data
 
           setPosts(data)
-          navigate('/profile')
-        }
+          navigate(`/profile/${user.userData.userId}`);        }
 
         
             

@@ -5,7 +5,6 @@ import { Route, Routes } from "react-router-dom";
 
 const MessageComponent = ({ setSidebarOpen }: any) => {
   setSidebarOpen(false);
-  const [userId,setUserId] = useState("")
 
   return (
     <div className=" flex h-[99vh] sm:ml-20 overflow-hidden">

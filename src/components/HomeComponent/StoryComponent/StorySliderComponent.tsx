@@ -161,7 +161,7 @@ const StorySliderComponent = ({
       <div className="flex justify-center w-full absolute top-2">
         {currentStory.map((_: any, index: number) => (
           <>
-              <Link to="/profile" onClick={()=>setShowStory("")}>
+              <Link to={`/profile/${userData?.userId}`} onClick={()=>setShowStory("")}>
                 <img
                   className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
                   src={

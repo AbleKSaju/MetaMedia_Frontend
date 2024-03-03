@@ -42,7 +42,7 @@ const EditProfile = () => {
 
       dispatch(editUser(data));
       toast.success(response.data.message);
-      Navigate('/profile')
+      Navigate(`/profile/${userData?.userId}`);  
     } else {
       toast.error(response.data.message);
     }
