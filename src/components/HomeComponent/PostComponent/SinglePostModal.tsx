@@ -26,6 +26,10 @@ import { toast } from "sonner";
 import { AddCommentFunction } from "../../../utils/api/methods/PostService/Post/addComment";
 import { ReportPostFunction } from "../../../utils/api/methods/PostService/Post/reportPost";
 import { AddReplayToCommentFunction } from "../../../utils/api/methods/PostService/Post/addReplayToComment";
+import { DeletePostFuntion } from "../../../utils/api/methods/PostService/Post/deletePost";
+import { useNavigate } from "react-router-dom";
+import { UpdateCommentFuntion } from "../../../utils/api/methods/PostService/Post/updateComent";
+import { DeleteCommentFuntion } from "../../../utils/api/methods/PostService/Post/deleteComment";
 const SinglePostModal = ({ render, setRender }: any) => {
   TimeAgo.addDefaultLocale(en);
   const timeAgo = new TimeAgo("en-US");
@@ -34,6 +38,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
   const singlePost = useSelector(
     (state: any) => state.persisted.singlePost.singlePost
   );
+  const Navigate = useNavigate();
   const isSinglePostModal = useSelector(
     (state: any) => state.persisted.singlePost.isSinglePostModal
   );
@@ -44,15 +49,19 @@ const SinglePostModal = ({ render, setRender }: any) => {
   const [imageIndex, setImageIndex] = useState(0);
   const [date, setDate] = useState("");
   const [isReplay,setIsReplay]=useState(false)
+  const [isUpdateComment,setIsUpdateComment]=useState(false)
   const [postCretedDate, setPostCreaetedDate]: any = useState(
     singlePost.createdAt
   );
+  const [replayUserName,setReplayUserName]=useState('')
   const [dotModal,setDotModal]=useState(false)
   const [images, setImages] = useState(singlePost.mediaUrl);
   const [postUser, setPostUser] = useState(postUserData);
   const [liked, setLiked] = useState(false);
   const [text, setText] = useState("");
 const [isReportModal,setIsReportModal]=useState(false)
+const [visibleCommentOptions, setVisibleCommentOptions] = useState(null);
+const [isDotOpen,setIsDotOpen]=useState(false)
   const imageRightClick = () => {
     setImageIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -112,6 +121,10 @@ const [isReportModal,setIsReportModal]=useState(false)
 
   const handleComment=async()=>{
    
+
+    if(text.trim()==''){
+      toast.error('Please Enter a comment')
+    }else{
     const data = { 
         postId:singlePost._id,
          userId:userData.userId,
@@ -131,12 +144,32 @@ const [isReportModal,setIsReportModal]=useState(false)
          }else{
             toast.error("erroor")
          }
-
+        }
 
   }
 
  const  handleReplay=()=>{
     
+ }
+
+ const hanldeDelete=async()=>{
+const data={
+  postId:singlePost._id
+}
+  const responce=await DeletePostFuntion(data)
+  console.log(responce,'this is responce');
+  
+  if(responce.status){
+    toast.success('Deleted')
+    dispatch(clearPostData());
+      dispatch(clearPostUserData());
+      dispatch(isSinglePostModalClose())
+    Navigate('/profile')
+  }else{
+    toast.error('failed')
+    
+    toast.error(responce.message)
+  }
  }
 
   const handleDot=()=>{
@@ -167,29 +200,114 @@ if(responce.status){
 
 
   const handleReplayToComment=async()=>{
+
+    if(text.trim()==''){
+      toast.error("Enter some thing")
+    }else {
+      
+   const texted=replayUserName+text
     const data={
         postId:singlePost._id,
         commentId:commentId,
-        content:text,
+        content:texted,
         userId:userData.userId
     }
     const responce =await AddReplayToCommentFunction(data)
     if(responce.status){
        
         setText('')
+        setIsReplay(false)
         dispatch(clearPostData());
   dispatch(addPostData(responce.data));
   dispatch(isSinglePostModalOpen());
     }
   }
+  }
 
   const replayClick=(item:any)=>{
   
-    setIsReplay(true)
+    setIsReplay(!isReplay)
     setCommentId(item._id)
-    setText(`@${item.userName}:`)
+    setReplayUserName(`@${item.userName}:`)
+    setText('')
   }
 
+  useEffect(()=>{
+   if(!isReplay){
+    setText('')
+   }
+  },[isReplay])
+
+  const handleReplayDot=(commentId:any)=>{
+    setIsDotOpen(!isDotOpen)
+    setVisibleCommentOptions(commentId);
+  }
+
+  const handleComentEdit=(item:any)=>{
+   
+    setCommentId(item._id)
+ setIsUpdateComment(!isUpdateComment)
+ setIsReplay(false)
+ setText(item.content)
+
+
+  }
+
+
+  const updateComment=async()=>{
+    if(text.trim()==''){
+      toast.error("Enter Something")
+    }else{
+
+      const data={
+        postId:singlePost._id,
+        commentId:commentId,
+        comment:text
+    }
+
+    const responce=await UpdateCommentFuntion(data)
+    if(responce.status){
+      setText('')
+      setIsReplay(false)
+      setIsUpdateComment(false)
+      dispatch(clearPostData());
+  dispatch(addPostData(responce.data));
+  dispatch(isSinglePostModalOpen());
+    }else{
+      toast.error(responce.message)
+    }
+    }
+  }
+
+  useEffect(()=>{
+
+    if(!isUpdateComment){
+      setText('')
+    }
+
+  },[isUpdateComment])
+
+
+  const handleDeleteComment=async(item:any)=>{
+    const data={
+      postId:singlePost._id,
+      commentId:item._id
+    }
+    const responce =await DeleteCommentFuntion(data)
+
+    if(responce.status){
+      setText('')
+      setIsReplay(false)
+      setIsUpdateComment(false)
+      dispatch(clearPostData());
+  dispatch(addPostData(responce.data));
+  dispatch(isSinglePostModalOpen());
+    }else{
+      toast.error(responce.message)
+    }
+
+
+  }
   return (
     <>
       <div className="fixed z-20 inset-0  w-screen h-screen  bg-black bg-opacity-85   flex flex-col p-5 ">
@@ -199,7 +317,14 @@ if(responce.status){
         {dotModal && (
              <div className=" fixed  w-5/6 flex top-24 justify-end ">
              <div className="flex bg-white border  rounded-lg shadow-xl w-64 h-52 flex-col justify-evenly cursor-pointer">
-                 <div className="w-full border h-14 flex items-center justify-center font-medium text-sm " onClick={hanndleReport}>Report</div>
+                 {userData.userId==singlePost.userId ? ( 
+                  <>
+                  <div className="w-full border h-14 flex items-center justify-center font-medium text-sm " onClick={hanldeDelete}>Delete</div>
+                  </>
+                 ):(
+                  <>
+                   <div className="w-full border h-14 flex items-center justify-center font-medium text-sm " onClick={hanndleReport}>Report</div></>
+                 )}
                  <div className="w-full border h-14 flex items-center justify-center font-medium text-sm">Go to Post</div>
                  <div className="w-full border h-14 flex items-center justify-center font-medium text-sm">Share To</div>
                  <div className="w-full border h-14 flex items-center justify-center font-medium text-sm" onClick={handleDot}>Cansel</div>
@@ -306,18 +431,10 @@ if(responce.status){
                       <div className="flex flex-col overflow-wrap: break-word; text-gray-900">
                         {singlePost?.description}
                       </div>
-                      <div className="flex  w-3/6  h-full justify-between items-center">
-                        <p className="text-[13px] text-gray-400">{timeAgo.format(new Date(postCretedDate))}</p>
-                        <div className="font-medium text-sm text-gray-700">
-                          Replay
-                        </div>
-                        <div>
-                          <MoreHorizontal className="w-5 " />
-                        </div>
-                      </div>
+                     <div className="h-4"></div>
                     </div>
                     <div className="h-full w-1/6 flex justify-center items-start p-1 pt-2">
-                      <Heart className="w-4" />
+                     
                     </div>
                   </div>
                   {/* one comment end */}
@@ -348,19 +465,29 @@ if(responce.status){
                         <div className="flex flex-col overflow-wrap: break-word;">
                           {item.content}
                         </div>
-                        <div className="flex  w-3/6  h-full justify-between items-center">
+                        <div className="flex  w-3/6  h-full justify-between items-center gap-2">
                           <p className="text-[13px]">{timeAgo.format(new Date(item.createdAt))}</p>
-                          <div className="font-medium text-sm" onClick={()=>replayClick(item)}>Replay</div>
+                          <div className="font-medium text-[12px]" onClick={()=>replayClick(item)}>Replay</div>
                           <div>
-                            <MoreHorizontal className="w-5 " />
+                            {userData.userId==item.userId && <MoreHorizontal className="w-5 " onClick={()=>handleReplayDot(item._id)} />}
+                            
+                           
                           </div>
+                          {isDotOpen && visibleCommentOptions === item._id && (
+                    <div className="w-16 h-10 bg-white border flex justify-between items-center flex-col mt-5">
+                      <div className="w-full h-5 flex justify-center items-center text-sm border-b" onClick={()=>handleComentEdit(item)} >edit</div>
+                      <div className="w-full h-5 flex justify-center items-center text-sm" onClick={()=>handleDeleteComment(item)}>delete</div>
+                    </div>
+                  )}
                         </div>
                         {item.replay.length >0 && (
                             <>
                             {item.replay.map((item:any)=>{
+                              {console.log(item,'hhhhhahshdashdhashdhashdhasdhhsadhas');
+                              }
                                 return (
                                     <>
-                                   <div className="flex flex-col  ">
+                                   <div className="flex flex-col h-16 border  ">
                                    <div className=" h-7  ml-5  "> {item.content}</div>
                                    </div>
                                     </>
@@ -372,7 +499,7 @@ if(responce.status){
  }
                       </div>
                       <div className="h-full w-1/6 flex justify-center items-start p-1 pt-2">
-                        <Heart className="w-4" />
+                      
                       </div>
                     </div>
                     {/* one comment end */}
@@ -429,13 +556,18 @@ if(responce.status){
                       type="text"
                       className="w-full h-full p-2 outline-none "
                       placeholder="Add a comment.. "
-                      value={text}
-                      onChange={(e)=>setText(e.target.value)}
+                      value={isReplay ? `${replayUserName} ${text}` : text}
+  onChange={(e) => setText(e.target.value.replace(`${replayUserName} `, ''))}
                     />
                     {isReplay ? (<>
                         {text?.length != 0 ? ( <> <p className="text-sm font-semibold p-2"onClick={handleReplayToComment}>replay</p></>):(<div></div>)}
                     </>):(<>
-                        {text?.length != 0 ? ( <> <p className="text-sm font-semibold p-2"onClick={handleComment}>post</p></>):(<div></div>)}
+                    {isUpdateComment ? (<>
+                      {text?.length != 0 ? ( <> <p className="text-sm font-semibold p-2"onClick={updateComment}>update</p></>):(<div></div>)}
+                     </>):( <> 
+                      {text?.length != 0 ? ( <> <p className="text-sm font-semibold p-2"onClick={handleComment}>post</p></>):(<div></div>)}
+                     </> )}
+                        
                     </>) }
                    
                    

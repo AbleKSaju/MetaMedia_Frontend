@@ -46,7 +46,7 @@ const UserRouter = () => {
       <Route path="/s" element={<S />} />
       <Route path="/size" element={<SizeSelectModal/>} />
       <Route path="/selectPost" element={<SinglePostModal/>} />
-      <Route path="/new" element={<NewModel/>} />
+      <Route path="/new/*" element={<NewModel/>} />
       <Route path="/newSignUp" element={<NewSignUp />}/>
       <Route path="/newLogin" element={<NewLogin />}/>
 
