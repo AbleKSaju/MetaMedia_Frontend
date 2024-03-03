@@ -12,6 +12,8 @@ import AddHighlightComponent from "./AddHighlightComponent";
 import HighlightListComponent from "../HighlightComponent/HighlightListComponent";
 import { addHighlights, deleteHighlights } from "../../../utils/ReduxStore/Slice/highlightSlice";
 import OpenHighlightComponent from "../HighlightComponent/OpenHighlightComponent";
+import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
+import { toast } from "sonner";
 
 const Profile = ({ setSidebarOpen,render,setRender}:any) => {
 
@@ -20,6 +22,7 @@ const Profile = ({ setSidebarOpen,render,setRender}:any) => {
   const [openFollowings,setOpenFollowings] = useState(false)
   const [openFollowers,setOpenFollowers] = useState(false)
   const [postComponent, setPostComponent] = useState(false);
+  const [currentUser,setCurrentUser] = useState<any>([])
   const [otherUser, setOtherUser] = useState(false);
   const [openHighlight, setOpenHighlight] = useState(-1);
   const [highlightName, setHighlightName] = useState("");
@@ -27,30 +30,42 @@ const Profile = ({ setSidebarOpen,render,setRender}:any) => {
   const dispatch = useDispatch()
   const userData = useSelector((state: any) => state.persisted.user.userData);
   let { user_id } = useParams();
-  console.log("ENTTTTT");
-  
   console.log(user_id,"USER IDDDDDDDD");
-  
-
   
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
   setSidebarOpen(true);  
+
+  useEffect(()=>{
+    console.log("I am the useEffect");
+    (async ()=>{
+      if(user_id){
+        console.log(user_id,"dataId");
+        const response = await getUserByIdFuntion(user_id)
+        setCurrentUser(response.data)
+      }
+    })()
+  },[user_id])
+
   let highlight
   useEffect(()=>{
     (async ()=>{
-     const response:any = await GetHighlightData()
-     if(response?.data?.status){
-      highlight = response?.data?.data?.highlights
-      dispatch(addHighlights(highlight))
-     }else{
-      console.log("ENTER TO ELSE");
-      dispatch(deleteHighlights())
-     }
+      if(user_id){
+        const response:any = await GetHighlightData(user_id)
+        console.log(response,"HIGLLLLL");
+        
+        if(response?.data?.status){
+         highlight = response?.data?.data?.highlights
+         dispatch(addHighlights(highlight))
+        }else{
+         dispatch(deleteHighlights())
+        }
+      }else{
+        toast.error("User not found")
+      }
     })();
     setDeleteHighlight(false)
-  },[addHighlight,highlightList,highlight,deleteHighlight])
+  },[addHighlight,highlightList,highlight,deleteHighlight,user_id])
   
-
 useEffect(()=>{
   if(highlights.length==0){
     setOpenHighlight(-1)
@@ -67,16 +82,16 @@ useEffect(()=>{
                 className=" w-full h-full rounded-full border border-teal-900"
                 src={
                   userData.profile?.startsWith("https://graph.facebook.com/")
-                    ? `${userData.profile}`
-                    : userData.profile
-                    ? `http://localhost:3000/profile/${userData?.profile}`
+                    ? `${currentUser?.profile?.profileUrl}`
+                    : currentUser?.profile?.profileUrl
+                    ? `http://localhost:3000/profile/${currentUser?.profile?.profileUrl}`
                     : `${profile}`
                 }
                 alt="Profile"
               />
               <div className="flex flex-row justify-center text-center font-medium cursor-pointer mt-3 lg:mt-6">
                 <p className="font-extrabold text-lg text-teal-900">
-                  {userData?.name}
+                  {currentUser?.basicInformation?.fullName}
                 </p>
                 <p className="ml-3 hidden lg:flex">
                   <Link to="/settings">
@@ -102,7 +117,7 @@ useEffect(()=>{
                 !otherUser ? "mt-8" : "mt-0"
               } flex flex-col w-[90vw] sm:w-[55vw] md:w-[45vw] lg:w-[30vw] col-span-4 row-span-3 row-start-1 ml-4 lg:mt-0`}
             >
-              <p className="underline mb-1 text-xl text-teal-900">{userData?.userName}</p>
+              <p className="underline mb-1 text-xl text-teal-900">{currentUser?.basicInformation?.userName}</p>
               {otherUser && (
                 <div className="lg:flex w-64 my-3 justify-between hidden ">
                   <button className="border border-teal-900 px-8 py-1 hover:bg-teal-900 hover:text-amber-50 rounded-3xl">
@@ -115,7 +130,7 @@ useEffect(()=>{
               )}
 
               <p className=" text-sm mt-3 w-full h-20">
-               {userData?.bio}
+               {currentUser?.profile?.bio}
               </p>
             </div>
 
@@ -151,10 +166,12 @@ useEffect(()=>{
                       />
                     );
                   })}
+                  {/* {user_id === userData.userId}{ */}
                   <Highlight
                     extra={true as boolean}
                     setAddHighlight={setAddHighlight}
                   />
+                  {/* } */}
                 </div>
               </div>
             </div>
@@ -189,8 +206,8 @@ useEffect(()=>{
           </p>
         </div>
         <div className="lg:px-16">
-          {postComponent && <PostsComponent setRender={setRender} render={render}/>}
-          {!postComponent && <PostsComponent setRender={setRender} render={render}/>}
+          <PostsComponent setRender={setRender} render={render}/>
+          {/* {!postComponent && <PostsComponent setRender={setRender} render={render}/>} */}
         </div>
       </div>
     </>
