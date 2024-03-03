@@ -390,7 +390,7 @@ const Sidebar = ({ open,setAddStory,setIsAddPost,isAddPost }: any) => {
 
           {/* profile  */}
           <Link
-            to={`/profile/user_id`}
+            to={`/profile/${userData?.userId}`}
             className={`flex mt-5  rounded-md p-2 cursor-pointer text-white text-xl font-sans font-semibold items-center gap-x-4
          ${4 === 4 && "bg-light-white"} ${
               location.pathname === "/profile" &&

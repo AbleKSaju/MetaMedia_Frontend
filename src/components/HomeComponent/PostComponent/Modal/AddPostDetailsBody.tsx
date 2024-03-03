@@ -232,8 +232,6 @@ const AddPostDetailsBody = ({
   };
 
   const serchLocation = async (data: string) => {
-    console.log(data, "JJJJJJJJ");
-
     setLocation(data);
   };
 
