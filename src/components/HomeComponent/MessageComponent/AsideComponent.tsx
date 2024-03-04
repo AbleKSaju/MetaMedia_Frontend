@@ -26,6 +26,7 @@ import { Link } from "react-router-dom";
 const AsideComponent = () => {
   const [conversations, setConversations] = useState<any>();
   const [message, setMessage] = useState<string>("");
+  const [currentUser, setCurrentUser] = useState<number>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<any>({});
   const [users, setUsers] = useState<any>([]);
@@ -56,7 +57,6 @@ const AsideComponent = () => {
     });
   }, [socket]);
 
-  console.log(messages,"messagesmessagesmessagesmessagesmessagesmessages");
   
   	useEffect(() => {
   	messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
@@ -144,25 +144,25 @@ const AsideComponent = () => {
 
   return (
     <>
-      <div className=" flex sidebar w-96 bg-white min-w-60 flex-col border-r border-gray-300 transition-all">
+      <div className=" flex sidebar w-96 bg-gray-200 min-w-60 flex-col border-r border-gray-300 transition-all">
         <div className="logo flex items-center justify-center py-4 text-3xl font-medium">
           Messages
         </div>
         <div className="flex justify-center border-b border-gray-300 lg:mt-6">
           <input
             type="text"
-            className=" flex border focus:border-2 border-gray-300 mb-4 p-1 outline-none rounded-md"
+            className=" flex border focus:border-gray-600 border-gray-300 mb-4 px-6 py-1 outline-none rounded-full"
             placeholder="search people"
           />
         </div>
         <div className="overflow-auto scrollbar-hide ">
           {conversations?.length
             ? conversations?.map((data: any, index: number) => {
-              console.log(data,"adata");
+              console.log(currentUser,"currentUser");
               
                 return (
                   <div
-                    className="list flex cursor-pointer border-b border-gray-300 hover:bg-gray-100 transition-all p-2 items-center h-[70px]"
+                    className={`list flex cursor-pointer border-b border-gray-300 transition-all p-2 items-center h-[70px] ${currentUser == index ? "bg-gray-300":""}`}
                     key={index}
                   >
                   <Link to={`/profile/${data?.receiverId}`}>
@@ -180,7 +180,7 @@ const AsideComponent = () => {
                     </Link>
                     <div
                       className="info flex-1"
-                      onClick={() => fetchMessages(data)}
+                      onClick={() => {fetchMessages(data);setCurrentUser(index)}}
                     >
                       <div className="flex flex-col">
                         <span className=" font-bold">{data?.name}</span>
@@ -236,9 +236,9 @@ const AsideComponent = () => {
         </div>
       </div>
       {/* {!isMobile && <ChatComponent />} */}
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full ">
         {messages?.data && (
-          <header className=" w-full flex items-center p-2 sm:p-3 border-b border-gray-300">
+          <header className=" w-full flex items-center p-2 sm:p-3 border-b border-gray-300 bg-gray-200 ">
             <ArrowLeft className="mr-3 sm:hidden" />
             <img
               src={
@@ -317,7 +317,7 @@ const AsideComponent = () => {
                   <div className="flex items-end justify-end">
                     <div className="flex flex-col space-y-2 max-w-[80%] lg:max-w-lg mx-2 order-1 items-end">
                       <div>
-                        <span className="px-4 py-2 rounded-lg text-sm md:text-base inline-block rounded-br-none bg-blue-600 text-white ">
+                        <span className="px-4 py-2 rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#C1506D] text-white ">
                           {data.message}
                         </span>
                         <div ref={messageRef}></div>

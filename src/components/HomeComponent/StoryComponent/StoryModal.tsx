@@ -139,7 +139,7 @@ console.log(videoTimestamp, videoSignature,"videoTimestamp, videoSignature");
   }
 
   return (
-<div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-20">
+<div className="fixed top-0 left-0 w-full h-full backdrop-blur bg-opacity-50 bg-black z-20">
   <div className="flex justify-center w-full h-full bg-transparent ">
     <div className="fixed top-24 h-[500px] md:h-[700px] w-full sm:w-[500px] md:w-[600px] md:top-10 z-30 flex justify-center border text-white rounded-lg border-teal-900  bg-white">        
     <div className="flex-col w-full  ">

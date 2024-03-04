@@ -92,7 +92,6 @@ const SinglePostModal = ({ render, setRender }: any) => {
     setRender(!render);
   }, []);
   const like = async () => {
-    // const {postId,userId} =req.body
     const data = {
       userId: userData.userId,
       postId: singlePost._id,
@@ -182,7 +181,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
 
   return (
     <>
-      <div className="fixed z-20 inset-0  w-screen h-screen  bg-black bg-opacity-85   flex flex-col p-5 ">
+      <div className="fixed z-20 inset-0  w-screen h-screen bg-black bg-opacity-85 flex flex-col p-5 ">
         <div className="w-full h-10 flex justify-end ">
           <X className="text-white cursor-pointer" onClick={handleModalClose} />
         </div>

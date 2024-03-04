@@ -61,15 +61,14 @@ const PostScroll = ({ data, render, setRender }: any) => {
       toast.error(responce.message);
     }
   };
-  console.log(data, "datadatadatadatadata");
 
   return (
     <>
-      <div className=" md:p-5  sm:p-3 p-7 w-screen sm:w-full flex justify-center  sm:pl-0   lg:p-4   ">
-        <div className=" flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[464px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
+      <div className=" md:p-5 sm:p-3 p-7 w-screen sm:w-full flex justify-center sm:pl-0 lg:p-4  ">
+        <div className=" flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[520px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
           <div className="flex p-2 sm:p-4 pl-5 md:p-3 sm:pl-5 ">
             <img
-              className="lg:w-10 lg:h-10 font-roboto  rounded-full lg:ml-6 lg:mt-1 md:ml-3  md:border-2 border-amber-100 border-2  lg:border-2 w-10 h-10 md:w-12 md:h-12 "
+              className="lg:w-10 lg:h-10 font-roboto rounded-full lg:ml-6 lg:mt-1 md:ml-3  md:border-2 border-amber-100 border-2 lg:border-2 w-10 h-10 md:w-12 md:h-12 "
               src={
                 data.userData?.profile?.profileUrl.startsWith("https://graph")
                   ? data.userData?.profile?.profileUrl
@@ -81,7 +80,6 @@ const PostScroll = ({ data, render, setRender }: any) => {
               {data.userData.basicInformation.fullName}
             </p>
             <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-[#07312E]  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
-              {" "}
             </p>
             <p className="lg:ml-[210px] lg:text-lg font-bold  text-[#07312E] md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
               ...
@@ -105,34 +103,29 @@ const PostScroll = ({ data, render, setRender }: any) => {
                 size={30}
               />
             </div>
-
             <div>
-              {" "}
               <MessageCircle
+                      size={30}
                 className="text-[#07312E] "
                 onClick={() => handlePostClick(data)}
               />
             </div>
             <div>
-              {" "}
-              <Send className="text-[#07312E]" />
+              <Send className="text-[#07312E]" size={30}/>
             </div>
-            <div className="lg:pl-64 sm:pl-[55%] md:pl-[62%] pl-28 ">
-              <Bookmark className="text-[#07312E]" />
+            <div className="lg:pl-74 sm:pl-[55%] md:pl-[62%] pl-28 ">
+              <Bookmark className="text-[#07312E]" size={30}/>
             </div>
           </div>
-
           <div className="lg:pl-8 pt-2 pl-5 text-[10px] sm:text-sm md:pl-8 md:pt-2 font-semibold font-roboto text-[#07312E] sm:pl-8 sm:p-1">
             {data.likes.length} likes
           </div>
-
           <div className="lg:pl-8 p-2 text-[13px] pl-5 sm:text-md font-semibold text-[#07312E] md:pl-8 sm:pl-8">
             {data.userData.basicInformation.fullName} :{" "}
             <span className="sm:text-sm pl-1 text-[10px] font-normal text-[#07312E] md:pl-1 sm:pl-1 ">
               {data?.description}
             </span>
           </div>
-
           <div className="sm:text-[14px] text-[10px] font-roboto font-normal pl-5  lg:pl-8 p-2 md:pl-8 sm:pl-8">
             {data.comments.length > 0 ? (
               <p onClick={() => handlePostClick(data)}>
@@ -143,7 +136,6 @@ const PostScroll = ({ data, render, setRender }: any) => {
             )}
           </div>
           <div className="ml-9 text-[12px] text-gray-500">
-            {" "}
             {timeAgo.format(new Date(data.createdAt))}
           </div>
           <div className="sm:text-[14px] text-[10px] mb-2 pl-4 p-2 font-roboto font-normal lg:pl-8 md:pl-8 sm:pl-8 ">
@@ -154,7 +146,6 @@ const PostScroll = ({ data, render, setRender }: any) => {
               id=""
               placeholder=" Add comment..."
             />
-
             <div className="sm:pt-2 md:pt-2 lg:p-0"></div>
           </div>
         </div>

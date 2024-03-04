@@ -15,7 +15,7 @@ import OpenHighlightComponent from "../HighlightComponent/OpenHighlightComponent
 import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
 import { toast } from "sonner";
 
-const Profile = ({ setSidebarOpen,render,setRender}:any) => {
+const Profile = ({ render,setRender}:any) => {
 
   const [addHighlight, setAddHighlight] = useState(false);
   const [deleteHighlight, setDeleteHighlight] = useState(false);
@@ -23,7 +23,7 @@ const Profile = ({ setSidebarOpen,render,setRender}:any) => {
   const [openFollowers,setOpenFollowers] = useState(false)
   const [postComponent, setPostComponent] = useState(false);
   const [currentUser,setCurrentUser] = useState<any>([])
-  const [otherUser, setOtherUser] = useState(false);
+  const [otherUser, setOtherUser] = useState(true);
   const [openHighlight, setOpenHighlight] = useState(-1);
   const [highlightName, setHighlightName] = useState("");
   const [highlightList,setHighlightList] = useState(false)
@@ -33,7 +33,6 @@ const Profile = ({ setSidebarOpen,render,setRender}:any) => {
   console.log(user_id,"USER IDDDDDDDD");
   
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
-  setSidebarOpen(true);  
 
   useEffect(()=>{
     console.log("I am the useEffect");
@@ -74,10 +73,11 @@ useEffect(()=>{
 
   return (
     <>
-      <div className={`${ openFollowings || openFollowers || highlightList ? "fixed left-10" : ""} sm:ml-60 sm:p-7 md:p-2 lg:ml-72 z-10`}>
-        <div className="p-4 lg:pt-10 lg:flex lg:justify-around">
+    <div className=" flex flex-col w-full ">
+      <div className="">
+        <div className="lg:pt-10 lg:flex lg:justify-around">
           <div className="flex justify-center lg:justify-start">
-            <div className=" w-32 lg:w-40 lg:h-40 h-32">
+            <div className="w-32 lg:w-48 lg:h-48 h-32">
               <img
                 className=" w-full h-full rounded-full border border-teal-900"
                 src={
@@ -103,10 +103,10 @@ useEffect(()=>{
           </div>
           {otherUser && (
             <div className="flex justify-around row-start-1 w-30 mr-6 md:ml-20 md:mr-20 mt-16 lg:hidden">
-              <button className="border border-teal-900 px-8 py-1 hover:bg-teal-900 hover:text-amber-50 rounded-3xl">
+              <button className="border border-[#000] bg-[#d2637f] hover:bg-[#C1506D] px-8 py-1  rounded-3xl">
                 Follow
               </button>
-              <button className="border border-teal-900 px-5 py-1 hover:bg-teal-900 hover:text-amber-50 rounded-3xl">
+              <button className="border border-[#C1506D] px-5 py-1 rounded-3xl">
                 Message
               </button>
             </div>
@@ -120,10 +120,10 @@ useEffect(()=>{
               <p className="underline mb-1 text-xl text-teal-900">{currentUser?.basicInformation?.userName}</p>
               {otherUser && (
                 <div className="lg:flex w-64 my-3 justify-between hidden ">
-                  <button className="border border-teal-900 px-8 py-1 hover:bg-teal-900 hover:text-amber-50 rounded-3xl">
+                  <button className="border border-[#000] bg-[#d2637f] hover:bg-[#C1506D] px-8 py-1 rounded-3xl">
                     Follow
                   </button>
-                  <button className="border border-teal-900 px-5 py-1 hover:bg-teal-900 hover:text-amber-50 rounded-3xl">
+                  <button className="border border-black px-5 py-1 hover:border-[#C1506D] rounded-3xl">
                     Message
                   </button>
                 </div>
@@ -134,7 +134,7 @@ useEffect(()=>{
               </p>
             </div>
 
-            <div className="col-span-full col-start-1 row-start-5 flex justify-around border-y border-teal-900 cursor-pointer py-2">
+            <div className="col-span-full col-start-1 row-start-4 flex justify-around border-y border-teal-900 cursor-pointer py-2">
               <div className=" flex flex-col">
                 <p className="text-center font-medium">20</p>
                 <p className="font-light text-teal-900">Post</p>
@@ -177,7 +177,6 @@ useEffect(()=>{
             </div>
           </div>
         </div>
-        {/* each round icon of highlight */}
         {highlights.length!=0 && openHighlight >=0 && <OpenHighlightComponent openHighlight={openHighlight} setOpenHighlight={setOpenHighlight} setHighlightList={setHighlightList} setHighlightName={setHighlightName} setDeleteHighlight={setDeleteHighlight} />}
         {openFollowers && <FollowComponent openFollowers={openFollowers} openFollowings={openFollowings} setOpenFollowers={setOpenFollowers} setOpenFollowings={setOpenFollowings} />}
         {openFollowings && <FollowComponent openFollowers={openFollowers} openFollowings={openFollowings} setOpenFollowers={setOpenFollowers} setOpenFollowings={setOpenFollowings} />}
@@ -205,11 +204,11 @@ useEffect(()=>{
             saved
           </p>
         </div>
-        <div className="lg:px-16">
-          <PostsComponent setRender={setRender} render={render}/>
-          {/* {!postComponent && <PostsComponent setRender={setRender} render={render}/>} */}
-        </div>
       </div>
+        <div className="lg:px-16 overflow-y-auto scrollbar-hide">
+          <PostsComponent setRender={setRender} render={render}/>
+        </div>
+        </div>
     </>
   );
 };

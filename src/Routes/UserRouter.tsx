@@ -49,11 +49,6 @@ const UserRouter = () => {
       <Route path="/new/*" element={<NewModel/>} />
       <Route path="/newSignUp" element={<NewSignUp />}/>
       <Route path="/newLogin" element={<NewLogin />}/>
-
-
-
-
-
     </Routes>
     </>
   );

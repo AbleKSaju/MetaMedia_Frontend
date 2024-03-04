@@ -18,6 +18,9 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
     (state: any) => state.persisted.singlePost.singlePost
   );
 
+  console.log(posts,"postspostspostspostsposts");
+  
+
   const user = useSelector((state: any) => state.persisted.user);
 
   const dispatch = useDispatch();
@@ -67,8 +70,8 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
 
   return (
     <>
-      <div className="flex flex-wrap flex-row justify-center mt-5 pb-20">
-        <div className="grid grid-cols-3 gap-0.5 md:gap-4 p-0.5">
+      <div className="flex flex-wrap flex-row justify-center mt-5 pb-20 ">
+        <div className="grid grid-cols-3 gap-0.5 md:gap-4 p-0.5 ">
           <>
             {posts.length > 0 &&
               posts.map((item: any) => {
@@ -78,7 +81,6 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
                     key={item.id}
                     onClick={() => handlePostClick(item)}
                   >
-                    {" "}
                     {/* Adding a key to each mapped element */}
                     <img
                       className=" border border-amber-10 w-full h-full object-fill"

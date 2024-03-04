@@ -1,549 +1,125 @@
 import {
-    Home,
-    Search,
-    Mail,
-    Clapperboard,
-    Bell,
-    ListCollapse,
-    MoreVertical,
-    Radio,
-    Image,
-    Film,
-    MoreVerticalIcon,
-    MoreHorizontal,
-    Bookmark,
-    Send,
-    MessageCircle,
-    Heart
-  } from "lucide-react";
+  MoreVertical,
+  Radio,
+  Image,
+  Film,
+  Bookmark,
+  Send,
+  MessageCircle,
+  Heart,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const MainBody=({createIndex,setCreateIndex}:any)=>{
-    const handleCreateIndex = (index: number) => {
-        setCreateIndex(index);
-      };
-    return (
-        <>
-         {/* main div ------------------------- */}
-         <div className="w-full h-screen flex justify-center p-3 ">
-            <div className="w-full sm:w-11/12 h-full flex flex-col overflow-y-auto gap-4 scrollbar-hide">
-              {/* story main div ------------------- */}
-              <div className="w-[95vw] sm:[98vw] md:w-[74vw] lg:w-[60vw] h-[190px] sm:h-[250px] border items-center rounded-lg ">
-                <div className=" flex overflow-x-auto p-4 h-full scrollbar-hide gap-6 items-center">
-                  <div className="flex-none flex items-center mr-4 ">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
+// import { toast } from "sonner";
+import { getAllStoriesFunction } from "../../../utils/api/methods/StoryService/Story/get";
+import { addOtherUserStories } from "../../../utils/ReduxStore/Slice/storySlice";
+import { showAllPostFuntion } from "../../../utils/api/methods/PostService/get/showAllPost";
+import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
+import { toast } from "sonner";
+import { PostScroll, Story } from "../../../components/HomeComponent";
+import CreateMediaComponent from "../../../components/HomeComponent/CreateMediaComponent";
 
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
+interface MainBodyProps {
+  setShowStory: (value: string) => void;
+  setAddStory: (value: boolean) => void;
+  setIsAddPost: (value: boolean) => void;
+  // other props if any
+}
+const MainBody = ({  setShowStory, setAddStory, setIsAddPost }: MainBodyProps) => {
 
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
+    const dispatch = useDispatch();
+    const [render, setRender] = useState(false);
+    const [postData, setPostData] = useState([]);
 
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
 
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 rounded-full border-[#C1506D] justify-center mr-2 sm:mr-7">
-                      <div className="w-full h-full flex justify-center items-center">
-                        <div className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] border flex justify-center items-center rounded-full">
-                          <img
-                            className="w-[58px] h-[58px] sm:w-[72px] sm:h-[72px] rounded-full"
-                            src="https://i.pinimg.com/564x/2b/e6/78/2be678c7417a633a1c03f9e8d7ed8655.jpg"
-                            alt="Profile Picture"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* story main div ------------------- */}
-
-              {/* create option -------------------- */}
-              <div className="bg-white rounded-md w-full h-[290px] sm:h-[390px]  flex justify-between flex-col">
-                {/* sepration 1  */}
-                <div className="w-full h-[130px]  flex justify-between  ">
-                  <div className="w-full h-[110px]  flex items-center pl-5 gap-2 ">
-                    <img
-                      src="https://i.pinimg.com/564x/4f/13/a0/4f13a073215546acc81a2f8a236f4cba.jpg"
-                      className="sm:w-12 sm:h-12 h-10 w-10 rounded-full  border-2 border-[#C1506D]"
-                      alt=""
-                    />
-                    <input
-                      type="text"
-                      className="sm:w-5/6 w-5/6 p-2 outline-none  placeholder:text-gray-500 placeholder:text-sm placeholder:sm:text-lg "
-                      readOnly={true}
-                      placeholder="Create share and shine..."
-                    />
-                  </div>
-                  <div className="h-full  w-2/12 flex justify-center items-center pb-5">
-                    <MoreVertical size={20} color="#C1506D" />
-                  </div>
-                </div>
-                {/* sepration 1  */}
-
-                {/* sepration 2  */}
-
-                <div className="w-full h-full flex justify-between">
-                  <div className="flex items-center  w-full gap-5 p-3 sm:pl-8 pl-5">
-                    <div
-                      className={`${
-                        createIndex === 1
-                          ? "sm:w-11 sm:h-11 w-8 h-8 rounded-full bg-[#C1506D] text-white border-3"
-                          : "sm:w-11 sm:h-11 w-8 h-8 rounded-full bg-[#FADBE1] text-gray-500"
-                      } flex justify-center items-center`}
-                      onClick={() => handleCreateIndex(1)}
-                    >
-                      <Image className={`size-5 sm:size-6`} />
-                    </div>
-                    <div
-                      className={`${
-                        createIndex === 2
-                          ? "sm:w-11 sm:h-11 w-8 h-8 rounded-full bg-[#C1506D] text-white border-3"
-                          : "sm:w-11 sm:h-11 w-8 h-8 rounded-full bg-[#FADBE1] text-gray-500"
-                      } flex justify-center items-center`}
-                      onClick={() => handleCreateIndex(2)}
-                    >
-                      <Film className="  size-5 sm:size-6" />
-                    </div>
-                    <div
-                      className={`${
-                        createIndex === 3
-                          ? "sm:w-11 sm:h-11 w-8 h-8 rounded-full bg-[#C1506D] text-white border-3"
-                          : "sm:w-11 sm:h-11 w-8 h-8 rounded-full bg-[#FADBE1] text-gray-500"
-                      } flex justify-center items-center`}
-                      onClick={() => handleCreateIndex(3)}
-                    >
-                      <Radio className=" size-5 sm:size-6" />
-                    </div>
-                  </div>
-                  <div className="sm:w-3/12 w-6/12  flex justify-center items-center">
-                    {createIndex == 1 && (
-                      <button className="sm:w-24 rounded-md sm:h-10 h-8 w-16 bg-[#C1506D] text-white font-roboto font-medium sm:font-semibold">
-                        Post
-                      </button>
-                    )}
-                    {createIndex == 2 && (
-                      <button className="sm:w-24  rounded-md sm:h-10 h-8 w-16 bg-[#C1506D] text-white font-roboto font-medium sm:font-semibold">
-                        Story
-                      </button>
-                    )}
-                    {createIndex == 3 && (
-                      <button className="sm:w-24  rounded-md sm:h-10 h-8 w-16 bg-[#C1506D] text-white font-roboto  font-medium sm:font-semibold">
-                        Live
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {/* sepration 2  */}
-              </div>
-              {/* create option -------------------- */}
-
-              {/* post showing ---------------------- */}
-              <div className=" w-full h-[500px]  flex-none items-center p-1  gap-2  justify-center ">
-              
-<div className="flex flex-col justify-center items-center gap-5">
+    useEffect(() => {
+      (async () => {
+        console.log("getStoriesFunction");
+        const response: any = await getAllStoriesFunction();
+        console.log(response,"getAllStoriesFunctionresponse");
+        
+        if (response) {
+          dispatch(addOtherUserStories(response?.data?.data));
+        } else {
+          dispatch(addOtherUserStories([]));
+        }
+      })();
+    }, []);
   
-    
+    useEffect(() => {
+      (async () => {
+        const responce: any = await showAllPostFuntion();
+        if (responce.status) {
+          const postsWithData: any = await Promise.all(
+            responce?.data?.map(async (post: any) => {
+              const userDataResponse = await getUserByIdFuntion(post.userId);
+              if (userDataResponse.status) {
+                const postDataWithUserData = {
+                  ...post,
+                  userData: userDataResponse.data,
+                };
+                return postDataWithUserData;
+              } else {
+                // Handle error while fetching user data
+                return null;
+              }
+            })
+          );
+  
+          const filteredPosts = postsWithData.filter(
+            (post: any) => post !== null
+          );
+  
+          setPostData(filteredPosts);
+        } else {
+          toast.error("Responce error");
+        }
+      })();
+    }, [render]);
 
-{/* -----------------singel post---------------------------- */}
-<div className=" md:p-5  sm:p-3 p-7 w-screen sm:w-full flex justify-center  sm:pl-0   lg:p-4   ">
-        <div className=" flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[464px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
 
-          <div className="flex p-2 sm:p-4 pl-5 md:p-3 sm:pl-5 ">
-            <img
-              className="lg:w-10 lg:h-10 font-roboto  rounded-full lg:ml-6 lg:mt-1 md:ml-3  md:border-2 border-[#C1506D] border-2  lg:border-2 w-10 h-10 md:w-12 md:h-12 "
-              src="https://i.pinimg.com/564x/aa/f7/39/aaf7399b8e31d1cbc707794b38edf86b.jpg"
-              alt=""
-            />
-            <p className="lg:pt-3 lg:pl-4 text-sm md:text-md font-semibold text-[#07312E] md:pt-4 md:pl-3 p-2 pt-3  pl-5 ">
-              __raszik
-            </p>
-            <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-[#07312E]  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
-             
-             
-            </p>
-            <p className="lg:ml-[210px] lg:text-lg font-bold  text-[#07312E] md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
-              ...
-            </p>
-          </div>
-          <div className="relative mx-4 mt-0 overflow-hidden text-gray-700  shadow-lg bg-clip-border  rounded-md lg:h-[500px]">
-            <img
+  return (
+    <>
+      {/* main div ------------------------- */}
+      <div className="w-full h-screen flex justify-center p-3 ">
+        <div className="w-full sm:w-11/12 h-full flex flex-col overflow-y-auto gap-4 scrollbar-hide">
+          {/* story main div ------------------- */}
+          <Story setShowStory={setShowStory} setAddStory={setAddStory}/>
+          {/* story main div ------------------- */}
 
-              className="w-full h-full "
-              src="https://i.pinimg.com/564x/aa/f7/39/aaf7399b8e31d1cbc707794b38edf86b.jpg"
-              alt=""
-            />
-          </div>
-          <div className="flex md:pl-7 lg:pl-7 sm:pl-5   sm:pt-4 sm:p-2 lg:p-6 lg:pt-4 lg:gap-5 sm:gap-2 md:gap-4 pl-4 gap-1 pt-3">
-          <div >
-                          <Heart
-                          
-                            color="red"
-                            size={30}
-                          />
-                        </div>
-
-            <div>
-            
-              <MessageCircle className="text-[#07312E] " />
-            </div>
-            <div>
-             
-              <Send  className="text-[#07312E]" />
-            </div>
-            <div className="lg:pl-64 sm:pl-[55%] md:pl-[62%] pl-28 " >
-              <Bookmark className="text-[#07312E]" />
-            </div>
-          </div>
-
-          <div className="lg:pl-8 pt-2 pl-5 text-[10px] sm:text-sm md:pl-8 md:pt-2 font-semibold font-roboto text-[#07312E] sm:pl-8 sm:p-1">
-            7 likes 
-          </div>
-
-          <div className="lg:pl-8 p-2 text-[13px] pl-5 sm:text-md font-semibold text-[#07312E] md:pl-8 sm:pl-8">
-           __razik :
-            <span className="sm:text-sm pl-1 text-[10px] font-normal text-[#07312E] md:pl-1 sm:pl-1 ">
-             hello this is my new post
-            </span>
-          </div>
-
-          <div className="sm:text-[14px] text-[10px] font-roboto font-normal pl-5  lg:pl-8 p-2 md:pl-8 sm:pl-8">
+          {/* create option -------------------- */}
           
-        <p >View 7 comments</p>
-      
+            <CreateMediaComponent setAddStory={setAddStory} setIsAddPost={setIsAddPost}/>
+          
+            {/* sepration 2 
           </div>
-         <div className="ml-9 text-[12px] text-gray-500"> 2h ago</div>
-          <div className="sm:text-[14px] text-[10px] mb-2 pl-4 p-2 font-roboto font-normal lg:pl-8 md:pl-8 sm:pl-8 " >
-            <input
-              className="w-3/4     outline-none  hover:border-b py-2 border-[#07312E] "
-              type="text"
-              name=""
-              id=""
-              placeholder=" Add comment..."
-            />
+          {/* create option -------------------- */}
 
-            <div className="sm:pt-2 md:pt-2 lg:p-0" > 
+          {/* post showing ---------------------- */}
+
+          <div className=" w-full h-[500px]  flex-none items-center p-1  gap-2  justify-center ">
+            <div className="flex flex-col justify-center items-center gap-5">
+              {/* -----------------singel post---------------------------- */}
+              {postData.map((item: any) => {
+                      return (
+                        <>
+                          <PostScroll
+                            setRender={setRender}
+                            render={render}
+                            data={item}
+                          />
+                        </>
+                      );
+                    })}
+              {/* -----------------singel post---------------------------- */}
             </div>
           </div>
+          {/* post showing ---------------------- */}
         </div>
       </div>
-{/* -----------------singel post---------------------------- */}
-{/* -----------------singel post---------------------------- */}
-<div className=" md:p-5  sm:p-3 p-7 w-screen sm:w-full flex justify-center  sm:pl-0   lg:p-4   ">
-        <div className=" flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[464px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
-
-          <div className="flex p-2 sm:p-4 pl-5 md:p-3 sm:pl-5 ">
-            <img
-              className="lg:w-10 lg:h-10 font-roboto  rounded-full lg:ml-6 lg:mt-1 md:ml-3  md:border-2 border-[#C1506D] border-2  lg:border-2 w-10 h-10 md:w-12 md:h-12 "
-              src="https://i.pinimg.com/564x/aa/f7/39/aaf7399b8e31d1cbc707794b38edf86b.jpg"
-              alt=""
-            />
-            <p className="lg:pt-3 lg:pl-4 text-sm md:text-md font-semibold text-[#07312E] md:pt-4 md:pl-3 p-2 pt-3  pl-5 ">
-              __raszik
-            </p>
-            <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-[#07312E]  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
-             
-             
-            </p>
-            <p className="lg:ml-[210px] lg:text-lg font-bold  text-[#07312E] md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
-              ...
-            </p>
-          </div>
-          <div className="relative mx-4 mt-0 overflow-hidden text-gray-700  shadow-lg bg-clip-border  rounded-md lg:h-[500px]">
-            <img
-
-              className="w-full h-full "
-              src="https://i.pinimg.com/564x/aa/f7/39/aaf7399b8e31d1cbc707794b38edf86b.jpg"
-              alt=""
-            />
-          </div>
-          <div className="flex md:pl-7 lg:pl-7 sm:pl-5   sm:pt-4 sm:p-2 lg:p-6 lg:pt-4 lg:gap-5 sm:gap-2 md:gap-4 pl-4 gap-1 pt-3">
-          <div >
-                          <Heart
-                          
-                            color="red"
-                            size={30}
-                          />
-                        </div>
-
-            <div>
-            
-              <MessageCircle className="text-[#07312E] " />
-            </div>
-            <div>
-             
-              <Send  className="text-[#07312E]" />
-            </div>
-            <div className="lg:pl-64 sm:pl-[55%] md:pl-[62%] pl-28 " >
-              <Bookmark className="text-[#07312E]" />
-            </div>
-          </div>
-
-          <div className="lg:pl-8 pt-2 pl-5 text-[10px] sm:text-sm md:pl-8 md:pt-2 font-semibold font-roboto text-[#07312E] sm:pl-8 sm:p-1">
-            7 likes 
-          </div>
-
-          <div className="lg:pl-8 p-2 text-[13px] pl-5 sm:text-md font-semibold text-[#07312E] md:pl-8 sm:pl-8">
-           __razik :
-            <span className="sm:text-sm pl-1 text-[10px] font-normal text-[#07312E] md:pl-1 sm:pl-1 ">
-             hello this is my new post
-            </span>
-          </div>
-
-          <div className="sm:text-[14px] text-[10px] font-roboto font-normal pl-5  lg:pl-8 p-2 md:pl-8 sm:pl-8">
-          
-        <p >View 7 comments</p>
-      
-          </div>
-         <div className="ml-9 text-[12px] text-gray-500"> 2h ago</div>
-          <div className="sm:text-[14px] text-[10px] mb-2 pl-4 p-2 font-roboto font-normal lg:pl-8 md:pl-8 sm:pl-8 " >
-            <input
-              className="w-3/4     outline-none  hover:border-b py-2 border-[#07312E] "
-              type="text"
-              name=""
-              id=""
-              placeholder=" Add comment..."
-            />
-
-            <div className="sm:pt-2 md:pt-2 lg:p-0" > 
-            </div>
-          </div>
-        </div>
-      </div>
-{/* -----------------singel post---------------------------- */}
-{/* -----------------singel post---------------------------- */}
-<div className=" md:p-5  sm:p-3 p-7 w-screen sm:w-full flex justify-center  sm:pl-0   lg:p-4   ">
-        <div className=" flex  flex-col justify-center  bg-white shadow-md bg-clip-border rounded-lg lg:w-[464px] lg:h-[800px] border w-[300px] md:w-[450px] sm:w-[330px]">
-
-          <div className="flex p-2 sm:p-4 pl-5 md:p-3 sm:pl-5 ">
-            <img
-              className="lg:w-10 lg:h-10 font-roboto  rounded-full lg:ml-6 lg:mt-1 md:ml-3  md:border-2 border-[#C1506D] border-2  lg:border-2 w-10 h-10 md:w-12 md:h-12 "
-              src="https://i.pinimg.com/564x/aa/f7/39/aaf7399b8e31d1cbc707794b38edf86b.jpg"
-              alt=""
-            />
-            <p className="lg:pt-3 lg:pl-4 text-sm md:text-md font-semibold text-[#07312E] md:pt-4 md:pl-3 p-2 pt-3  pl-5 ">
-              __raszik
-            </p>
-            <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-[#07312E]  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
-             
-             
-            </p>
-            <p className="lg:ml-[210px] lg:text-lg font-bold  text-[#07312E] md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
-              ...
-            </p>
-          </div>
-          <div className="relative mx-4 mt-0 overflow-hidden text-gray-700  shadow-lg bg-clip-border  rounded-md lg:h-[500px]">
-            <img
-
-              className="w-full h-full "
-              src="https://i.pinimg.com/564x/aa/f7/39/aaf7399b8e31d1cbc707794b38edf86b.jpg"
-              alt=""
-            />
-          </div>
-          <div className="flex md:pl-7 lg:pl-7 sm:pl-5   sm:pt-4 sm:p-2 lg:p-6 lg:pt-4 lg:gap-5 sm:gap-2 md:gap-4 pl-4 gap-1 pt-3">
-          <div >
-                          <Heart
-                            style={{fill:"red"}}
-                            color="red"
-                            size={30}
-                          />
-                        </div>
-
-            <div>
-            
-              <MessageCircle className="text-[#07312E] " />
-            </div>
-            <div>
-             
-              <Send  className="text-[#07312E]" />
-            </div>
-            <div className="lg:pl-64 sm:pl-[55%] md:pl-[62%] pl-28 " >
-              <Bookmark className="text-[#07312E]" />
-            </div>
-          </div>
-
-          <div className="lg:pl-8 pt-2 pl-5 text-[10px] sm:text-sm md:pl-8 md:pt-2 font-semibold font-roboto text-[#07312E] sm:pl-8 sm:p-1">
-            7 likes 
-          </div>
-
-          <div className="lg:pl-8 p-2 text-[13px] pl-5 sm:text-md font-semibold text-[#07312E] md:pl-8 sm:pl-8">
-           __razik :
-            <span className="sm:text-sm pl-1 text-[10px] font-normal text-[#07312E] md:pl-1 sm:pl-1 ">
-             hello this is my new post
-            </span>
-          </div>
-
-          <div className="sm:text-[14px] text-[10px] font-roboto font-normal pl-5  lg:pl-8 p-2 md:pl-8 sm:pl-8">
-          
-        <p >View 7 comments</p>
-      
-          </div>
-         <div className="ml-9 text-[12px] text-gray-500"> 2h ago</div>
-          <div className="sm:text-[14px] text-[10px] mb-2 pl-4 p-2 font-roboto font-normal lg:pl-8 md:pl-8 sm:pl-8 " >
-            <input
-              className="w-3/4     outline-none  hover:border-b py-2 border-[#07312E] "
-              type="text"
-              name=""
-              id=""
-              placeholder=" Add comment..."
-            />
-
-            <div className="sm:pt-2 md:pt-2 lg:p-0" > 
-            </div>
-          </div>
-        </div>
-      </div>
-{/* -----------------singel post---------------------------- */}
-
-
-        
-    </div>     
-
-
-                
-              </div>
-              {/* post showing ---------------------- */}
-            </div>
-          </div>
-          {/* main div ------------------------- */}
-        
-        
-        </>
-    )
-} 
+      {/* main div ------------------------- */}
+    </>
+  )
+}
 export default MainBody
