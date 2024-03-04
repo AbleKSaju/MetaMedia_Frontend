@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import MainBody from "../../components/HomeComponent/MainBodyComponent";
+import Main from "../../pages/user/newUi/Main"
 import Search from "../../components/HomeComponent/SearchComponent";
 import Message from "../../components/HomeComponent/MessageComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
 import Profile from "../../components/HomeComponent/ProfileComponents/ProfileComponent";
 import Notification from "../../components/HomeComponent/NotificationComponent";
 import Settings from "./Settings";
-import { Route, Routes, useParams } from "react-router-dom";
+import { Route, Routes, useLocation, useParams } from "react-router-dom";
 import AsideComponent from "../../components/HomeComponent/AsideComponent";
 import StoryModal from "../../components/HomeComponent/StoryComponent/StoryModal";
 import ShowStoryComponent from "../../components/HomeComponent/StoryComponent/ShowStoryComponent";
@@ -14,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { addStory, deleteAllStory } from "../../utils/ReduxStore/Slice/storySlice";
 import { getStoriesFunction } from "../../utils/api/methods";
 import MainModalBorderPost from "../../components/HomeComponent/PostComponent/Modal/mainModalBorderPost";
+import NewSideBar from "./newUi/Sidebar";
+import Suggetions from "./newUi/Suggetions";
 
 
 
@@ -28,8 +31,8 @@ const Home = ({ render,setRender}:any) => {
   const [isAddPost,setIsAddPost] = useState(false)
   const [addPost,setAddPost] = useState(false)
   const dispatch = useDispatch()
-  const [viewUserProfile,setViewUserProfile] = useState()
-  
+  const location = useLocation();
+
   useEffect(()=>{
     (async ()=>{
      const response:any = await getStoriesFunction()
@@ -42,33 +45,29 @@ const Home = ({ render,setRender}:any) => {
     })();
   },[addStories,deleteStory])
 
-  let { user_id } = useParams();
-
-console.log(user_id,"user_iduser_iduser_iduser_id");
+  const allowedPaths = ["/", "/post"];
  
   return (
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
-
- {showStory.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
- <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/>
-         {isAddPost && (
-        <>
-        <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost}  />
-        </>
-       )}
-    <Routes>
-          <Route path="/" element={<MainBody setSidebarOpen={setSidebarOpen} setShowStory={setShowStory} setAddStory={setAddStories}/>} />
-          <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
-          <Route path="/message/*" element={<Message setSidebarOpen={setSidebarOpen}/>} />
-          <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
-          <Route path="/profile/:user_id" element={<Profile setSidebarOpen={setSidebarOpen} setRender={setRender} render={render}/>} />
-          <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
-          <Route path="/settings/*" element={<Settings setSidebarOpen={setSidebarOpen} />} />
-    </Routes>
-  
-
-
+ {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
+ <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
+    <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
+        <NewSideBar />
+ {/* <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/> */}
+          {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
+            <Routes>
+                  <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost}/>} />
+                  <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
+                  <Route path="/message/*" element={<Message setSidebarOpen={setSidebarOpen}/>} />
+                  <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
+                  <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
+                  <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
+                  <Route path="/settings/*" element={<Settings setSidebarOpen={setSidebarOpen} />} />
+            </Routes>
+          {allowedPaths.includes(location.pathname) && <Suggetions />}
+    </div>
+  </div>
     </>
   );
 };

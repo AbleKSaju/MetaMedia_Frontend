@@ -69,8 +69,8 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
 
   return (
     <>
-      <div className="fixed top-32 md:h-5/6 w-full md:top-16 z-10   sm:w-2/4   flex justify-center border text-white rounded-lg border-gray-500  bg-white">
-        <div className="flex-col w-full   ">
+      <div className="fixed top-32 md:h-5/6 w-full md:top-16 z-10 sm:w-2/4   flex justify-center border text-white rounded-lg border-gray-500  bg-white">
+        <div className="flex-col w-full">
           {!CamaraOn ? (
             <>
               <div className="w-full  p-4 flex justify-between sm:border-b sm:border-b-gray-200 	">

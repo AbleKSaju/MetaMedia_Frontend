@@ -50,7 +50,7 @@ const EditProfile = () => {
 
   return (
     <>
-      <div className="hidden sm:flex sm:ml-20 md:ml-10 w-96 xl:ml-52">
+      <div className="hidden sm:flex lg:ml-3 ustify-center w-100%">
         <form onSubmit={handleSubmit(formSubmit)} className="flex-col sm:flex">
           <h1 className="flex justify-center text-4xl font-roboto lg:mt-14 mt-6 text-teal-900">
             Edit Profile
@@ -130,7 +130,7 @@ const EditProfile = () => {
             </p>
           </div>
           <div className="mt-5 lg:mt-20 flex justify-center ">
-            <button className="h-12  w-52 hover:shadow-lg transition duration-300 ease-in-out hover:bg-teal-700 hover:text-amber-100 focus:outline-none focus:ring focus:border-teal-800 bg-teal-900 text-amber-50 font-bold  rounded-lg text-xl">
+            <button className="h-12  w-52 hover:shadow-lg transition duration-300 ease-in-out hover:bg-[#C1506D] focus:outline-none focus:ring focus:border-teal-800 bg-[#f49db3] text-black font-md border border-black rounded-lg text-xl">
               Submit
             </button>
           </div>

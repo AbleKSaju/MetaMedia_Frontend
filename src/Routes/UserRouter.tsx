@@ -18,6 +18,8 @@ import { useEffect, useState } from "react";
 import { isSinglePostModalClose } from "../utils/ReduxStore/Slice/singlePostSlice";
 import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePostModal";
 import NewModel from "../pages/user/newModle";
+import NewSignUp from "../pages/user/NewSignUp";
+import NewLogin from "../pages/user/newLogin";
 
 const UserRouter = () => {
   const isSinglePostModal = useSelector((state: any) => state.persisted.singlePost.isSinglePostModal);
@@ -44,9 +46,9 @@ const UserRouter = () => {
       <Route path="/s" element={<S />} />
       <Route path="/size" element={<SizeSelectModal/>} />
       <Route path="/selectPost" element={<SinglePostModal/>} />
-      <Route path="/new" element={<NewModel/>} />
-
-
+      <Route path="/new/*" element={<NewModel/>} />
+      <Route path="/newSignUp" element={<NewSignUp />}/>
+      <Route path="/newLogin" element={<NewLogin />}/>
     </Routes>
     </>
   );
