@@ -4,29 +4,22 @@ import HighlightSliderComponent from './HighlightSliderComponent'
 
 const OpenHighlightComponent = ({openHighlight , setOpenHighlight, setHighlightList, setHighlightName,setDeleteHighlight}:any) => {
   return (
-    <div className="fixed top-0 left-0 w-full h-[92vh] sm:h-full bg-black bg-opacity-60 z-20">
-    <div className="flex justify-center w-full h-full bg-transparent">
-      <div className="fixed top-0 sm:top-8 h-[637px] w-full sm:w-[600px] md:w-[700px] lg:w-[900px] md:top-10 z-30 flex justify-center border text-white bg-amber-50 rounded-lg border-teal-900">
-        <div className="flex-col w-full h-full justify-center">
-          <div className="w-full p-4 flex flex-col justify-center sm:border-b sm:border-b-amber-50 bg-teal-900">
-            <div className="w-full h-full">
-              <div className="flex justify-end">
-                <X
-                  className="text-amber-50"
-                  onClick={() => setOpenHighlight(-1)}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center w-full h-[560px]">
-            <div className="">
+    <div className="fixed z-20 inset-0  w-full h-full backdrop-blur bg-opacity-50 bg-black flex flex-col p-5 ">
+        <div className="flex justify-end">
+          <X
+            className="text-white  cursor-pointer"
+            onClick={() => setOpenHighlight(-1)}
+            />
+        </div>
+      <div className="w-full h-10 flex flex-col justify-center">
+        <div className="flex justify-center w-full h-full ">
+          <div className="h-[800px] w-[800px]">
+             
               <HighlightSliderComponent openHighlight={openHighlight} setOpenHighlight={setOpenHighlight} durationPerImage = {5000} setHighlightList={setHighlightList} setHighlightName={setHighlightName} setDeleteHighlight={setDeleteHighlight} />
-            </div>
-          </div>
+              </div>
         </div>
       </div>
     </div>
-  </div>
   )
 }
 

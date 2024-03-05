@@ -3,10 +3,9 @@ import Webcam from "react-webcam";
 import { X } from "lucide-react";
 import {
   addImage,
-  addVideo,
   clearImages,
-} from "../../../../utils/ReduxStore/Slice/postSlice"; // Import the actions
-import { useDispatch, useSelector } from "react-redux";
+} from "../../../../utils/ReduxStore/Slice/postSlice";
+import { useDispatch } from "react-redux";
 const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
   const [CamaraOn, setCamaraOn] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);

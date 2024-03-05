@@ -11,13 +11,11 @@ import Home from "../pages/user/Home";
 import Mods from "../pages/user/Mods";
 import S from "../pages/user/S";
 import AddPostModal from "../components/HomeComponent/AddPostcomponent";
-import SizeSelectModal from "../components/HomeComponent/SizeSelectModal";
 import ProtectedAuthRoute from "./ProtectedAuthRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { isSinglePostModalClose } from "../utils/ReduxStore/Slice/singlePostSlice";
 import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePostModal";
-import NewModel from "../pages/user/newModle";
 import NewSignUp from "../pages/user/NewSignUp";
 import NewLogin from "../pages/user/newLogin";
 
@@ -44,9 +42,7 @@ const UserRouter = () => {
       <Route path="/addprofile" element={<AddProfile />} />
       <Route path="/selectMod" element={<Mods />} />
       <Route path="/s" element={<S />} />
-      <Route path="/size" element={<SizeSelectModal/>} />
       <Route path="/selectPost" element={<SinglePostModal/>} />
-      <Route path="/new/*" element={<NewModel/>} />
       <Route path="/newSignUp" element={<NewSignUp />}/>
       <Route path="/newLogin" element={<NewLogin />}/>
     </Routes>

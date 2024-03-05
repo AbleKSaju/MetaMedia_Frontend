@@ -50,14 +50,14 @@ const EditProfile = () => {
 
   return (
     <>
-      <div className="hidden sm:flex lg:ml-3 ustify-center w-100%">
+      <div className="hidden sm:flex lg:ml-3 ustify-center w-100% ">
         <form onSubmit={handleSubmit(formSubmit)} className="flex-col sm:flex">
-          <h1 className="flex justify-center text-4xl font-roboto lg:mt-14 mt-6 text-teal-900">
+          <h1 className="flex justify-center text-4xl font-roboto lg:mt-14 mt-6 text-black">
             Edit Profile
           </h1>
           <div className="lg:flex lg:gap-x-20">
             <div className="mt-5 lg:mt-14 flex flex-col">
-              <label htmlFor="full_name" className="mb-1 lg:mb-2 text-teal-900">
+              <label htmlFor="full_name" className="mb-1 lg:mb-2 text-black">
                 full name
               </label>
               <input
@@ -71,7 +71,7 @@ const EditProfile = () => {
               </p>
             </div>
             <div className="mt-5 lg:mt-14 flex flex-col">
-              <label htmlFor="user_name" className="mb-1 lg:mb-2 text-teal-900">
+              <label htmlFor="user_name" className="mb-1 lg:mb-2 text-black">
                 user name
               </label>
               <input
@@ -87,7 +87,7 @@ const EditProfile = () => {
           </div>
           <div className="lg:flex lg:gap-x-20">
             <div className="mt-5 lg:mt-14 flex flex-col">
-              <label htmlFor="phoneNumber" className="mb-1 lg:mb-2 text-teal-900">
+              <label htmlFor="phoneNumber" className="mb-1 lg:mb-2 text-black">
                 mobile
               </label>
               <input
@@ -101,7 +101,7 @@ const EditProfile = () => {
               </p>
             </div>
             <div className="mt-5 lg:mt-14 flex flex-col">
-              <label htmlFor="gender" className="mb-1 lg:mb-2 text-teal-900">
+              <label htmlFor="gender" className="mb-1 lg:mb-2 text-black">
                 gender
               </label>
               <input
@@ -116,7 +116,7 @@ const EditProfile = () => {
             </div>
           </div>
           <div className="mt-5 lg:mt-14 flex flex-col">
-            <label htmlFor="description" className="text-teal-900">
+            <label htmlFor="description" className="text-black">
               description
             </label>
             <textarea
@@ -130,7 +130,7 @@ const EditProfile = () => {
             </p>
           </div>
           <div className="mt-5 lg:mt-20 flex justify-center ">
-            <button className="h-12  w-52 hover:shadow-lg transition duration-300 ease-in-out hover:bg-[#C1506D] focus:outline-none focus:ring focus:border-teal-800 bg-[#f49db3] text-black font-md border border-black rounded-lg text-xl">
+            <button className="h-12  w-52 hover:shadow-lg transition duration-300 ease-in-out hover:bg-[#C1506D] focus:outline-none focus:ring focus:border-teal-800 bg-[#ce4f6f] text-black font-md border border-black rounded-lg text-xl">
               Submit
             </button>
           </div>

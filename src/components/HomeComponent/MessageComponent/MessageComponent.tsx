@@ -7,7 +7,7 @@ const MessageComponent = ({ setSidebarOpen }: any) => {
   setSidebarOpen(false);
 
   return (
-    <div className=" flex h-full w-full overflow-hidden">
+    <div className=" flex h-full w-full overflow-hidden bg-white">
       <Routes>
         <Route path="/" element={<Aside />} />
         <Route path="/chat" element={<Chat />} />

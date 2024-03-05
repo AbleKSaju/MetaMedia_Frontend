@@ -144,7 +144,7 @@ const AsideComponent = () => {
 
   return (
     <>
-      <div className=" flex sidebar w-96 bg-gray-200 min-w-60 flex-col border-r border-gray-300 transition-all">
+      <div className=" flex sidebar w-96 bg-[#EBE9EF] min-w-60 flex-col border-r border-gray-300 transition-all">
         <div className="logo flex items-center justify-center py-4 text-3xl font-medium">
           Messages
         </div>
@@ -238,7 +238,7 @@ const AsideComponent = () => {
       {/* {!isMobile && <ChatComponent />} */}
       <div className="flex flex-col w-full ">
         {messages?.data && (
-          <header className=" w-full flex items-center p-2 sm:p-3 border-b border-gray-300 bg-gray-200 ">
+          <header className=" w-full flex items-center p-2 sm:p-3 border-b border-gray-300 bg-[#EBE9EF] ">
             <ArrowLeft className="mr-3 sm:hidden" />
             <img
               src={

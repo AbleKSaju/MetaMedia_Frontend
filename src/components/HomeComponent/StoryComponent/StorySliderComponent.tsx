@@ -5,11 +5,10 @@ import {
   ChevronRightCircle,
   MoreVertical,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteStoryFunction } from "../../../utils/api/methods";
-import { addStory } from "../../../utils/ReduxStore/Slice/storySlice";
 import { toast } from "sonner";
 
 interface ImageSliderProps {

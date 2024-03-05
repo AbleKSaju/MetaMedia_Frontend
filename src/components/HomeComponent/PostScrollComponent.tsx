@@ -16,7 +16,6 @@ import { LikePostFuntion } from "../../utils/api/methods/PostService/Post/likePo
 const PostScroll = ({ data, render, setRender }: any) => {
   TimeAgo.addDefaultLocale(en);
   const timeAgo = new TimeAgo("en-US");
-
   const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
   const userData = useSelector((state: any) => state.persisted.user.userData);
@@ -76,12 +75,12 @@ const PostScroll = ({ data, render, setRender }: any) => {
               }
               alt=""
             />
-            <p className="lg:pt-3 lg:pl-4 text-sm md:text-md font-semibold text-[#07312E] md:pt-4 md:pl-3 p-2 pt-3  pl-5 ">
+            <p className="lg:pt-3 lg:pl-4 text-sm md:text-md font-semibold text-black md:pt-4 md:pl-3 p-2 pt-3  pl-5 ">
               {data.userData.basicInformation.fullName}
             </p>
-            <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-[#07312E]  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
+            <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-black  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
             </p>
-            <p className="lg:ml-[210px] lg:text-lg font-bold  text-[#07312E] md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
+            <p className="lg:ml-[210px] lg:text-lg font-bold  text-black md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
               ...
             </p>
           </div>
@@ -106,23 +105,23 @@ const PostScroll = ({ data, render, setRender }: any) => {
             <div>
               <MessageCircle
                       size={30}
-                className="text-[#07312E] "
+                className="text-black "
                 onClick={() => handlePostClick(data)}
               />
             </div>
             <div>
-              <Send className="text-[#07312E]" size={30}/>
+              <Send className="text-black" size={30}/>
             </div>
             <div className="lg:pl-74 sm:pl-[55%] md:pl-[62%] pl-28 ">
-              <Bookmark className="text-[#07312E]" size={30}/>
+              <Bookmark className="text-black" size={30}/>
             </div>
           </div>
-          <div className="lg:pl-8 pt-2 pl-5 text-[10px] sm:text-sm md:pl-8 md:pt-2 font-semibold font-roboto text-[#07312E] sm:pl-8 sm:p-1">
+          <div className="lg:pl-8 pt-2 pl-5 text-[10px] sm:text-sm md:pl-8 md:pt-2 font-semibold font-roboto text-black sm:pl-8 sm:p-1">
             {data.likes.length} likes
           </div>
-          <div className="lg:pl-8 p-2 text-[13px] pl-5 sm:text-md font-semibold text-[#07312E] md:pl-8 sm:pl-8">
+          <div className="lg:pl-8 p-2 text-[13px] pl-5 sm:text-md font-semibold text-black md:pl-8 sm:pl-8">
             {data.userData.basicInformation.fullName} :{" "}
-            <span className="sm:text-sm pl-1 text-[10px] font-normal text-[#07312E] md:pl-1 sm:pl-1 ">
+            <span className="sm:text-sm pl-1 text-[10px] font-normal text-black md:pl-1 sm:pl-1 ">
               {data?.description}
             </span>
           </div>
@@ -140,7 +139,7 @@ const PostScroll = ({ data, render, setRender }: any) => {
           </div>
           <div className="sm:text-[14px] text-[10px] mb-2 pl-4 p-2 font-roboto font-normal lg:pl-8 md:pl-8 sm:pl-8 ">
             <input
-              className="w-3/4     outline-none  hover:border-b py-2 border-[#07312E] "
+              className="w-3/4     outline-none  hover:border-b py-2 border-black "
               type="text"
               name=""
               id=""

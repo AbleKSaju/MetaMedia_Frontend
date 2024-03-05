@@ -101,8 +101,6 @@ const Aside = () => {
                   </p>
                 </p>
                 </div>
-                {/* <div className=" flex flex-col w-52 ml-10 content-center bg-red-500 "> */}
-
                 {/* </div> */}
               </div>
               <div className="w-[100vw] sm:w-64 lg:w-[295px] absolute bottom-16 sm:bottom-3 cursor-pointer bg-red-900">
@@ -111,7 +109,7 @@ const Aside = () => {
                     to="/settings"
                     className={`${
                       location.pathname === "/settings"
-                        ? "bg-[#f49db3] "
+                        ? "bg-[#C1506D] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-1 w-full py-2 sm:px-2 `}
                   >
@@ -121,7 +119,7 @@ const Aside = () => {
                     to="/settings/activity"
                     className={`${
                       location.pathname == "/settings/activity"
-                        ? "bg-[#f49db3] "
+                        ? "bg-[#C1506D] "
                         :""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-3 w-full py-2 md:py-2.5 sm:px-2`}
                   >
@@ -131,7 +129,7 @@ const Aside = () => {
                     to="/settings/security"
                     className={`${
                       location.pathname == "/settings/security"
-                        ? "bg-[#f49db3] "
+                        ? "bg-[#C1506D] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-5 w-full py-2 md:py-2.5 sm:px-2 `}
                   >
@@ -141,7 +139,7 @@ const Aside = () => {
                     to="/settings/notification"
                     className={`${
                       location.pathname === "/settings/notification"
-                        ? "bg-[#f49db3] "
+                        ? "bg-[#C1506D] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-7 w-full py-2 md:py-2.5 sm:px-2 `}
                   >
@@ -151,7 +149,7 @@ const Aside = () => {
                     to="/settings/contactUs"
                     className={`${
                       location.pathname == "/settings/contactUs"
-                        ? "bg-[#f49db3] "
+                        ? "bg-[#C1506D] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-9 w-full py-2 md:py-2.5 sm:px-2 `}
                   >

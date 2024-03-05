@@ -35,10 +35,7 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost }: MainBodyProps) =
 
     useEffect(() => {
       (async () => {
-        console.log("getStoriesFunction");
-        const response: any = await getAllStoriesFunction();
-        console.log(response,"getAllStoriesFunctionresponse");
-        
+        const response: any = await getAllStoriesFunction();        
         if (response) {
           dispatch(addOtherUserStories(response?.data?.data));
         } else {

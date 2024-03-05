@@ -3,7 +3,6 @@ import PostsComponent from "../PostComponent/PostsComponent";
 import { Edit } from "lucide-react";
 import Highlight from "../HighlightComponent/HighlightComponent";
 import { GetHighlightData } from "../../../utils/api/methods";
-import { SetSidebarOpenFunction } from "src/pages/user/Home";
 import profile from '../../../assets/profile.webp'
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +22,6 @@ const Profile = ({ render,setRender}:any) => {
   const [openFollowers,setOpenFollowers] = useState(false)
   const [postComponent, setPostComponent] = useState(false);
   const [currentUser,setCurrentUser] = useState<any>([])
-
   const [otherUser, setOtherUser] = useState(true);
   const [openHighlight, setOpenHighlight] = useState(-1);
   const [highlightName, setHighlightName] = useState("");
@@ -31,14 +29,11 @@ const Profile = ({ render,setRender}:any) => {
   const dispatch = useDispatch()
   const userData = useSelector((state: any) => state.persisted.user.userData);
   let { user_id } = useParams();
-  console.log(user_id,"USER IDDDDDDDD");
   
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
   useEffect(()=>{
-    console.log("I am the useEffect");
     (async ()=>{
       if(user_id){
-        console.log(user_id,"dataId");
         const response = await getUserByIdFuntion(user_id)
         setCurrentUser(response.data)
       }
@@ -49,9 +44,7 @@ const Profile = ({ render,setRender}:any) => {
   useEffect(()=>{
     (async ()=>{
       if(user_id){
-        const response:any = await GetHighlightData(user_id)
-        console.log(response,"HIGLLLLL");
-        
+        const response:any = await GetHighlightData(user_id)        
         if(response?.data?.status){
          highlight = response?.data?.data?.highlights
          dispatch(addHighlights(highlight))
@@ -90,7 +83,7 @@ useEffect(()=>{
                 alt="Profile"
               />
               <div className="flex flex-row justify-center text-center font-medium cursor-pointer mt-3 lg:mt-6">
-                <p className="font-extrabold text-lg text-teal-900">
+                <p className="font-extrabold text-lg text-black">
                   {currentUser?.basicInformation?.fullName}
                 </p>
                 <p className="ml-3 hidden lg:flex">
@@ -103,7 +96,7 @@ useEffect(()=>{
           </div>
           {otherUser && (
             <div className="flex justify-around row-start-1 w-30 mr-6 md:ml-20 md:mr-20 mt-16 lg:hidden">
-              <button className="border border-[#000] bg-[#d2637f] hover:bg-[#C1506D] px-8 py-1  rounded-3xl">
+              <button className="border border-[#000] bg-[#C1506D] hover:bg-[#C1506D] px-8 py-1  rounded-3xl">
                 Follow
               </button>
               <button className="border border-[#C1506D] px-5 py-1 rounded-3xl">
@@ -117,7 +110,7 @@ useEffect(()=>{
                 !otherUser ? "mt-8" : "mt-0"
               } flex flex-col w-[90vw] sm:w-[55vw] md:w-[45vw] lg:w-[30vw] col-span-4 row-span-3 row-start-1 ml-4 lg:mt-0`}
             >
-              <p className="underline mb-1 text-xl text-teal-900">{currentUser?.basicInformation?.userName}</p>
+              <p className="underline mb-1 text-xl text-black">{currentUser?.basicInformation?.userName}</p>
               {otherUser && (
                 <div className="lg:flex w-64 my-3 justify-between hidden ">
                   <button className="border border-[#000] bg-[#d2637f] hover:bg-[#C1506D] px-8 py-1 rounded-3xl">
@@ -137,15 +130,15 @@ useEffect(()=>{
             <div className="col-span-full col-start-1 row-start-4 flex justify-around border-y border-teal-900 cursor-pointer py-2">
               <div className=" flex flex-col">
                 <p className="text-center font-medium">20</p>
-                <p className="font-light text-teal-900">Post</p>
+                <p className="font-light text-black">Post</p>
               </div>
               <div className=" flex flex-col" onClick={()=>setOpenFollowers(true)}>
                 <p className="text-center font-medium">200</p>
-                <p className="font-light text-teal-900">followers</p>
+                <p className="font-light text-black">followers</p>
               </div>
               <div className=" flex flex-col" onClick={()=>setOpenFollowings(true)}>
                 <p className="text-center font-medium">200</p>
-                <p className="font-light text-teal-900">following</p>
+                <p className="font-light text-black">following</p>
               </div>
             </div>
           </div>
@@ -187,8 +180,8 @@ useEffect(()=>{
             onClick={() => setPostComponent(true)}
             className={
               postComponent
-                ? "underline font-extrabold text-teal-900"
-                : "text-teal-900"
+                ? "underline font-extrabold text-black"
+                : "text-black"
             }
           >
             posts
@@ -197,8 +190,8 @@ useEffect(()=>{
             onClick={() => setPostComponent(false)}
             className={
               !postComponent
-                ? "underline font-extrabold text-teal-900"
-                : "text-teal-900"
+                ? "underline font-extrabold text-black"
+                : "text-black"
             }
           >
             saved
