@@ -1,7 +1,6 @@
 import { SetSidebarOpenFunction } from "src/pages/user/Home"
 
-const Notification: React.FC<SetSidebarOpenFunction> = ({setSidebarOpen}) => {
-   setSidebarOpen(true)
+const Notification = () => {
  return (
     <>
      <div>notification</div>

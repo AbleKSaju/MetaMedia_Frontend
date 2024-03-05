@@ -282,14 +282,14 @@ console.log(myStory,"myStorymyStorymyStory");
                 src={`http://localhost:3003/story/${story?.storyUrl}`}
                 alt=""
                 onLoad={() => setVideo(false)}
-                className={`w-full h-full border-2 rounded-lg border-teal-800 ${
+                className={`w-full h-full border-2 rounded-lg border-black ${
                   index === currentIndex ? "" : "hidden"
                 }`}
               />
             )}
             <div className="absolute -bottom-8 font-medium shadow-black cursor-pointer">
               <p
-                className={`text-teal-900  ${
+                className={`text-white  ${
                   index === currentIndex ? "" : "hidden"
                 }`}
               >

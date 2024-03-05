@@ -7,6 +7,8 @@ import {
 } from "../../../../utils/ReduxStore/Slice/postSlice";
 import { useDispatch } from "react-redux";
 const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
+  console.log("I am In CreatePostModalBody");
+  
   const [CamaraOn, setCamaraOn] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
   const dispatch = useDispatch();

@@ -22,7 +22,7 @@ const Profile = ({ render,setRender}:any) => {
   const [openFollowers,setOpenFollowers] = useState(false)
   const [postComponent, setPostComponent] = useState(false);
   const [currentUser,setCurrentUser] = useState<any>([])
-  const [otherUser, setOtherUser] = useState(true);
+  const [otherUser, setOtherUser] = useState(false);
   const [openHighlight, setOpenHighlight] = useState(-1);
   const [highlightName, setHighlightName] = useState("");
   const [highlightList,setHighlightList] = useState(false)
@@ -33,7 +33,14 @@ const Profile = ({ render,setRender}:any) => {
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
   useEffect(()=>{
     (async ()=>{
+      console.log(user_id,"user_iduser_iduser_iduser_id");
+      
       if(user_id){
+        if(user_id !== userData.userId){
+          setOtherUser(true)
+        }else{
+          setOtherUser(false)
+        }
         const response = await getUserByIdFuntion(user_id)
         setCurrentUser(response.data)
       }
@@ -66,7 +73,7 @@ useEffect(()=>{
 
   return (
     <>
-    <div className=" flex flex-col w-full ">
+    <div className=" flex flex-col w-full overflow-auto scrollbar-hide">
       <div className="">
         <div className="lg:pt-10 lg:flex lg:justify-around">
           <div className="flex justify-center lg:justify-start">
@@ -96,7 +103,7 @@ useEffect(()=>{
           </div>
           {otherUser && (
             <div className="flex justify-around row-start-1 w-30 mr-6 md:ml-20 md:mr-20 mt-16 lg:hidden">
-              <button className="border border-[#000] bg-[#C1506D] hover:bg-[#C1506D] px-8 py-1  rounded-3xl">
+              <button className="border border-[#000] bg-[#C1506D] hover:bg-[#C1506D] px-8 py-1 text-white rounded-3xl">
                 Follow
               </button>
               <button className="border border-[#C1506D] px-5 py-1 rounded-3xl">
@@ -113,7 +120,7 @@ useEffect(()=>{
               <p className="underline mb-1 text-xl text-black">{currentUser?.basicInformation?.userName}</p>
               {otherUser && (
                 <div className="lg:flex w-64 my-3 justify-between hidden ">
-                  <button className="border border-[#000] bg-[#d2637f] hover:bg-[#C1506D] px-8 py-1 rounded-3xl">
+                  <button className="border border-[#000] bg-[#C1506D] text-white  px-8 py-1 rounded-3xl">
                     Follow
                   </button>
                   <button className="border border-black px-5 py-1 hover:border-[#C1506D] rounded-3xl">
@@ -121,12 +128,10 @@ useEffect(()=>{
                   </button>
                 </div>
               )}
-
               <p className=" text-sm mt-3 w-full h-20">
                {currentUser?.profile?.bio}
               </p>
             </div>
-
             <div className="col-span-full col-start-1 row-start-4 flex justify-around border-y border-teal-900 cursor-pointer py-2">
               <div className=" flex flex-col">
                 <p className="text-center font-medium">20</p>
@@ -159,12 +164,12 @@ useEffect(()=>{
                       />
                     );
                   })}
-                  {/* {user_id === userData.userId}{ */}
-                  <Highlight
+                  {
+                  !otherUser &&  <Highlight 
                     extra={true as boolean}
                     setAddHighlight={setAddHighlight}
                   />
-                  {/* } */}
+                }
                 </div>
               </div>
             </div>
@@ -198,7 +203,7 @@ useEffect(()=>{
           </p>
         </div>
       </div>
-        <div className="lg:px-16 overflow-y-auto scrollbar-hide">
+        <div className="lg:px-16">
           <PostsComponent setRender={setRender} render={render}/>
         </div>
         </div>

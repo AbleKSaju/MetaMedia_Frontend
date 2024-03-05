@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { getUsersByNameFunction } from "../../../../utils/api/methods/UserService/post";
 
 const AddPostDetailsBody = ({
+  setIsAddPost,
   setPostState,
   addPost,
   setAddPost,
@@ -56,8 +57,6 @@ const AddPostDetailsBody = ({
   useEffect(() => {
     setImageLength(post.images[0].length);
     setSelectedImageIndex(0);
-    console.log(selectedImageSrc, "PPPPP");
-
     setSelectedImageSrc(post.images[0][selectedImageIndex]);
   }, [post]);
 
@@ -69,7 +68,6 @@ const AddPostDetailsBody = ({
   };
 
   useEffect(() => {
-    console.log(tagedUserData.length, "BBBBBBBBBBBBBBbbbbbbbbbb");
   }, [tagedUserData]);
 
   const toggleDropdown = () => {
@@ -227,6 +225,7 @@ const AddPostDetailsBody = ({
         setPostState(false);
         toast.success("the status from the responce is true");
         navigate(`/profile/${user?.userData?.userId}`);  
+        setIsAddPost(false)
       }
     }
   };

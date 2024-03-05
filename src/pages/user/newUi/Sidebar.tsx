@@ -13,7 +13,8 @@ import { LogoutFunction } from "../../../utils/api/methods";
 import { clearToken } from "../../../utils/ReduxStore/Slice/tokenSlice";
 import { toast } from "sonner";
 import { persistor } from "../../../utils/ReduxStore/Store/Store";
-const NewSideBar = () => {
+import SearchComponent from "./Search";
+const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
   const location = useLocation();
   const Navigate = useNavigate();
   const dispatch = useDispatch();
@@ -49,6 +50,8 @@ const NewSideBar = () => {
     persistor.purge();
   };
 
+
+
   return (
     <>
       {/* sidebar ------------------------ */}
@@ -78,24 +81,16 @@ const NewSideBar = () => {
           </Link>
           {/* home  */}
           {/* search */}
-          <Link
-            to="/search"
+          <li
+            onClick={()=>setOpenSearch(true)}
             className="h-full w-full flex justify-center items-center"
           >
             <div
-              className={`bg-[#FADBE1] w-10 h-10 ${
-                location.pathname === "/search" ? "w-14 h-14" : "w-12 h-12"
-              } rounded-full flex justify-center items-center`}
+              className={`bg-[#FADBE1]  w-12 h-12 rounded-full flex justify-center items-center`}
             >
-              {location.pathname === "/search" ? (
-                <div className="rounded-full w-5/6 h-5/6 flex justify-center items-center bg-[#C1506D]">
-                  <Search className="text-white size-6 sm:size-6" />
-                </div>
-              ) : (
                 <Search className="text-gray-600 size-6 sm:size-7" />
-              )}
             </div>
-          </Link>
+          </li>
           {/* search */}
           {/* post  */}
           <Link
@@ -147,7 +142,17 @@ const NewSideBar = () => {
           {/* message  */}
 
           {/* notification  */}
-          <Link
+          <li
+            onClick={()=>setOpenNotification(true)}
+            className="h-full w-full flex justify-center items-center"
+          >
+            <div
+              className={`bg-[#FADBE1]  w-12 h-12 rounded-full flex justify-center items-center`}
+            >
+                <Bell className="text-gray-600 size-6 sm:size-7" />
+            </div>
+          </li>
+          {/* <Link
             to="/notification"
             className="hidden h-full w-full sm:flex justify-center  items-center"
           >
@@ -170,7 +175,7 @@ const NewSideBar = () => {
                 </>
               )}
             </div>
-          </Link>
+          </Link> */}
 
           {/* notifiactoin  */}
           {/* profile  */}

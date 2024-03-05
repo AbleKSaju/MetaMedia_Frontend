@@ -1,4 +1,4 @@
-import {AUTH_URL,CHAT_URL,HIGHLIGHT_URL,POST_URL,STORY_URL,USER_URL} from '../baseUrl/axios.baseUrl' 
+import {ADMIN_URL, AUTH_URL,CHAT_URL,HIGHLIGHT_URL,POST_URL,STORY_URL,USER_URL} from '../baseUrl/axios.baseUrl' 
 
 // AUTH SERVICE
 
@@ -23,7 +23,8 @@ export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
 export const GetAllUsers_Api=`${USER_URL}/getAllUsersForChat`
 export const getUsersByName_Api=`${USER_URL}/getUsersByname`
 export const getuserById_Api=`${USER_URL}/getUserById`
-export const getAllUsersData_Api=`${USER_URL}/getAllUsers`
+export const GetAllUsersData_Api=`${USER_URL}/getAllUsers`
+export const GetSearchUserData_Api=`${USER_URL}/getSearchUser`
 
 // STORY SERVICE
 
@@ -57,11 +58,13 @@ export const ReplayToComment_Api=`${POST_URL}/addReplayToComment`
 export const DeletePost_Api=`${POST_URL}/deletePost`
 export const UpdateComment_Api=`${POST_URL}/updateCommnet`
 export const DeleteComment_Api=`${POST_URL}/deleteComment`
+
 //CHAT
 
 export const GetConversations_Api=`${CHAT_URL}/conversations`
 export const GetMessages_Api=`${CHAT_URL}/getMessages`
 export const SendMessage_Api=`${CHAT_URL}/message`
 
+//Admin
 
 

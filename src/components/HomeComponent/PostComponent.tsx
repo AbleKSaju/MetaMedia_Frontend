@@ -58,26 +58,9 @@ const Post: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
                   />
                 </div>
               ))}
-            
           </div>
         </div>
       </div>
-      {/* <div className="w-screen h-full flex justify-between p-1 overflow-hidden scrollbar-hidden">
-        <div className="hidden sm:block sm:w-3/6 md:w-1/5 sm:ml-16 lg:ml-0 lg:w-1/5 h-full scrollbar-hidden"></div>
-        <div className=" w-full h-full flex  justify-center lg:justify-center overflow-x-hidden">
-        <div className="flex flex-wrap justify-center md:justify-start md:ml-16 lg:ml-  w-full h-full">
-    {posts && posts.length > 0 && (
-        <>
-            {posts.map((item:any) => (
-                <div key={item._id} className="w-[145px] h-[145px] sm:w-2/6 sm:h-2/6 md:w-[240px] md:h-[240px] lg:w-72lg:h-80 bg-red-100 m-1 border" onClick={()=>handlePostClick(item)}>
-                    <img src={`http://localhost:3002/img/${item.mediaUrl[0]}`} className="w-full h-full object-cover" alt="" />
-                </div>
-            ))}
-        </>
-    )}
-</div>
-        </div>
-       </div> */}
     </>
   );
 };

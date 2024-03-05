@@ -71,25 +71,26 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
   return (
     <>
       <div className="flex flex-wrap flex-row justify-center mt-5 pb-20 ">
-        <div className="grid grid-cols-3 gap-0.5 md:gap-4 p-0.5 ">
+        <div className="grid grid-cols-3 gap-0.5 md:gap-4 p-0.5">
           <>
-            {posts.length > 0 &&
+            {posts.length > 0 ?
               posts.map((item: any) => {
                 return (
                   <div
-                    className="max-w-64  max-h-64"
+                    className="max-w-64 max-h-64"
                     key={item.id}
                     onClick={() => handlePostClick(item)}
                   >
                     {/* Adding a key to each mapped element */}
                     <img
-                      className=" border border-amber-10 w-full h-full object-fill"
+                      className=" border border-amber-10 w-full h-full rounded-md object-fill"
                       src={`http://localhost:3002/img/${item.mediaUrl[0]}`}
                       alt=""
                     />
                   </div>
                 );
-              })}
+              }):
+              ( <p className="font-bold text-xl col-span-2 row-start-3 h-full">No posts.</p> )}
           </>
         </div>
       </div>

@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
-import MainBody from "../../components/HomeComponent/MainBodyComponent";
 import Main from "../../pages/user/newUi/Main"
 import Search from "../../components/HomeComponent/SearchComponent";
 import Message from "../../components/HomeComponent/MessageComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
 import Profile from "../../components/HomeComponent/ProfileComponents/ProfileComponent";
-import Notification from "../../components/HomeComponent/NotificationComponent";
 import Settings from "./Settings";
-import { Route, Routes, useLocation, useParams } from "react-router-dom";
-import AsideComponent from "../../components/HomeComponent/AsideComponent";
+import { Route, Routes, useLocation } from "react-router-dom";
 import StoryModal from "../../components/HomeComponent/StoryComponent/StoryModal";
 import ShowStoryComponent from "../../components/HomeComponent/StoryComponent/ShowStoryComponent";
 import { useDispatch } from "react-redux";
@@ -17,6 +14,8 @@ import { getStoriesFunction } from "../../utils/api/methods";
 import MainModalBorderPost from "../../components/HomeComponent/PostComponent/Modal/mainModalBorderPost";
 import NewSideBar from "./newUi/Sidebar";
 import Suggetions from "./newUi/Suggetions";
+import SearchComponent from "./newUi/Search";
+import Notification from "./newUi/Notification";
 
 
 
@@ -30,6 +29,9 @@ const Home = ({ render,setRender}:any) => {
   const [showStory,setShowStory] = useState("")
   const [isAddPost,setIsAddPost] = useState(false)
   const [addPost,setAddPost] = useState(false)
+  const [openSearch, setOpenSearch] = useState(false);
+  const [openNotification, setOpenNotification] = useState(false);
+
   const dispatch = useDispatch()
   const location = useLocation();
 
@@ -44,16 +46,17 @@ const Home = ({ render,setRender}:any) => {
      }
     })();
   },[addStories,deleteStory])
-
   const allowedPaths = ["/", "/post"];
  
   return (
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
- <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
+ <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center">
     <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
-        <NewSideBar />
+        <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> 
+        {openSearch && <SearchComponent setOpenSearch={setOpenSearch}/>}
+        {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
  {/* <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/> */}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
             <Routes>

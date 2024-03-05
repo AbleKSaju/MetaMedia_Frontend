@@ -1,317 +1,148 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllUsersFunction } from "../../utils/api/methods/UserService/get";
+import { getAllUsersDataFunction } from "../../utils/api/methods/UserService/get";
+import { toast } from "sonner";
+import profile from "../../assets/profile.webp";
 
 const UsersListComponent = () => {
+  const [users, setUsers] = useState<any>([]);
+  const [currentUsers, setCurrentUsers] = useState<any>();
+  const [searchUser, setSearchUser] = useState<string>("");
 
-    useEffect(() => {
-        (async () => {
-            const response = await get();
-                console.log(response,"responseresponseresponseresponseresponseresponse");
+  useEffect(() => {
+    (async () => {
+      const response = await getAllUsersDataFunction();
+      if (response.status) {
+        setUsers(response?.data);
+        setCurrentUsers(response?.data);
+      } else {
+        toast.error("Users not found");
+      }
+    })();
+  }, []);
 
-        //     if (response.data.status) {
-        //     const data=response?.data?.data
-        //     const addedStoryUrls = addedHighLightData.map((val: any) => val.media).flat();
-        //     const filteredHighLightData = data.filter((dataItem:any) => !addedStoryUrls.includes(dataItem.storyUrl));
-        //     setHighLightData(filteredHighLightData)
-        //   } else {
-        //     setHighLightData([]);
-        //   }
-        })();
-      }, []);
-      
-
-    useEffect(() => {
-        (async () => {
-          console.log("getStoriesFunction");
-        //   const response = await getAllUsersFunction();
-        //   console.log(response,"responseresponseresponseresponseresponseresponse");
-        })();
-      }, []);
+  useEffect(() => {
+    (async () => {
+      if (searchUser.length !== 0 && searchUser.trim() === "") {
+        setCurrentUsers(users);
+      } else {
+        const usersData = await users.filter((data: any) => {
+          return (
+            data.fullName.toLowerCase().includes(searchUser.toLowerCase()) ||
+            data.id.includes(searchUser)
+          );
+        });
+        if (usersData.length) {
+          setCurrentUsers(usersData);
+        } else {
+          setCurrentUsers([]);
+        }
+      }
+    })();
+  }, [searchUser]);
 
   return (
-    <section className="container mx-auto p-6 font-mono">
+    <section className="container mx-auto p-6 pt-0 mt-10 font-mono overflow-auto scrollbar-hide">
+      <div className="max-w-md mx-full ">
+        <div className="relative flex items-center w-full h-12 mb-5 rounded-lg focus-within:shadow-lg bg-white overflow-hidden">
+          <div className="grid place-items-center h-full w-12 text-gray-300">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <input
+            className="peer h-full w-full outline-none text-sm text-gray-700 pr-2"
+            type="text"
+            id="search"
+            onChange={(e) => setSearchUser(e?.target?.value)}
+            placeholder="Search user.."
+          />
+        </div>
+      </div>
       <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
         <div className="w-full overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
                 <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Age</th>
+                <th className="px-4 py-3">Email</th>
+                <th className="px-4 py-3">Phone</th>
                 <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full md:block">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-black">Sufyan</p>
-                      <p className="text-xs text-gray-600">Developer</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-ms font-semibold border">22</td>
-                <td className="px-4 py-3 text-xs border">
-                  <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
-                    {" "}
-                    Acceptable{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm border">6/4/2000</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-black">Stevens</p>
-                      <p className="text-xs text-gray-600">Programmer</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-md font-semibold border">27</td>
-                <td className="px-4 py-3 text-xs border">
-                  <span className="px-2 py-1 font-semibold leading-tight text-orange-700 bg-gray-100 rounded-sm">
-                    {" "}
-                    Pending{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm border">6/10/2020</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Nora</p>
-                      <p className="text-xs text-gray-600">Designer</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-md font-semibold border">17</td>
-                <td className="px-4 py-3 text-xs border">
-                  <span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-sm">
-                    {" "}
-                    Nnacceptable{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm border">6/10/2020</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Ali</p>
-                      <p className="text-xs text-gray-600">Programmer</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border text-md font-semibold">23</td>
-                <td className="px-4 py-3 border text-xs">
-                  <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
-                    {" "}
-                    Acceptable{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 border text-sm">6/10/2020</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Khalid</p>
-                      <p className="text-xs text-gray-600">Designer</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border text-md font-semibold">20</td>
-                <td className="px-4 py-3 border text-xs">
-                  <span className="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-sm">
-                    {" "}
-                    Pending{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 border text-sm">6/10/2020</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Nasser</p>
-                      <p className="text-xs text-gray-600">Pen Tester</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border text-md font-semibold">29</td>
-                <td className="px-4 py-3 border text-xs">
-                  <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
-                    {" "}
-                    Acceptable{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 border text-sm">6/10/2020</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Mohammed</p>
-                      <p className="text-xs text-gray-600">Web Designer</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border text-md font-semibold">38</td>
-                <td className="px-4 py-3 border text-xs">
-                  <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
-                    {" "}
-                    Acceptable{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 border text-sm">6/10/2020</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Saad</p>
-                      <p className="text-xs text-gray-600">Data</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border text-md font-semibold">19</td>
-                <td className="px-4 py-3 border text-xs">
-                  <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
-                    {" "}
-                    Acceptable{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 border text-sm">6/10/2020</td>
-              </tr>
-              <tr className="text-gray-700">
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div className="relative w-10 h-10 mr-3 rounded-full">
-                      <img
-                        className="object-cover w-full h-full rounded-full"
-                        src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                        alt=""
-                        loading="lazy"
-                      />
-                      <div
-                        className="absolute inset-0 rounded-full shadow-inner"
-                        aria-hidden="true"
-                      ></div>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Sami</p>
-                      <p className="text-xs text-gray-600">Developer</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border text-md font-semibold">21</td>
-                <td className="px-4 py-3 border text-xs">
-                  <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
-                    {" "}
-                    Acceptable{" "}
-                  </span>
-                </td>
-                <td className="px-4 py-3 border text-sm">6/10/2020</td>
-              </tr>
+              {currentUsers?.map((data: any, index: number) => {
+                return (
+                  <tr className="text-black font-roboto" key={data.fullName}>
+                    <>
+                      <td className="px-4 py-3 border">
+                        <div className="flex items-center text-sm">
+                          <div className="relative w-10 h-10 mr-3 rounded-full md:block">
+                            <img
+                              className="object-cover w-full h-full rounded-full"
+                              src={
+                                data.profile?.startsWith(
+                                  "https://graph.facebook.com/"
+                                )
+                                  ? `${data?.profile}`
+                                  : data?.profile
+                                  ? `http://localhost:3000/profile/${data?.profile}`
+                                  : `${profile}`
+                              }
+                              alt=""
+                              loading="lazy"
+                            />
+                            <div
+                              className="absolute inset-0 rounded-full shadow-inner"
+                              aria-hidden="true"
+                            ></div>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-black">
+                              {data?.fullName}
+                            </p>
+                            <p className="text-xs text-gray-600">{data?.id}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-ms font-semibold border">
+                        {data?.email}
+                      </td>
+                      <td className="px-4 py-3 text-md border">
+                        <span className="px-2 py-1 leading-tight">
+                          {data?.mobile}
+                        </span>
+                      </td>
+                      <td
+                        className={`px-4 py-3 text-md border ${
+                          data?.blocked ? "text-red-700" : "text-green-700"
+                        }`}
+                      >
+                        {data?.blocked ? "Blocked" : "Active"}
+                      </td>
+                      <td
+                        className={`px-4 py-3 text-md border ${
+                          data?.blocked ? "text-green-700" : "text-red-700"
+                        }`}
+                      >
+                        {data?.blocked ? "Unblock" : "Block"}
+                      </td>
+                    </>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

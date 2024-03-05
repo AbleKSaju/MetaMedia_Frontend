@@ -1,6 +1,5 @@
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { Toaster } from "sonner";
-
 import AdminRouter from "./Routes/AdminRouter";
 import UserRouter from "./Routes/UserRouter";
 
