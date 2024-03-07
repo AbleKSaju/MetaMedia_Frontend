@@ -4,6 +4,9 @@ import { addToken } from "../ReduxStore/Slice/tokenSlice";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import {axiosPrivet} from '../api/baseUrl/axios.baseUrl'
+import { getUserByIdFuntion } from "../api/methods/UserService/post";
+import { editUser } from "../ReduxStore/Slice/userSlice";
+
 
 export const useAccessToken=()=>{
     const dispach=useDispatch()
@@ -69,10 +72,6 @@ export const useAxiosPrivete=()=>{
         axiosPrivet.interceptors.request.eject(requestInterceptor);
         axiosPrivet.interceptors.response.eject(responseInterceptor);
       };
-
-
-
-
     },[accesToken,access])
 
     return axiosPrivet
@@ -87,4 +86,30 @@ const shouldAttachMultipartHeader = (config:any) => {
       (isPostMethod || isPatchMethod || isPutMethod)
      
     return shouldAttach;
+  };
+
+
+  export const StoreUserData = () => {
+    const dispatch = useDispatch();
+    const userData = useSelector((state: any) => state.persisted.user.userData);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await getUserByIdFuntion(userData.userId);
+          if (response?.status) {
+            dispatch(editUser(response.data.socialConections));
+          } else {
+            throw new Error("Failed to fetch user data");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchData();
+  
+    }, [dispatch, userData.userId]);
+  
+    return null; 
   };

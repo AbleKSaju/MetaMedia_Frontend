@@ -8,7 +8,7 @@ import Settings from "./Settings";
 import { Route, Routes, useLocation } from "react-router-dom";
 import StoryModal from "../../components/HomeComponent/StoryComponent/StoryModal";
 import ShowStoryComponent from "../../components/HomeComponent/StoryComponent/ShowStoryComponent";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addStory, deleteAllStory } from "../../utils/ReduxStore/Slice/storySlice";
 import { getStoriesFunction } from "../../utils/api/methods";
 import MainModalBorderPost from "../../components/HomeComponent/PostComponent/Modal/mainModalBorderPost";
@@ -16,6 +16,9 @@ import NewSideBar from "./newUi/Sidebar";
 import Suggetions from "./newUi/Suggetions";
 import SearchComponent from "./newUi/Search";
 import Notification from "./newUi/Notification";
+import { StoreUserData } from "../../utils/costumHook/constumHook";
+import { editUser } from "../../utils/ReduxStore/Slice/userSlice";
+import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 
 
 
@@ -34,6 +37,7 @@ const Home = ({ render,setRender}:any) => {
 
   const dispatch = useDispatch()
   const location = useLocation();
+  const userData=useSelector((state:any)=>state.persisted.user.userData)
 
   useEffect(()=>{
     (async ()=>{
@@ -46,6 +50,27 @@ const Home = ({ render,setRender}:any) => {
      }
     })();
   },[addStories,deleteStory])
+
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await getUserByIdFuntion(userData.userId);
+          if (response?.status) {            
+            dispatch(editUser(response.data.socialConections));
+          } else {
+            throw new Error("Failed to fetch user data");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchData();
+  
+    }, [dispatch, userData.userId]);
+  
+
   const allowedPaths = ["/", "/post"];
  
   return (
@@ -57,16 +82,15 @@ const Home = ({ render,setRender}:any) => {
         <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> 
         {openSearch && <SearchComponent setOpenSearch={setOpenSearch}/>}
         {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
- {/* <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/> */}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
             <Routes>
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost}/>} />
-                  <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
-                  <Route path="/message/*" element={<Message setSidebarOpen={setSidebarOpen}/>} />
+                  {/* <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} /> */}
+                  <Route path="/message/:user_id" element={<Message />} />
                   <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
-                  <Route path="/settings/*" element={<Settings setSidebarOpen={setSidebarOpen} />} />
+                  <Route path="/settings/*" element={<Settings />} />
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

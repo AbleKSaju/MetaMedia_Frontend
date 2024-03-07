@@ -1,17 +1,16 @@
 import { useState } from "react";
 import Aside from "./AsideComponent";
-import Chat from "./ChatComponent";
+// import Chat from "./ChatComponent";
 import { Route, Routes } from "react-router-dom";
+import MessageListComponent from "./MessageListComponent";
 
-const MessageComponent = ({ setSidebarOpen }: any) => {
-  setSidebarOpen(false);
+const MessageComponent = () => {
+  const [conversations, setConversations] = useState<any>();
 
   return (
     <div className=" flex h-full w-full overflow-hidden bg-white">
-      <Routes>
-        <Route path="/" element={<Aside />} />
-        <Route path="/chat" element={<Chat />} />
-      </Routes>
+      <Aside conversations={conversations} setConversations={setConversations} />
+      <MessageListComponent conversations={conversations} setConversations={setConversations}/>
     </div>
   );
 };

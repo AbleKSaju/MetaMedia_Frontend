@@ -118,15 +118,15 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
           {/* post  */}
           {/* message */}
           <Link
-            to="/message"
+            to="/message/index"
             className=" h-full w-full flex justify-center  items-center"
           >
             <div
               className={`bg-[#FADBE1] w-10 h-10 ${
-                location.pathname === "/message" ? "w-14 h-14" : "w-12 h-12"
+                location.pathname === "/message/index" ? "w-14 h-14" : "w-12 h-12"
               } rounded-full flex justify-center items-center`}
             >
-              {location.pathname === "/message" ? (
+              {location.pathname === "/message/index" ? (
                 <>
                   <div className="rounded-full w-5/6 h-5/6 flex justify-center items-center bg-[#C1506D]">
                     <Mail className="text-white size-6 sm:size-6 " />{" "}

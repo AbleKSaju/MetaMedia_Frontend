@@ -169,7 +169,10 @@ console.log(myStory,"myStorymyStorymyStory");
   return (
     <div className="flex justify-center items-center w-[100%] h-[80%] mt-5 mb-36 relative">
       <div className="flex justify-center w-full absolute top-2">
-        {currentStory.map((_: any, index: number) => (
+        {currentStory.map((_: any, index: number) => {
+        console.log(currentStory,"currentStorycurrentStory")
+        
+        return (
           <>
             <Link
               to={`/profile/${userData?.userId}`}
@@ -203,7 +206,7 @@ console.log(myStory,"myStorymyStorymyStory");
               </div>
             )}
           </>
-        ))}
+        )})}
       </div>
       <div className="absolute top-7 right-1 z-20">
         <MoreVertical onClick={toggleDropdown} className="text-amber-50 mr-3" />

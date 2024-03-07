@@ -10,12 +10,8 @@ export const GetConversationsFunction = () => {
   }
 };
 
-export const getMessagesFunction = (data:any) => {
-  console.log(data,"DATAAAA");
-  
+export const getMessagesFunction = (data:any) => {  
     let convId = data?.conversationId ? data?.conversationId:'new' 
-    console.log(convId,"convIdconvIdconvIdconvIdconvId");
-    
   try {
     return axios.create({ withCredentials: true }).get(`${GetMessages_Api}/${convId}?receiverId=${data.receiverId}`);
   } catch (error) {

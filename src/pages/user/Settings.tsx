@@ -4,10 +4,8 @@ import { Contactus, EditProfile, Security } from "../../components";
 import { SetSidebarOpenFunction } from "./Home";
 import { Route, Routes } from "react-router-dom";
 
-const Settings: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
-  const [selectedSettings, setSelectedSettings] = useState(0);
+const Settings = () => {
 
-  setSidebarOpen(false);
   return (
     <>
       <div className="sm:ml-0 flex sm:flex">

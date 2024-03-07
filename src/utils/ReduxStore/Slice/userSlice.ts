@@ -7,10 +7,8 @@ const userSlice=createSlice({
         userData:{},
     },
     reducers:{
-        addUser:(state,action)=>{
-            console.log(action.payload,"PAYLOAD");
-            
-            state.userData = {...state.userData,...action.payload}
+       addUser:(state,action)=>{
+        state.userData = {...state.userData,...action.payload}
        },
        clearUser:(state)=>{
            state.userData={}
@@ -19,7 +17,6 @@ const userSlice=createSlice({
         state.userData = {...state.userData,...action.payload}
        },
        addProfileImage:(state,action)=>{
-        console.log(action,"ACTIONN");
         state.userData = {...state.userData,...action.payload}
        },
        getUser:()=>{},

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { UseSelector, useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getAllPostOfUserFunction } from "../../../utils/api/methods/PostService/get/getAllPostOfUser";
 import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
 import { toast } from "sonner";
@@ -11,15 +11,14 @@ import {
   clearPostUserData,
   setPostUserData,
 } from "../../../utils/ReduxStore/Slice/singlePostSlice";
-const PostsComponent = ({ isAddPost, render, setRender }: any) => {
+import PostProfileShimmer from "../../../pages/shimmer/PostProfileShimmer";
+const PostsComponent = ({ postLength, render, setRender }: any) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
   let { user_id } = useParams();
   const singlePost = useSelector(
     (state: any) => state.persisted.singlePost.singlePost
   );
-
-
-  
 
   const user = useSelector((state: any) => state.persisted.user);
 
@@ -28,12 +27,12 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
   const handlePostClick = async (item: any) => {
     const responce = await getUserByIdFuntion(item.userId);
 
-    if (responce.status) {
+    if (responce.status && responce.data) {
       dispatch(clearPostData());
       dispatch(clearPostUserData());
-      dispatch(setPostUserData(responce.data));
+      dispatch(setPostUserData(responce?.data));
       dispatch(addPostData(item));
-      dispatch(isSinglePostModalOpen())
+      dispatch(isSinglePostModalOpen());      
     } else {
       toast.error("Api call fail");
     }
@@ -41,30 +40,29 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        if (user?.userData == undefined) {
-          toast.error("user  not find");
-          // return navigate('/login');
+        if (user?.userData === undefined) {
+          toast.error("user not find");
         } else {
           const response = await getAllPostOfUserFunction(user_id);
-          console.log(response.data, "this   form the get all post requst");
-
-          if (response.status) {
+          if (response && response.status && response.data) {
             const data = response.data;
             setPosts(data);
+            postLength(data.length)
+
           }
         }
       } catch (error) {
         console.error("Error occurred:", error);
+      } finally {
+        setLoading(false);
       }
     };
-
-    fetchData(); // Call the async function immediately
-  }, [user, isAddPost, singlePost, addPostData, render ,user_id]);
+    fetchData();
+  }, [ singlePost, addPostData, render, user_id]);
 
   useEffect(() => {
-    console.log(posts, "this is posts ");
-    console.log(posts.length, "this is posts lenght");
     setRender(!render);
   }, []);
 
@@ -73,7 +71,9 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
       <div className="flex flex-wrap flex-row justify-center mt-5 pb-20 ">
         <div className="grid grid-cols-3 gap-0.5 md:gap-4 p-0.5">
           <>
-            {posts.length > 0 ?
+            {loading ? (
+          <PostProfileShimmer/>
+            ) : posts.length > 0 ? (
               posts.map((item: any) => {
                 return (
                   <div
@@ -81,7 +81,6 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
                     key={item.id}
                     onClick={() => handlePostClick(item)}
                   >
-                    {/* Adding a key to each mapped element */}
                     <img
                       className=" border border-amber-10 w-full h-full rounded-md object-fill"
                       src={`http://localhost:3002/img/${item.mediaUrl[0]}`}
@@ -89,8 +88,12 @@ const PostsComponent = ({ isAddPost, render, setRender }: any) => {
                     />
                   </div>
                 );
-              }):
-              ( <p className="font-bold text-xl col-span-2 row-start-3 h-full">No posts.</p> )}
+              })
+            ) : (
+              <p className="font-bold text-xl col-span-2 row-start-3 h-full">
+                No posts.
+              </p>
+            )}
           </>
         </div>
       </div>

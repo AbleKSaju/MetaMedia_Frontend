@@ -13,7 +13,6 @@ const messageSlice = createSlice({
     initialState,
     reducers: {
         addCurrentReciever: (state, action: PayloadAction<any>) => {
-            console.log(action.payload, "PAYLOAD from messageData");
             state.messageData=[]
             state.messageData.push(action.payload);
         },

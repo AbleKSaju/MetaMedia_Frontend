@@ -19,7 +19,8 @@ import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePos
 import NewSignUp from "../pages/user/NewSignUp";
 import NewLogin from "../pages/user/newLogin";
 
-const UserRouter = () => {
+const 
+UserRouter = () => {
   const isSinglePostModal = useSelector((state: any) => state.persisted.singlePost.isSinglePostModal);
   const dispach=useDispatch()
   const [render,setRender]:any=useState(false)

@@ -4,6 +4,7 @@ import {
   AddProfile_Api,
   ChooseInterest_Api,
   EditProfile_Api,
+  FollowUser_Api,
   GetUserData_Api,
   GetUsersData_Api,
   getUsersByName_Api,
@@ -80,9 +81,18 @@ export const getUserByIdFuntion = async (data: any) => {
     return error;
   }
 };
+
 export const GetUsersDataByIdFunction = async (data: any) => {
   try {
     return axios.create({ withCredentials: true }).post(GetUsersData_Api, data);
+  } catch (error) {
+    console.log(error,"err");
+  }
+};
+
+export const followUserFunction = async (data: any) => {
+  try {
+    return axios.create({ withCredentials: true }).post(FollowUser_Api, data);
   } catch (error) {
     console.log(error,"err");
   }

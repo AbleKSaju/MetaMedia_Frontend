@@ -16,11 +16,6 @@ export const CHAT_URL = 'http://localhost:3005/api/chat';
 export const ADMIN_URL = 'http://localhost:3006/api/admin'; 
 
 
-
-
-
-
-
 export const axiosPrivet = axios.create({
     baseURL:AUTH_URL,
     headers: {'Content-Type' : 'application/json'},

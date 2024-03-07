@@ -130,7 +130,7 @@ const HighlightSliderComponent = ({
       </div>
       <Link to={`/profile/${userData?.userId}`}>
         <img
-          className={`w-10 absolute h-10 top-5 left-2 border-2 border-teal-900 rounded-full  text-black  `}
+          className={`w-10 absolute h-10 top-5 left-2 border-2 border-black rounded-full  text-black  `}
           src={
             userData.profile?.startsWith("https://graph.facebook.com/")
               ? `${userData.profile}`
@@ -184,13 +184,13 @@ const HighlightSliderComponent = ({
             key={index}
             src={`http://localhost:3003/story/${highlight}`}
             alt=""
-            className={`w-full h-full border-2 rounded-lg border-teal-800 ${
+            className={`w-full h-full border-2 rounded-lg border-black ${
               index === currentIndex ? "" : "hidden"
             }`}
           />
           <div className="absolute -bottom-8 font-medium shadow-black cursor-pointer">
             <p
-              className={`text-teal-900  ${
+              className={`text-white  ${
                 index === currentIndex ? "" : "hidden"
               }`}
             >

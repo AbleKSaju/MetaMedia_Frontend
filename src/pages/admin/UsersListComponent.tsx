@@ -3,6 +3,7 @@ import { getAllUsersFunction } from "../../utils/api/methods/UserService/get";
 import { getAllUsersDataFunction } from "../../utils/api/methods/UserService/get";
 import { toast } from "sonner";
 import profile from "../../assets/profile.webp";
+import { ChangeUserStatusFunction } from "../../utils/api/methods/AdminService/post";
 
 const UsersListComponent = () => {
   const [users, setUsers] = useState<any>([]);
@@ -40,6 +41,15 @@ const UsersListComponent = () => {
       }
     })();
   }, [searchUser]);
+
+  const ChangeUserStatus = async (userId:any)=>{
+    console.log(userId,"stats");
+    const response = await ChangeUserStatusFunction(userId)
+    console.log(response,"");
+    
+    
+
+  }
 
   return (
     <section className="container mx-auto p-6 pt-0 mt-10 font-mono overflow-auto scrollbar-hide">
@@ -136,6 +146,7 @@ const UsersListComponent = () => {
                         className={`px-4 py-3 text-md border ${
                           data?.blocked ? "text-green-700" : "text-red-700"
                         }`}
+                        onClick={()=>ChangeUserStatus(data?.id)}
                       >
                         {data?.blocked ? "Unblock" : "Block"}
                       </td>

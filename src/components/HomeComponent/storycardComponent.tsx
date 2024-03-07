@@ -1,4 +1,3 @@
-import { MouseEventHandler, useState } from "react";
 import useMediaQuery from "../../utils/costumHook/mediaqueri";
 import { useSelector } from "react-redux";
 import profile from '../../assets/profile.webp'

@@ -15,7 +15,6 @@ const storySlice = createSlice({
     initialState,
     reducers: {
         addStory: (state, action: PayloadAction<any>) => {
-            console.log(action.payload, "PAYLOAD from storyData");
             state.storyData=[]
             state.storyData.push(action.payload);
         },
@@ -27,7 +26,6 @@ const storySlice = createSlice({
             state.storyData=[]
         },
         addOtherUserStories: (state, action: PayloadAction<any>)=>{
-            console.log(action.payload, "PAYLOAD from addOtherUserStories");
             state.otherUsersStoryData=[]
             state.otherUsersStoryData.push(action.payload);
 

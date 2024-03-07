@@ -12,10 +12,12 @@ export const ForgotPassword_Api=`${AUTH_URL}/forgotPassword`
 export const ChangePassword_Api=`${AUTH_URL}/changePassword`
 export const RefreshToken_Api=`${AUTH_URL}/refresh`
 
+
 // USER SERVICE
 
 export const GetUserData_Api=`${USER_URL}/getUserData`
 export const GetUsersData_Api=`${USER_URL}/getUsersDataById`
+export const FollowUser_Api=`${USER_URL}/followUser`
 export const ChooseInterest_Api=`${USER_URL}/chooseInterest`
 export const AddProfile_Api=`${USER_URL}/addProfile`
 export const EditProfile_Api=`${USER_URL}/editProfile`
@@ -25,6 +27,7 @@ export const getUsersByName_Api=`${USER_URL}/getUsersByname`
 export const getuserById_Api=`${USER_URL}/getUserById`
 export const GetAllUsersData_Api=`${USER_URL}/getAllUsers`
 export const GetSearchUserData_Api=`${USER_URL}/getSearchUser`
+export const ChangeUserStatus_Api=`${USER_URL}/changeUserStatus`
 
 // STORY SERVICE
 

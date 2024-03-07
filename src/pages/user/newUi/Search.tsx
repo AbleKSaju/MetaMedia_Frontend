@@ -2,7 +2,12 @@ import axios from "axios";
 import { Search, XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { GetSearchUserDataFunction } from "../../../utils/api/methods/UserService/get";
-import SearchUserShimmer from "../../../pages/shimmer/searchUserShimmer";
+import SearchUserShimmer from "../../../pages/shimmer/SearchUserShimmer";
+import { Link } from "react-router-dom";
+import { followUserFunction, getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
+import { useDispatch, useSelector } from "react-redux";
+import { editUser } from "../../../utils/ReduxStore/Slice/userSlice";
+import { toast } from "sonner";
 
 const SearchComponent = ({ setOpenSearch }: any) => {
   const [searchUser, setSearchUser] = useState("");
@@ -10,6 +15,10 @@ const SearchComponent = ({ setOpenSearch }: any) => {
   const [searchedUsers, setsearchedUsers] = useState<any>([]);
   const [noUserFound, setNoUserFound] = useState(false);
   const wrapperRef: any = useRef(null);
+
+  const dispatch = useDispatch()
+
+  const userData = useSelector((state:any)=>state.persisted.user.userData)
 
   const handleClickOutside = (event: any) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -31,7 +40,7 @@ const SearchComponent = ({ setOpenSearch }: any) => {
         console.log("MAKING REQUEST with", searchUser);
         const response = await GetSearchUserDataFunction(searchUser);
         if (response.status) {
-          setsearchedUsers(response.data);
+          setsearchedUsers(response?.data);
         } else {
           setNoUserFound(true);
         }
@@ -40,6 +49,29 @@ const SearchComponent = ({ setOpenSearch }: any) => {
       return () => clearTimeout(getData);
     }
   }, [searchUser]);
+
+  const FollowUser = async (id: string) => {
+    const data = {
+      currentUserId: userData.userId,
+      followedUserId: id,
+    };
+    const response: any = await followUserFunction(data);    
+    if (response.data.status) {
+      toast.success(response.data.message);
+      try {
+        const response = await getUserByIdFuntion(userData.userId);
+        if (response?.status) {
+          dispatch(editUser(response.data.socialConections));
+        } else {
+          throw new Error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }else{
+      toast.error(response.data.message);
+    }
+  };
 
   return (
     <>
@@ -93,16 +125,18 @@ const SearchComponent = ({ setOpenSearch }: any) => {
                         alt=""
                       />
                     </div>
-                    <div className="h-full w-6/12 flex justify-center flex-col  ">
+                    <Link to={`/profile/${data.id}`} className="h-full w-6/12 flex justify-center flex-col  "
+                      onClick={()=>setOpenSearch(false)}>
                       <p className="font-semibold text-gray-500 text-md">
                         {data?.userName}
                       </p>
                       <p className="text-gray-400 text-sm pl-1">
                         {data?.fullName}
                       </p>
-                    </div>
+                    </Link>
                     <div className="w-3/12 flex justify-center items-center">
-                      <button className="w-16 h-6 border border-[#C1506D] rounded-full flex justify-center items-center font-semibold text-[13px] text-[#C1506D] ">
+                      <button className="w-16 h-6 border border-[#C1506D] rounded-full flex justify-center items-center font-semibold text-[13px] text-[#C1506D] "
+                      onClick={()=>FollowUser(data?.id)}>
                         Follow
                       </button>
                     </div>
