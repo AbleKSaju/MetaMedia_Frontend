@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import MainBody from "../../components/HomeComponent/MainBodyComponent";
-import Main from "../../pages/user/newUi/Main"
+import Main from "./newUi/Main"
 import Search from "../../components/HomeComponent/SearchComponent";
 import Message from "../../components/HomeComponent/MessageComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
@@ -17,7 +17,8 @@ import { getStoriesFunction } from "../../utils/api/methods";
 import MainModalBorderPost from "../../components/HomeComponent/PostComponent/Modal/mainModalBorderPost";
 import NewSideBar from "./newUi/Sidebar";
 import Suggetions from "./newUi/Suggetions";
-
+import CreateLive from "../../components/HomeComponent/liveComponent/CreateLive";
+import Golive from "../../components/HomeComponent/liveComponent/goLive";
 
 
 export interface SetSidebarOpenFunction {
@@ -29,7 +30,9 @@ const Home = ({ render,setRender}:any) => {
   const [deleteStory, setDeleteStory] = useState<boolean>(false);
   const [showStory,setShowStory] = useState("")
   const [isAddPost,setIsAddPost] = useState(false)
+  const [isAddLive,setIsAddLive]=useState(false)
   const [addPost,setAddPost] = useState(false)
+  const [isgoLive,setIsGoLive]=useState(false)
   const dispatch = useDispatch()
   const location = useLocation();
 
@@ -51,13 +54,17 @@ const Home = ({ render,setRender}:any) => {
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
+ {isAddLive &&  (<CreateLive setIsAddLive={setIsAddLive} setIsGoLive={setIsGoLive}/>)}
+ {isgoLive &&  (<Golive />)}
+
  <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
     <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
         <NewSideBar />
  {/* <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/> */}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
+         
             <Routes>
-                  <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost}/>} />
+                  <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/message/*" element={<Message setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />

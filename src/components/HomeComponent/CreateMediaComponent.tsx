@@ -1,7 +1,8 @@
 import { Film, Image, MoreVertical, Radio } from 'lucide-react'
 import React, { useState } from 'react'
+import { toast } from 'sonner';
 
-const CreateMediaComponent = ({setAddStory,setIsAddPost}:any) => {
+const CreateMediaComponent = ({setAddStory,setIsAddPost,setIsAddLive}:any) => {
   const [currentMedia, setCurrentMedia] = useState<any>("");
 
   const setMedia=(media:string)=>{
@@ -10,11 +11,14 @@ const CreateMediaComponent = ({setAddStory,setIsAddPost}:any) => {
       setAddStory(true)
     }else if(media=="Post"){
       setIsAddPost(true)
+    }else if( media=='Live'){
+     
+      setIsAddLive(true)
     }
   }
   return (
     <>
-    <div className="bg-white rounded-md w-full h-[290px] sm:h-[390px]  flex justify-between flex-col">
+    <div className="bg-white rounded-md w-full h-[290px] sm:h-[290px]  flex justify-between flex-col">
             {/* sepration 1  */}
             <div className="w-full h-[130px]  flex justify-between  ">
               <div className="w-full h-[110px]  flex items-center pl-5 gap-2 ">

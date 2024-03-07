@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Sidebar from "../../components/HomeComponent/SidebarComponent";
-import Footer from "../../components/HomeComponent/FooterComponent";
+import Sidebar from "./SidebarComponent";
+import Footer from "./FooterComponent";
 import { useLocation } from 'react-router-dom';
 
 

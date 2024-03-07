@@ -4,11 +4,14 @@ import { X } from "lucide-react";
 import {
   addImage,
   clearImages,
+  addVideo,
+  clearVideos
 } from "../../../../utils/ReduxStore/Slice/postSlice";
 import { useDispatch } from "react-redux";
 const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
   const [CamaraOn, setCamaraOn] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
+ 
   const dispatch = useDispatch();
   const openGallery = () => {
     const fileInput = document.getElementById("fileInput");
@@ -20,10 +23,11 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
   };
   const getImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
-    const files = e.target.files;
+    const files:any = e.target.files;
 
     if (files) {
       dispatch(clearImages());
+      dispatch(clearVideos())
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
@@ -43,8 +47,12 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
         }
         // Check if the file is a video
         else if (file.type.startsWith("video/")) {
-          // Dispatch addVideo action for videos if needed
-          // dispatch(addVideo(file));
+          
+          console.log(file,'THIS SIS VEDIO FILE');
+          
+dispatch(addVideo(file))
+
+
         } else {
           // Handle invalid file types
           console.error("Invalid file type:", file.type);
