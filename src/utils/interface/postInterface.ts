@@ -7,12 +7,12 @@ export interface PostData {
     likes:any,
     comments:any,
     shareCount:number,
-    images:any,
+    media:any,
     tags:any,
     location:{ },
     reports:any,
     postCropSize:any,
-    postType:'image',
+    postType:string,
     showComment:boolean,
     showLikes:boolean
 

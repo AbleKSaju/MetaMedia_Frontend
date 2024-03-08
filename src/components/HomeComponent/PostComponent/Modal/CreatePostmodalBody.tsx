@@ -44,15 +44,16 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
           };
 
           reader.readAsDataURL(file);
+          setPostState(2);
         }
         // Check if the file is a video
         else if (file.type.startsWith("video/")) {
           
           console.log(file,'THIS SIS VEDIO FILE');
-          
+      
 dispatch(addVideo(file))
 
-
+setPostState(4)
         } else {
           // Handle invalid file types
           console.error("Invalid file type:", file.type);
@@ -62,7 +63,7 @@ dispatch(addVideo(file))
         formData.append("files[]", file);
       }
 
-      setPostState(2);
+     
     }
   };
 

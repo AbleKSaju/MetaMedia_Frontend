@@ -225,11 +225,32 @@ const SinglePostModal = ({ render, setRender }: any) => {
                       <ChevronLeft size={20} />
                     </button>
                   </div>
-                  <img
+                  {singlePost.postType =='image'&&(<>
+              <img
+              className="object-contain opacity-100 w-full h-full"
+              src={`http://localhost:3002/img/${images[imageIndex]}`}
+              alt=""
+            />
+            </>) }
+            {singlePost.postType =='video'&& (<>
+              <video
+    className="border border-amber-10 w-full h-full object-contain"
+    controls 
+   
+>
+    <source
+        src={`http://localhost:3002/img/${singlePost.mediaUrl[0]}`} // Provide the source URL of the video
+        type="video/mp4" // Set the type of the video file (replace 'mp4' with the actual video format)
+    />
+   
+</video>
+            </>)}
+
+                  {/* <img
                     className="object-contain opacity-100 w-full h-full"
                     src={`http://localhost:3002/img/${images[imageIndex]}`}
                     alt=""
-                  />
+                  /> */}
 
                   <div className="flex justify-end " onClick={imageRightClick}>
                     <button className="absolute text-black w-6 rounded-full h-6 bg-white p-0.5 bg-opacity-50">
