@@ -1,27 +1,50 @@
 import {Radio,ChevronDown,X} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {addLiveName,addLiveUser,clearLiveName,clearLiveUsers} from '../../../utils/ReduxStore/Slice/liveSlice'
+import {addLiveName,addLiveUser,clearLiveName,clearLiveUsers,clearLiveId,setLiveId} from '../../../utils/ReduxStore/Slice/liveSlice'
 import { useDispatch, useSelector } from 'react-redux'
-const CreateLive =({setIsAddLive,setIsGoLive}:any)=>{
+import { useNavigate } from 'react-router-dom'
+const CreateLive = ({setIsAddLive,setIsGoLive}:any)=>{
     const user = useSelector((state: any) => state.persisted.user.userData);
    
+    console.log(user,'this is users');
+    
     
     const [isAudience,setIsAudience]=useState(false)
     const [selectedAudience,setSelecedAudeince]=useState('')
     const [liveTitle,setlivetitle]:any=useState('')
     const [isNext,setIsnext]=useState(false)
     const dispatch=useDispatch()
+const navigate=useNavigate()
 
+    function generateRandomID(len:number) {
+        let result = '';
+        const chars = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const maxPos = chars.length;
+        len = len || 5;
+      
+        for (let i = 0; i < len; i++) {
+          result += chars.charAt(Math.floor(Math.random() * maxPos));
+        }
+      
+        return result;
+      }
     const handleLiveNext=()=>{
-        setIsAddLive(false)
-        setIsGoLive(true)
+        
+        const id:any=generateRandomID(10)
         dispatch(clearLiveName())
         dispatch(addLiveName(liveTitle))
         dispatch(clearLiveUsers())
-        dispatch(addLiveUser(user.userName))
+        const host:any={
+            hostId:user.userId
+        }
+        dispatch(addLiveUser(host))
+        dispatch(clearLiveId())
+        dispatch(setLiveId(id))
 
-        toast.success('sucesss')
+        setIsAddLive(false)
+        navigate(`room/${id}`)
+        
     }
 
     useEffect(()=>{
@@ -55,7 +78,7 @@ const CreateLive =({setIsAddLive,setIsGoLive}:any)=>{
 
 {/* main div  */}
 <div className="fixed  z-10  w-screen h-screen bg-black bg-opacity-45  flex flex-col  items-center p-5">
-<div className='w-full h-10  flex justify-end items-center p-6'><X color='white' onClick={handleX}/></div>
+<div className='w-full h-10  flex justify-end items-center p-6  '><X color='white' onClick={handleX}/></div>
 
 
 {/* constent div  */}

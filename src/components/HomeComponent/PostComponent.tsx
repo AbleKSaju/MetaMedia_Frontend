@@ -50,12 +50,37 @@ const Post: React.FC<SetSidebarOpenFunction> = ({ setSidebarOpen }) => {
             {posts &&
               posts.length > 0 &&
               posts?.map((item: any) => (
-                <div className="w-72  h-hull" onClick={()=>handlePostClick(item)}>
-                  <img
+                <div className="w-72  h-72" onClick={()=>handlePostClick(item)}>
+
+{item.postType =='image'&&(<>
+              <img
+              className="w-full h-full object-cover "
+              src={`http://localhost:3002/img/${item.mediaUrl[0]}`}
+              alt=""
+            />
+            </>) }
+            {item.postType =='video'&& (<>
+              <video
+    className="border border-amber-10 w-full h-full object-cover"
+    autoPlay 
+   muted
+   loop
+>
+    <source
+        src={`http://localhost:3002/img/${item.mediaUrl[0]}`} // Provide the source URL of the video
+        type="video/mp4" // Set the type of the video file (replace 'mp4' with the actual video format)
+    />
+   
+</video>
+            </>)}
+
+
+
+                  {/* <img
                     src={`http://localhost:3002/img/${item.mediaUrl[0]}`}
                     className="w-full h-full object-cover"
                     alt=""
-                  />
+                  /> */}
                 </div>
               ))}
             

@@ -48,11 +48,13 @@ const SinglePostModal = ({ render, setRender }: any) => {
     singlePost.createdAt
   );
   const [dotModal, setDotModal] = useState(false);
+  const [isMyComment,setisMyComment]=useState(false)
   const [images, setImages] = useState(singlePost.mediaUrl);
   const [postUser, setPostUser] = useState(postUserData);
   const [liked, setLiked] = useState(false);
   const [text, setText] = useState("");
   const [isReportModal, setIsReportModal] = useState(false);
+  const [openCommentOptionsId, setOpenCommentOptionsId] = useState(null);
   const imageRightClick = () => {
     setImageIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -178,6 +180,12 @@ const SinglePostModal = ({ render, setRender }: any) => {
     setCommentId(item._id);
     setText(`@${item.userName}:`);
   };
+
+  const handleCommentOptionsClick = (commentId:any) => {
+    setisMyComment(!isMyComment)
+    setOpenCommentOptionsId(commentId);
+  };
+  
 
   return (
     <>
@@ -353,24 +361,23 @@ const SinglePostModal = ({ render, setRender }: any) => {
                           {timeAgo.format(new Date(postCretedDate))}
                         </p>
                         <div className="font-medium text-sm text-gray-700">
-                          Replay
+                         
                         </div>
                         <div>
-                          <MoreHorizontal className="w-5 " />
+                         
                         </div>
                       </div>
                     </div>
                     <div className="h-full w-1/6 flex justify-center items-start p-1 pt-2">
-                      <Heart className="w-4" />
+                     
                     </div>
                   </div>
                   {/* one comment end */}
                   {singlePost?.comments?.length > 0 ? (
                     <>
                       {singlePost.comments.map((item: any) => {
-                        {
-                          /* one comment  */
-                        }
+                        console.log(item,'J___________________');
+                        
                         return (
                           <>
                             <div
@@ -401,19 +408,41 @@ const SinglePostModal = ({ render, setRender }: any) => {
                                   >
                                     Replay
                                   </div>
+                                  
                                   <div>
-                                    <MoreHorizontal className="w-5 " />
+                                    {item.userId == userData.userId && (
+                                    
+                                
+                                  <MoreHorizontal className="w-5" onClick={() => handleCommentOptionsClick(item._id)} />
+                                 
+                                  )}
+                                  {openCommentOptionsId === item._id && isMyComment && (
+            <>
+              <div className="fixed w-24 h-20 flex flex-col justify-between rounded-md bg-white border   ">
+                <div className="w-full h-full flex justify-center items-center text-sm border-b">Edit</div>
+                <div className="w-full h-full flex justify-center items-center text-sm border-b">Delete</div>
+              </div>
+            </>
+          )}
+                                   
                                   </div>
+                                  
                                 </div>
+                               
                                 {item.replay.length > 0 && (
                                   <>
                                     {item.replay.map((item: any) => {
                                       return (
                                         <>
-                                          <div className="flex flex-col  ">
-                                            <div className=" h-7  ml-5  ">
-                                              {" "}
-                                              {item.content}
+                                          <div className="flex flex-col  mt-2 ">
+                                            <div className=" h-10  ml-5 w-8/12   flex justify-between border p-2 rounded-md">
+                                              <div className="w-5/12 flex justify-start items-center">
+                                                <img src="https://i.pinimg.com/736x/ae/ea/57/aeea57bf10e83de82769db03e9210a17.jpg" className="w-8 h-8 object-cover rounded-full border " alt="" />
+                                              </div>
+                                              <div className="w-full flex justify-start items-center flex-wrap overflow-y-auto text-sm">
+                                                {item.content}
+                                              </div>
+                                              <div className="border flex justify-center items-center text-sm p-2 rounded-md border-[#]">delete</div>
                                             </div>
                                           </div>
                                         </>
@@ -421,9 +450,10 @@ const SinglePostModal = ({ render, setRender }: any) => {
                                     })}
                                   </>
                                 )}
+                                
                               </div>
                               <div className="h-full w-1/6 flex justify-center items-start p-1 pt-2">
-                                <Heart className="w-4" />
+                                
                               </div>
                             </div>
                             {/* one comment end */}

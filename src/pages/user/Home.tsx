@@ -55,14 +55,14 @@ const Home = ({ render,setRender}:any) => {
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
  {isAddLive &&  (<CreateLive setIsAddLive={setIsAddLive} setIsGoLive={setIsGoLive}/>)}
- {isgoLive &&  (<Golive />)}
+ 
 
  <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
     <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
         <NewSideBar />
  {/* <AsideComponent sidebarOpen={sidebarOpen} setAddStory={setAddStories}  setIsAddPost={setIsAddPost} isAddPost={isAddPost}/> */}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
-         
+          {isgoLive &&  (<Golive />)}
             <Routes>
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
@@ -71,6 +71,7 @@ const Home = ({ render,setRender}:any) => {
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/settings/*" element={<Settings setSidebarOpen={setSidebarOpen} />} />
+                  <Route path="/room/:roomId" element={<Golive  />}/>
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

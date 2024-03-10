@@ -4,7 +4,8 @@ const liveSlice = createSlice({
     name: 'live',
     initialState: {
        liveName:'',
-       liveUser:[]
+       liveUser:[],
+       liveId:  ''
     },
     reducers: {
         addLiveName: (state:any, action:any):any => {
@@ -20,11 +21,19 @@ const liveSlice = createSlice({
         },
         clearLiveUsers:(state:any)=>{
             state.liveUser=[]
+        },
+        setLiveId:(state:any, action:any):any => {
+            if (action.payload) {
+                state.liveId=action.payload
+            }
+        },
+        clearLiveId:(state:any)=>{
+           state.liveId=''
         }
         
 
     }
 });
 
-export const { addLiveName, clearLiveName, addLiveUser, clearLiveUsers} = liveSlice.actions;
+export const { addLiveName, clearLiveName, addLiveUser, clearLiveUsers,setLiveId,clearLiveId} = liveSlice.actions;
 export default liveSlice.reducer;
