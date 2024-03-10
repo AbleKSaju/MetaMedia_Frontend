@@ -474,7 +474,7 @@ if(responce.status){
                            
                           </div>
                           {isDotOpen && visibleCommentOptions === item._id && (
-                    <div className="w-16 h-10 bg-white border flex justify-between items-center flex-col mt-5">
+                    <div className="fixed w-16 h-10 bg-white border flex justify-between items-center flex-col mt-5 ml-48 rounded-md">
                       <div className="w-full h-5 flex justify-center items-center text-sm border-b" onClick={()=>handleComentEdit(item)} >edit</div>
                       <div className="w-full h-5 flex justify-center items-center text-sm" onClick={()=>handleDeleteComment(item)}>delete</div>
                     </div>
@@ -487,9 +487,17 @@ if(responce.status){
                               }
                                 return (
                                     <>
-                                   <div className="flex flex-col h-16 border  ">
-                                   <div className=" h-7  ml-5  "> {item.content}</div>
-                                   </div>
+                                   <div className="flex flex-col  mt-2 ">
+                                            <div className=" h-10  ml-5 w-8/12   flex justify-between border p-2 rounded-md">
+                                              <div className="w-5/12 flex justify-start items-center">
+                                                <img src="https://i.pinimg.com/736x/ae/ea/57/aeea57bf10e83de82769db03e9210a17.jpg" className="w-8 h-8 object-cover rounded-full border " alt="" />
+                                              </div>
+                                              <div className="w-full flex justify-start items-center flex-wrap overflow-y-auto text-sm">
+                                                {item.content}
+                                              </div>
+                                              <div className="border flex justify-center items-center text-sm p-2 rounded-md border-[#]">delete</div>
+                                            </div>
+                                          </div>
                                     </>
                                 )
                             })}
