@@ -1,21 +1,25 @@
 import { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { useNavigate, useParams } from "react-router-dom";
+import { ZegoUIKitPrebuilt, ZegoUser } from '@zegocloud/zego-uikit-prebuilt';
 import { useSelector } from "react-redux";
+import { X } from "lucide-react";
+import { toast } from "sonner";
 
 const Golive = () => {
 
     const { roomId }:any = useParams();
 
-const userData = useSelector((state: any) => state.persisted.user.userData);
+const userData:any = useSelector((state: any) => state.persisted.user.userData);
 const live = useSelector((state: any) => state.persisted.live);
 
 const hostRef = useRef(null);
-
+const navigate=useNavigate()
 
 console.log(live,'THIS IS LIVEEEEE');
 
-
+const hanldeUser=(user:any)=>{
+ toast.success(user +" "+ "Joined")
+}
 useEffect(() => {
   const initializeHost = async () => {
     const appID = 1878520769;
@@ -25,7 +29,7 @@ useEffect(() => {
       serverSecret,
       roomId,
       Date.now().toString(),
-      'rashik muhammed'
+     `${userData.userName}`
     );
 
     let role = ZegoUIKitPrebuilt.Audience
@@ -68,22 +72,33 @@ useEffect(() => {
             role
         }
       },
-      sharedLinks
+      sharedLinks,
+      onLeaveRoom: handleBack,
+      onUserJoin: (users: ZegoUser[]) => {()=>hanldeUser(users)} 
       
     });
+
+    
   };
 
   initializeHost(); // Initialize the host when component mounts
-  
+   
+ 
 }, [roomId]);
 
+const handleBack=()=>{
+  navigate('/')
+}
 
     return (
+      <>
+      <div className="fixed z-30 w-full  h-10 flex justify-end items-center p-5 "><X color="white" onClick={handleBack}/></div>
         <div className='w-screen h-screen fixed bg-black bg-opacity-65 z-20 flex flex-col'>
            
            <div ref={hostRef} style={{ width: '100vw', height: '100vh' }}></div>
       
         </div>
+      </>
     );
 };
 
