@@ -6,13 +6,14 @@ import {
   Clapperboard,
   Bell,
   ListCollapse,
+  Users,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { LogoutFunction } from "../../../utils/api/methods";
-import { clearToken } from "../../../utils/ReduxStore/Slice/tokenSlice";
+import { LogoutFunction } from "../../utils/api/methods";
+import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { toast } from "sonner";
-import { persistor } from "../../../utils/ReduxStore/Store/Store";
+import { persistor } from "../../utils/ReduxStore/Store/Store";
 const NewSideBar = () => {
   const location = useLocation();
   const Navigate = useNavigate();
@@ -59,15 +60,15 @@ const NewSideBar = () => {
         <div className="bg-white h-full w-full flex sm:flex-col justify-center ">
           {/* home  */}
           <Link
-            to="/"
+            to="/admin"
             className="h-full w-full flex justify-center items-center"
           >
             <div
               className={`bg-[#FADBE1] w-10 h-10   ${
-                location.pathname === "/" ? "w-14 h-14" : "w-12 h-12"
+                location.pathname === "/admin" ? "w-14 h-14" : "w-12 h-12"
               } rounded-full flex justify-center items-center`}
             >
-              {location.pathname === "/" ? (
+              {location.pathname === "/admin" ? (
                 <div className="rounded-full w-5/6 h-5/6 sm:w-[45px] sm:h-[45px] flex justify-center items-center bg-[#C1506D]">
                   <Home className="text-white size-6 sm:size-7" />
                 </div>
@@ -79,35 +80,35 @@ const NewSideBar = () => {
           {/* home  */}
           {/* search */}
           <Link
-            to="/search"
+            to="/admin/users"
             className="h-full w-full flex justify-center items-center"
           >
             <div
               className={`bg-[#FADBE1] w-10 h-10 ${
-                location.pathname === "/search" ? "w-14 h-14" : "w-12 h-12"
+                location.pathname === "/admin/users" ? "w-14 h-14" : "w-12 h-12"
               } rounded-full flex justify-center items-center`}
             >
-              {location.pathname === "/search" ? (
+              {location.pathname === "/admin/users" ? (
                 <div className="rounded-full w-5/6 h-5/6 flex justify-center items-center bg-[#C1506D]">
-                  <Search className="text-white size-6 sm:size-6" />
+                  <Users className="text-white size-6 sm:size-6" />
                 </div>
               ) : (
-                <Search className="text-gray-600 size-6 sm:size-7" />
+                <Users className="text-gray-600 size-6 sm:size-7" />
               )}
             </div>
           </Link>
           {/* search */}
           {/* post  */}
           <Link
-            to="/post"
+            to="/admin/posts"
             className=" h-full w-full flex justify-center  items-center"
           >
             <div
               className={`bg-[#FADBE1] w-10 h-10 ${
-                location.pathname === "/post" ? "w-14 h-14" : "w-12 h-12"
+                location.pathname === "/admin/posts" ? "w-14 h-14" : "w-12 h-12"
               } rounded-full flex justify-center items-center`}
             >
-              {location.pathname === "/post" ? (
+              {location.pathname === "/admin/posts" ? (
                 <>
                   <div className="rounded-full w-5/6 h-5/6 flex justify-center items-center bg-[#C1506D]">
                     <Clapperboard className="text-white size-6 sm:size-6 " />{" "}
@@ -171,24 +172,8 @@ const NewSideBar = () => {
               )}
             </div>
           </Link>
-
           {/* notifiactoin  */}
-          {/* profile  */}
-          <Link
-            to={`/profile/${userData?.userId}`}
-            className=" h-full w-full sm:flex justify-center  items-center"
-          >
-            <div className="bg-[#FADBE1] w-10 h-10 rounded-full flex justify-center items-center ">
-              <div className="rounded-full w-5/6 h-5/6 sm:w-[45px] sm:h-[45px] flex justify-center items-center">
-                <img
-                  src="https://i.pinimg.com/564x/66/af/ad/66afadeda60eb0192a850b46bc75f78a.jpg"
-                  className="rounded-full border-2 border-[#C1506D] object-cover"
-                  alt=""
-                />
-              </div>
-            </div>
-          </Link>
-          {/* profile  */}
+
         </div>
         {/* sidebar content main part  */}
         {/* sidebar content setting part  */}

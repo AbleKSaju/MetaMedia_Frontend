@@ -6,7 +6,8 @@ import {
   clearImages,
   addImage,
   setAspectRatio,
-  clearAspectRatio} from "../../../../utils/ReduxStore/Slice/postSlice"
+  clearAspectRatio,
+} from "../../../../utils/ReduxStore/Slice/postSlice";
 import { AdvancedImage } from "@cloudinary/react";
 
 import { scale } from "@cloudinary/url-gen/actions/resize";
@@ -26,9 +27,9 @@ const CropImageBody = ({ setPostState }: any) => {
   const [imglength, setImageLength] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [croppedImages, setCroppedImages]: any = useState([]); // Store cropped images here
-  const [croppedImage, setCroppedImage] = useState('');
-  const [isfinish,setIsfinish]=useState(false)
-  
+  const [croppedImage, setCroppedImage] = useState("");
+  const [isfinish, setIsfinish] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,15 +52,10 @@ const CropImageBody = ({ setPostState }: any) => {
   };
   //change the aspect ratio
   const changeSize = (size: any) => {
-    dispatch(clearAspectRatio())
-    dispatch(setAspectRatio(aspect))
+    dispatch(clearAspectRatio());
+    dispatch(setAspectRatio(aspect));
     setAspect(size);
   };
-
-
-
-
-
 
   //crop the image
   const handleCropComplete = async (
@@ -67,22 +63,19 @@ const CropImageBody = ({ setPostState }: any) => {
     croppedAreaPixels: { x: number; y: number; width: number; height: number }
   ) => {
     try {
-        console.log("HHHH",croppedAreaPixels,"LLLL",croppedArea);
-        
-        const croppedImag = await getCroppedImage(
-            selectedImageSrc,
-            croppedArea,
-            croppedAreaPixels
-          );
+      console.log("HHHH", croppedAreaPixels, "LLLL", croppedArea);
 
+      const croppedImag = await getCroppedImage(
+        selectedImageSrc,
+        croppedArea,
+        croppedAreaPixels
+      );
 
-
-         await setCroppedImage(croppedImag);
-        console.log("saved",croppedImage);
-    } catch (error:any) {
-        toast.error(error)
+      await setCroppedImage(croppedImag);
+      console.log("saved", croppedImage);
+    } catch (error: any) {
+      toast.error(error);
     }
-   
   };
 
   const getCroppedImage = (
@@ -95,15 +88,14 @@ const CropImageBody = ({ setPostState }: any) => {
       const image = new Image();
       image.src = imageSrc;
       image.onload = () => {
-        const ctx:any = canvas.getContext("2d");
-        
+        const ctx: any = canvas.getContext("2d");
+
         // Set canvas size based on cropped area dimensions
         const scaleX = image.naturalWidth / image.width;
         const scaleY = image.naturalHeight / image.height;
         canvas.width = croppedAreaPixels.width;
         canvas.height = croppedAreaPixels.height;
-       
-        
+
         // Draw the cropped image onto the canvas
         ctx?.drawImage(
           image,
@@ -116,12 +108,11 @@ const CropImageBody = ({ setPostState }: any) => {
           croppedAreaPixels.width,
           croppedAreaPixels.height
         );
-  
+
         // Convert the cropped image to base64 format
-        const croppedImageBase64:any = canvas.toDataURL("image/jpeg"); // Change 'image/jpeg' to 'image/png' if needed
-       
+        const croppedImageBase64: any = canvas.toDataURL("image/jpeg"); // Change 'image/jpeg' to 'image/png' if needed
+
         resolve(croppedImageBase64);
-    
       };
       image.onerror = (error) => reject(error);
     });
@@ -141,20 +132,20 @@ const CropImageBody = ({ setPostState }: any) => {
     console.log("Cropped Images:", croppedImages);
   }, [croppedImages]);
 
-  useEffect(()=>{
-    if(isfinish){
-        dispatch(clearImages())
-        dispatch(addImage(croppedImages))
-        dispatch(clearAspectRatio())
-        dispatch(setAspectRatio(aspect))
-        setPostState(3)
+  useEffect(() => {
+    if (isfinish) {
+      dispatch(clearImages());
+      dispatch(addImage(croppedImages));
+      dispatch(clearAspectRatio());
+      dispatch(setAspectRatio(aspect));
+      setPostState(3);
     }
-  },[croppedImages,isfinish])
+  }, [croppedImages, isfinish]);
   // Function to switch to next image
   const switchToNextImage = async () => {
     if (selectedImageIndex < imglength - 1) {
       await setCroppedImages([...croppedImages, croppedImage]);
-      setCroppedImage('');
+      setCroppedImage("");
       setSelectedImageIndex(selectedImageIndex + 1);
       setSelectedImageSrc(post.images[selectedImageIndex + 1]); // Update selected image source
       setCrop({ x: 0, y: 0 }); // Reset crop for the new image
@@ -174,19 +165,15 @@ const CropImageBody = ({ setPostState }: any) => {
   };
 
   // Function to handle proceeding to next step
-  const handleNextStep = async() => {
-  console.log('Hello',croppedImages);
+  const handleNextStep = async () => {
+    console.log("Hello", croppedImages);
 
-    await  setCroppedImages([...croppedImages, croppedImage]);
+    await setCroppedImages([...croppedImages, croppedImage]);
 
-    await setIsfinish(true)
+    await setIsfinish(true);
 
-   
-  console.log('HELLO---',croppedImages);
- 
+    console.log("HELLO---", croppedImages);
   };
-
-  
 
   return (
     <>
@@ -201,16 +188,23 @@ const CropImageBody = ({ setPostState }: any) => {
                 Crop
               </p>
               {selectedImageIndex === imglength - 1 ? (
-  <p className="text-teal-800 font-bold text-md" onClick={handleNextStep}>Next</p>
-) : (  <>
-<p></p>
-</>)}
+                <p
+                  className="text-teal-800 font-bold text-md"
+                  onClick={handleNextStep}
+                >
+                  Next
+                </p>
+              ) : (
+                <>
+                  <p></p>
+                </>
+              )}
             </div>
           </div>
 
-          <div className="w-full h-full   ">
-            <div className="flex justify-center w-full h-[650px] flex-col ">
-              <div className="w-full h-full flex justify-center   ">
+          <div className="w-full h-full ">
+            <div className="flex justify-center w-full h-[600px] flex-col ">
+              <div className="w-full h-[90%] flex justify-center">
                 <Cropper
                   image={selectedImageSrc}
                   crop={crop}
@@ -241,13 +235,20 @@ const CropImageBody = ({ setPostState }: any) => {
                   }}
                 />
               </div>
-
-              <div className="w-full flex justify-between pb-9 mt-2 rounded ">
-              {selectedImageIndex > 0 ? (
-  <div className="text-black pl-6 pt-2" onClick={switchToPrevImage}>
-    <ArrowBigLeft />
-  </div>
-) :(<> <div></div></>)}
+              <div className="w-full flex justify-between pb-9 rounded ">
+                {selectedImageIndex > 0 ? (
+                  <div
+                    className="text-black pl-6 pt-2"
+                    onClick={switchToPrevImage}
+                  >
+                    <ArrowBigLeft />
+                  </div>
+                ) : (
+                  <>
+                    {" "}
+                    <div></div>
+                  </>
+                )}
                 <div className="flex ">
                   <ZoomOut
                     className="text-black mt-2 "
@@ -289,11 +290,19 @@ const CropImageBody = ({ setPostState }: any) => {
                   </>
                 )}
 
-{selectedImageIndex < imglength - 1 ? (
-  <div className="text-black pr-6 pt-2" onClick={switchToNextImage}>
-    <ArrowBigRight />
-  </div>
-): ( <> <div></div></>)}
+                {selectedImageIndex < imglength - 1 ? (
+                  <div
+                    className="text-black pr-6 pt-2"
+                    onClick={switchToNextImage}
+                  >
+                    <ArrowBigRight />
+                  </div>
+                ) : (
+                  <>
+                    {" "}
+                    <div></div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -304,11 +313,3 @@ const CropImageBody = ({ setPostState }: any) => {
 };
 
 export default CropImageBody;
-
-
-
-
-
-
-
-

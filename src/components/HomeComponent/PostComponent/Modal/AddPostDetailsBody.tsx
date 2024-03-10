@@ -19,8 +19,15 @@ import { searchLocationFuntion } from "../../../../utils/api/methods/PostService
 import { getLatAndLogFuntion } from "../../../../utils/api/methods/PostService/Post/getLatAndLog";
 import { useNavigate } from "react-router-dom";
 import { getUsersByNameFunction } from "../../../../utils/api/methods/UserService/post";
+import axios from "axios";
 
-const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}: any) => {
+const AddPostDetailsBody = ({
+  setPostState,
+  addPost,
+  setAddPost,
+  render,
+  setRender,
+}: any) => {
   const post = useSelector((state: any) => state.persisted.post);
   const user = useSelector((state: any) => state.persisted.user);
   console.log("LLL", post);
@@ -31,28 +38,56 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
   const [isOpen, setIsOpen] = useState(false);
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [isLocation, setIslocation] = useState(false);
-  const [selectedImageSrc, setSelectedImageSrc] = useState(post.images[0][0]);
+  const [selectedImageSrc, setSelectedImageSrc]:any = useState(null);
   const [text, setText] = useState("");
   const [imglength, setImageLength] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [hideLike, setHideLike] = useState(false);
+  const [isImage,setIsImage]=useState(false)
+  const [isVideo,setIsvideo]=useState(false)
+  const [vedioFile,setVideoFile]:any=useState([])
+  const [vedioUrl,setVedioUrl]:any=useState(null)
   const [hideComment, setHideComment] = useState(false);
   const [location, setLocation] = useState("");
   const [responceLocation, setResponceLocatoin] = useState([]);
   const [tageUser, setTagUsers] = useState("");
   const [resTagUser, setResTagUsers] = useState([]);
-  const [selectedLocationlatAndLog, setSelectedLocationlatAndLog]: any =
-    useState("");
+  const [selectedLocationlatAndLog, setSelectedLocationlatAndLog]: any = useState("");
   const [isSelected, setIsSelcted] = useState(false);
-  const [tagedUserData,setTagedUserData]:any=useState([])
+  const [tagedUserData, setTagedUserData]: any = useState([]);
   const maxLength = 500;
 
   useEffect(() => {
+ 
+try {
+  if(post?.images && post?.images[0]?.length > 0 ){
     setImageLength(post.images[0].length);
+    setSelectedImageSrc(post.images[0][0])
     setSelectedImageIndex(0);
     console.log(selectedImageSrc, "PPPPP");
-
+    setIsImage(true)
     setSelectedImageSrc(post.images[0][selectedImageIndex]);
+   }else if(post.videos.length > 0){
+  console.log('JJJJJJJJJJJJJJJJJJJJJJJJJ',post.videos.length);
+  
+    toast.error('in the vedio ')
+    setVideoFile(post.videos[0])
+    const videoURL = URL.createObjectURL(post.videos[0]);
+    console.log('THIS IS TRIMED URL FROM LAST',vedioUrl);
+    
+    if(videoURL){
+      setVedioUrl(videoURL)
+    setIsvideo(true)
+    }else{
+      console.log('trimed url not foud');
+      
+    }
+   }
+} catch (error) {
+  console.log('ERROR FROM CATCH ',error);
+  
+}
+    
   }, [post]);
 
   const handleChange = (event: any) => {
@@ -62,11 +97,9 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
     }
   };
 
-  useEffect(()=>{
-
-    console.log(tagedUserData.length ,"BBBBBBBBBBBBBBbbbbbbbbbb");
-    
-  },[tagedUserData])
+  useEffect(() => {
+    console.log(tagedUserData.length, "BBBBBBBBBBBBBBbbbbbbbbbb");
+  }, [tagedUserData]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -182,52 +215,62 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
   };
 
   const AddPost = async () => {
-    var files = base64toFile(post.images[0]);
+    const tagedUserIds = tagedUserData.map((userData: any) => userData.userId);
+    let media, postType:string;
 
-    console.log(files, "files", user.userData);
-
-    if (user.userData == undefined) {
-      toast.error("Please login to make this post");
-      navigate("login");
-      return;
-    } else if (text.trim() === "") {
-      toast.error("Add a caption for your post");
-      return;
+    if (isImage) {
+        const files = base64toFile(post.images[0]);
+        media = files;
+        postType = 'image';
     } else {
-      console.log(user.userDara, "htia is is ");
-      toast.success("here");
-      const tagedUserIds = tagedUserData.map((userData: any) => userData.userId);
-      const data: PostData = {
+        media = vedioFile;
+        postType= 'video';
+    }
+
+    if (!user.userData) {
+        toast.error("Please login to make this post");
+        navigate("login");
+        return;
+    }
+
+    if (text.trim() === "") {
+        toast.error("Add a caption for your post");
+        return;
+    }
+
+    const data: PostData = {
         userId: user.userData.userId,
         description: text,
         likes: [],
         comments: [],
-        images: files,
+        media: media,
         shareCount: 0,
         tags: tagedUserIds,
         location: selectedLocationlatAndLog,
         reports: [],
         postCropSize: post.aspectRatio,
-        postType: "image",
+        postType:postType,
         showComment: hideComment,
         showLikes: hideLike,
-      };
+    };
 
-      const res: any = await AddPostFuntion({ data });
-      console.log(res, "THIS is responce from the server");
-      if (res.status) {
-        setRender(!render)
-        setAddPost(!addPost)
-        setPostState(false);
-        toast.success("the status from the responce is true");
-        navigate("/profile");
-      }
+    try {
+        const res: any = await AddPostFuntion({ data });
+        console.log(res, "THIS is response from the server");
+        if (res.status) {
+            setRender(!render);
+            setAddPost(!addPost);
+            setPostState(false);
+            toast.success("The status from the response is true");
+            navigate(`/profile/${user?.userData?.userId}`);
+        }
+    } catch (error) {
+        console.error("Error:", error);
     }
-  };
+};
+
 
   const serchLocation = async (data: string) => {
-    console.log(data, "JJJJJJJJ");
-
     setLocation(data);
   };
 
@@ -236,24 +279,24 @@ const AddPostDetailsBody = ({ setPostState,addPost,setAddPost ,render,setRender}
 
     // Check if userId already exists in tagedUserData array
     if (!tagedUserData.some((data: any) => data.userId === userId)) {
-        const data = {
-            userId: userId,
-            name: user.basicInformation.fullName,
-            profile: user.profile.profileUrl
-        };
-        toast.success(`Tagged ${user.basicInformation.fullName}`);
-        setTagedUserData((prevState: any) => [...prevState, data]);
+      const data = {
+        userId: userId,
+        name: user.basicInformation.fullName,
+        profile: user.profile.profileUrl,
+      };
+      toast.success(`Tagged ${user.basicInformation.fullName}`);
+      setTagedUserData((prevState: any) => [...prevState, data]);
     } else {
-        toast.error("This user is already selected");
+      toast.error("This user is already selected");
     }
-}
-const deselectTagPeople = (userId: any) => {
-  
-  const updatedTagedUserData = tagedUserData.filter((user: any) => user.userId !== userId);
-  
-  
-  setTagedUserData(updatedTagedUserData);
-}
+  };
+  const deselectTagPeople = (userId: any) => {
+    const updatedTagedUserData = tagedUserData.filter(
+      (user: any) => user.userId !== userId
+    );
+
+    setTagedUserData(updatedTagedUserData);
+  };
   return (
     <>
       <div className="fixed top-32 md:h-5/6 w-full md:top-16 z-10 sm:ml-4  sm:w-4/6   flex justify-center border text-white rounded-lg border-gray-500  bg-white">
@@ -283,12 +326,17 @@ const deselectTagPeople = (userId: any) => {
             <div className="w-full h-full flex flex-row">
               <div className="w-4/6">
                 <div className="w-full h-full">
-                  <img
+                  {isImage && (<>
+                    <img
                     className="w-full h-full object-cover"
                     src={selectedImageSrc}
                     alt=""
                     style={{ width: "100%", height: "100%" }}
                   />
+                  </>)}
+                  {isVideo && (<>
+                  <video src={vedioUrl} className="w-full h-full object-contain" controls/>
+                  </>)}
                 </div>
               </div>
               <div className="w-2/6  p-2 ">
@@ -408,36 +456,36 @@ const deselectTagPeople = (userId: any) => {
                       {/* Dropdown */}
                       <div className="relative">
                         <div className="flex justify-between">
-                        <button
-                          id="dropdownToggleButton"
-                          onClick={tagToggleDropdown}
-                          className="text-black   focus:outline-none  font-medium rounded-lg text-sm  pl-2 text-center inline-flex items-center"
-                          type="button"
-                        >
-                          Tag People
-                          <svg
-                            className="w-2.5 h-2.5 ms-3"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 10 6"
+                          <button
+                            id="dropdownToggleButton"
+                            onClick={tagToggleDropdown}
+                            className="text-black   focus:outline-none  font-medium rounded-lg text-sm  pl-2 text-center inline-flex items-center"
+                            type="button"
                           >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="m1 1 4 4 4-4"
-                            />
-                          </svg>
-                        </button>
-                        <div className="pl-36">
-
-                        <p className=" border rounded-full w-5 h-5 flex items-center text-center p-1 bg-teal-600 text-white   ">{tagedUserData.length }</p>
+                            Tag People
+                            <svg
+                              className="w-2.5 h-2.5 ms-3"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 10 6"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="m1 1 4 4 4-4"
+                              />
+                            </svg>
+                          </button>
+                          <div className="pl-36">
+                            <p className=" border rounded-full w-5 h-5 flex items-center text-center p-1 bg-teal-600 text-white   ">
+                              {tagedUserData.length}
+                            </p>
+                          </div>
                         </div>
 
-                        </div>
-                       
                         {/* Dropdown menu */}
                         <div
                           id="dropdownToggle"
@@ -445,63 +493,82 @@ const deselectTagPeople = (userId: any) => {
                             isTagOpen ? "" : "hidden"
                           } bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border top-full left-0 mt-1`}
                         >
-                          
                           <ul
-  className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800 overflow-y-auto h-48"
-  aria-labelledby="dropdownToggleButton"
->
-  {/* Render selected tagged users */}
-  <p>Tagged</p>
-  <li className="border-gray-100 border  rounded">
-    {tagedUserData.length > 0 && (
-      <>
-      
-        {tagedUserData.map((user: any, index:any) => (
-          <li key={index} className="border-b overflow-auto shadow-md rounded">
-           
-            <div className="flex items-center justify-between px-4 py-2">
-              <img
-                className="w-6 h-6  rounded-full"
-                src={user.profile}
-                alt={`image`}
-              />
-              {user.name}
-              {/* Add a button or icon to deselect the user */}
-              <button className=" text-black font-bold p-1" onClick={() => deselectTagPeople(user.userId)}>X</button>
-            </div>
-          </li>
-        ))}
-      </>
-    )}
-  </li>
+                            className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800 overflow-y-auto h-32"
+                            aria-labelledby="dropdownToggleButton"
+                          >
+                            {/* Render selected tagged users */}
+                            <p>Tagged</p>
+                            <li className="border-gray-100 border  rounded">
+                              {tagedUserData.length > 0 && (
+                                <>
+                                  {tagedUserData.map(
+                                    (user: any, index: any) => {
+                                      console.log(user,"USSS");
+                                      
+                                      return (
+                                      <li
+                                        key={index}
+                                        className="border-b overflow-auto shadow-md rounded"
+                                      >
+                                        <div className="flex items-center justify-between px-4 py-2">
+                                          <img
+                                            className="w-6 h-6  rounded-full"
+                                            src={user?.profile?.startsWith('https://graph')
+                                            ? `${user?.profile}`
+                                            : `http://localhost:3000/profile/${user?.profile}`}
+                                            alt={`image`}
+                                          />
+                                          {user.name}
+                                          {/* Add a button or icon to deselect the user */}
+                                          <button
+                                            className=" text-black font-bold p-1"
+                                            onClick={() =>
+                                              deselectTagPeople(user.userId)
+                                            }
+                                          >
+                                            X
+                                          </button>
+                                        </div>
+                                      </li>
+                                    )}
+                                  )}
+                                </>
+                              )}
+                            </li>
 
-  {/* Render remaining users */}
-  <li>
-  <p>Select user</p>
-    {resTagUser && resTagUser.length > 0 && (
-      <>
-        {resTagUser.map((user: any, index) => (
-          <li key={index} className="border-b " onClick={() => selectTagPeople(user)}>
-            <a href="#" className="flex items-center px-4 py-2">
-              <img
-                className="w-6 h-6 me-2 rounded-full"
-                src={user.profile.profileUrl}
-                alt={`image`}
-              />
-              {user.basicInformation.fullName}
-            </a>
-          </li>
-        ))}
-      </>
-    )}
-  </li>
-</ul>
+                            {/* Render remaining users */}
+                            <li>
+                              <p>Select user</p>
+                              {resTagUser && resTagUser.length > 0 && (
+                                <>
+                                  {resTagUser.map((user: any, index) => (
+                                    <li
+                                      key={index}
+                                      className="border-b "
+                                      onClick={() => selectTagPeople(user)}
+                                    >
+                                      <a
+                                        href="#"
+                                        className="flex items-center px-4 py-2"
+                                      >
+                                        <img
+                                          className="w-6 h-6 me-2 rounded-full"
+                                          src={user.profile.profileUrl}
+                                          alt={`image`}
+                                        />
+                                        {user.basicInformation.fullName}
+                                      </a>
+                                    </li>
+                                  ))}
+                                </>
+                              )}
+                            </li>
+                          </ul>
                           <a
                             href="#"
                             className="flex items-center p-3 text-sm font-medium  border-t  rounded-b-lg bg-gray-50   hover:underline"
                           >
-                            
-
                             <input
                               type="text"
                               className="w-full h-full p-1 outline-none bg-gray-50 hover:underline "

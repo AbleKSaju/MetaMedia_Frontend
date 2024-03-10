@@ -24,10 +24,7 @@ const StoryModal = ({ setAddStory }: any) => {
   const Navigate = useNavigate()
   const userData = useSelector((state: any) => state.persisted.user.userData);
 
-  console.log(selectedFile,"selectedFile");
   useEffect(()=>{
-    console.log(selectedFile?.type,"BOOL")
-
     if(selectedFile?.type?.startsWith('video/') && back==false){
       console.log("setIsVideosetIsVideosetIsVideo");
       setIsVideo(true)
@@ -61,9 +58,6 @@ const getSignatureForUpload = async (folder:string) => {
 }
 
 const uploadFile = async ( timestamp:any, signature:any) => {
-  console.log("i am uploadFile");
-  console.log(timestamp);
-  console.log(signature,"SIG");
   
   const data = new FormData()
   data.append("file", video);
@@ -75,11 +69,8 @@ const uploadFile = async ( timestamp:any, signature:any) => {
     const cloudName="dton3lr3o"
     let resourceType='video'
     let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`
-    console.log(api,"apiapiapi");
     const res = await axios.post(api, data)
-    console.log(res.data,"res.datares.data");
     const { secure_url } = res.data;
-    console.log(secure_url);
     console.log("File upload success ...");
     return secure_url;
   } catch (error) {
@@ -92,17 +83,12 @@ const uploadFile = async ( timestamp:any, signature:any) => {
       if(croppedImage?.type?.startsWith('video/')){
         setLoading(true)
         const { timestamp: videoTimestamp, signature: videoSignature } = await getSignatureForUpload('stories');
-console.log(videoTimestamp, videoSignature,"videoTimestamp, videoSignature");
-
         const videoUrl = await uploadFile( videoTimestamp, videoSignature);
-        console.log(videoUrl,"videoUrlvideoUrlvideoUrlvideoUrl");     
         const data={
           profile:userData.profile,
           caption:caption,
           imageUrl:videoUrl
-        }
-        console.log(data,"datadatadatadatadatadatadata");
-        
+        }        
         const response: any = await AddVideoToStoryFunction(data);
         setLoading(false)
         if(response?.status){
@@ -139,7 +125,7 @@ console.log(videoTimestamp, videoSignature,"videoTimestamp, videoSignature");
   }
 
   return (
-<div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-20">
+<div className="fixed top-0 left-0 w-full h-full backdrop-blur bg-opacity-50 bg-black z-20">
   <div className="flex justify-center w-full h-full bg-transparent ">
     <div className="fixed top-24 h-[500px] md:h-[700px] w-full sm:w-[500px] md:w-[600px] md:top-10 z-30 flex justify-center border text-white rounded-lg border-teal-900  bg-white">        
     <div className="flex-col w-full  ">

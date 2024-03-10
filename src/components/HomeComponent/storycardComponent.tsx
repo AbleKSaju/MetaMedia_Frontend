@@ -15,8 +15,10 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
   );
   console.log(myStory,"myStory");
   console.log(myStory?.[0]?.[0]?.storyUrl.startsWith('https://'),"myStory?.[0]?.[0]?.storyUrl.startsWith('video/'");
-  console.log(userData?.profile,"userData?.profile");
+  console.log(userData?.profile.startsWith('https://graph'),"userData?.profile");
   
+  console.log(myStory?.[0]?.[0]?.storyUrl,":myStory?.[0]?.[0]?.storyUrlmyStory?.[0]?.[0]?.storyUrl");
+  console.log(myStory?.[0]?.[0]?.storyUrl.startsWith('https://graph'),"myStory?.[0]?.[0]?.storyUrl.startsWith('https://graph')");
   
 
   const renderSidebar = () => {
@@ -73,25 +75,35 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                         >
                           <img
                             className="h-28 w-full rounded-lg blur-[1px]"
-                            src={myStory?.[0]?.[0]?.storyUrl.startsWith('https://') && userData?.profile ? 
+                            src={
+                              userData?.profile.startsWith('https://graph') ?
+                              profile
+                              :myStory?.[0]?.[0]?.storyUrl.startsWith('https://') ? 
                             `http://localhost:3000/profile/${userData?.profile}`
-                            :`${
-                              !myStory?.[0]?.[0]?.storyUrl.startsWith('https://')
+                            :
+                              myStory?.[0]?.[0]?.storyUrl
                                 ? `http://localhost:3003/story/${myStory?.[0]?.[0]?.storyUrl}`
+                                : userData?.profile ?
+                                `http://localhost:3000/profile/${userData?.profile}`
                                 : profile
                                
-                            }`}
+                            }
                             alt=""
                           />
                         </div>
                         <div className="rounded-full h-16 w-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-50">
                           <img
                             className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                            src={`${
-                              userData?.profile
-                                ? `http://localhost:3000/profile/${userData?.profile}`
-                                : `${profile}`
-                            }`}
+                            src={
+                              userData?.profile.startsWith('https://graph') ?
+                              profile
+                              :myStory?.[0]?.[0]?.storyUrl.startsWith('https://') ? 
+                            `http://localhost:3000/profile/${userData?.profile}`
+                           
+                                : userData?.profile ?
+                                `http://localhost:3000/profile/${userData?.profile}`
+                                : profile
+                            }
                             alt="S"
                           />
                         </div>
@@ -118,7 +130,9 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                                 src={`${
                                   stories && !value.data[0]?.storyUrl.startsWith('https://')
                                     ? `http://localhost:3003/story/${value.data[0]?.storyUrl}`
-                                    : `http://localhost:3000/profile/${value?.profile}`
+                                    : value?.profile ?
+                                     `http://localhost:3000/profile/${value?.profile}`
+                                     : profile
                                 }`}
                                 alt=""
                               />
@@ -126,7 +140,7 @@ const StoryCard = ({ setShowStory, setAddStory }: any) => {
                                 <img
                                   className="rounded-full p-0.5 h-16 w-16 z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                                   src={`${
-                                    stories
+                                    stories && !value.data[0]?.storyUrl.startsWith('https://' && value?.profile)
                                       ? `http://localhost:3000/profile/${value?.profile}`
                                       : "https://www.shutterstock.com/image-vector/gray-avatar-icon-design-photo-600nw-1274338147.jpg"
                                   }`}

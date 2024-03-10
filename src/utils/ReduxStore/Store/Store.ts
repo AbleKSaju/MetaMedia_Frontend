@@ -8,10 +8,11 @@ import storySlice from "../Slice/storySlice";
 import highlightSlice from "../Slice/highlightSlice";
 import postSlice from "../Slice/postSlice";
 import singlePostSlice from "../Slice/singlePostSlice";
-
+import messageSlice from "../Slice/messageSlice";
+import liveSlice from "../Slice/liveSlice";
 const persistConfig = {
   key: "root",
-  whitelist: ["user", "token", "story", "highlight", 'post','singlePost'],
+  whitelist: ["user", "token", "story", "highlight", 'post','singlePost','message','live'],
   storage,
 };
 
@@ -20,8 +21,10 @@ const reducer = combineReducers({
   story: storySlice,
   token: tokenSlice,
   highlight: highlightSlice,
+  message: messageSlice,
   post:postSlice,
-  singlePost:singlePostSlice
+  singlePost:singlePostSlice,
+  live:liveSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

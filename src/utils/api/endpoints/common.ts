@@ -23,6 +23,7 @@ export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
 export const GetAllUsers_Api=`${USER_URL}/getAllUsersForChat`
 export const getUsersByName_Api=`${USER_URL}/getUsersByname`
 export const getuserById_Api=`${USER_URL}/getUserById`
+export const getAllUsersData_Api=`${USER_URL}/getAllUsers`
 
 // STORY SERVICE
 

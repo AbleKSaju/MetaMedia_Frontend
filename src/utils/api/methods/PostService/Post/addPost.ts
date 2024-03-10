@@ -1,12 +1,11 @@
 
 import axios from 'axios'
 import {AddPost_Api} from '../../../endpoints/common'
-import { PostData } from 'src/utils/interface/postInterface';
 
 export const AddPostFuntion = async ( data : any) => {
     try {
         const formData = new FormData();
-const {userId,description,likes,comments,images,location,postCropSize,postType,reports,shareCount,showComment,showLikes,tags}:any=data.data
+const {userId,description,likes,comments,media,location,postCropSize,postType,reports,shareCount,showComment,showLikes,tags}:any=data.data
         
 
 
@@ -15,9 +14,18 @@ formData.append('userId',userId)
 formData.append('description',description)
 formData.append('likes',likes)
 formData.append('comments',comments)
-images.forEach((file:any) => {
-    formData.append(`images`, file);
-});
+if(postType=='image'){
+
+    media.forEach((file:any) => {
+        formData.append(`images`, file);
+    });
+}else{
+   
+     formData.append(`images`, media);
+    
+}
+
+
 formData.append('location',location)
 formData.append('postCropSize',postCropSize)
 formData.append('postType',postType)

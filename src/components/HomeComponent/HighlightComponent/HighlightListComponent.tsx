@@ -32,9 +32,7 @@ const HighlightListComponent = ({
     })();
   }, []);
   
-  const handleClick = (id: string, imgUrl: string) => {
-    console.log(id,imgUrl,"DATAS");
-    
+  const handleClick = (id: string, imgUrl: string) => {    
     if (selectedImages.some((item) => item.id === id)) {
       setSelectedImages(selectedImages?.filter((item) => item.id !== id));
     } else {
@@ -56,9 +54,7 @@ const HighlightListComponent = ({
     } else {
       toast.error(response?.data?.message);
     }
-  };
-  console.log(highlightName.length,"highlightName.length");
-  
+  };  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50">

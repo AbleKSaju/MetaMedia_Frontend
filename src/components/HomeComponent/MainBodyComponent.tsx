@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllStoriesFunction } from "../../utils/api/methods/StoryService/Story/get";
 import { addOtherUserStories } from "../../utils/ReduxStore/Slice/storySlice";
 
-import { showAllPostFuntion } from "../..//utils/api/methods/PostService/get/showAllPost";
+import { showAllPostFuntion } from "../../utils/api/methods/PostService/get/showAllPost";
 import { toast } from "sonner";
 import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 
@@ -79,14 +79,14 @@ const MainBody = ({
 
   return (
     <>
-      {/* main div */}
+
+
+
+    
       <div className="sm:ml-60 sm:p-7 md:p-2 lg:ml-72 h-[99vh] scrollbar-hide overflow-hidden">
         <div className="w-full overflow-hidden ">
-          {/* status */}
           <Story setShowStory={setShowStory} setAddStory={setAddStory} />
-          {/* sub div for post and suggestion */}
           <div className="lg:mt-5 lg:w-full lg:h-full flex overflow-y-hidden ">
-            {/* post */}
             <div className="lg:w-3/4 lg:h-[600px]   overflow-y-auto scrollbar-hide flex items-center    flex-col">
               <div className=" lg:mt-0 md:mt-0    ">
                 {postData.length > 0 && (
@@ -106,7 +106,6 @@ const MainBody = ({
                 )}
               </div>
             </div>
-            {/* suggestion */}
             {!isMobile && !isTablet && (
               <div className="lg:w-1/3 flex lg:h-96">
                 <Suggestion />
@@ -116,7 +115,6 @@ const MainBody = ({
         </div>
       </div>
 
-      {/* main div end */}
     </>
   );
 };
