@@ -168,7 +168,7 @@ const data={
     dispatch(clearPostData());
       dispatch(clearPostUserData());
       dispatch(isSinglePostModalClose())
-    Navigate('/profile')
+    Navigate(`/profile/${userData.userId}`)
   }else{
     toast.error('failed')
     
