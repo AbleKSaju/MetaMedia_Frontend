@@ -103,11 +103,15 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost,setIsAddLive }: Mai
               {postData.map((item: any) => {
                       return (
                         <>
+                        <div key={item._id}>
+
                           <PostScroll
-                            setRender={setRender}
-                            render={render}
-                            data={item}
+                          
+                          setRender={setRender}
+                          render={render}
+                          data={item}
                           />
+                          </div>
                         </>
                       );
                     })}
