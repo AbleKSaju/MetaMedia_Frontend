@@ -182,7 +182,9 @@ const checkUser = useMemo(
                   {isFollows ? "Following" : "Follow"}
                 </button>
                 <button className="border border-[#C1506D] px-5 py-1 rounded-3xl">
+                  <Link to={`/message/${currentUser?.basicInformation?.userId}`}>
                   Message
+                </Link>
                 </button>
               </div>
             )}
@@ -206,7 +208,9 @@ const checkUser = useMemo(
                           {isFollows ? "Following" : "Follow"}
                     </button>
                     <button className="border border-black w-28 py-1 hover:border-[#C1506D] rounded-3xl">
+                      <Link to={`/message/${currentUser?.basicInformation?.userId}`}>
                       Message
+                    </Link>
                     </button>
                   </div>
                 )}

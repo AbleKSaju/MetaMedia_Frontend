@@ -23,38 +23,35 @@ import { toast } from "sonner";
 import { addCurrentReciever } from "../../../utils/ReduxStore/Slice/messageSlice";
 import { Link, useParams } from "react-router-dom";
 
-const AsideComponent = ({conversations,setConversations}:any) => {
+const AsideComponent = ({conversations}:any) => {
 
-  const dispach=useDispatch()
+  // const dispach=useDispatch()
 console.log("I a AsideComponent");
 const {user_id} = useParams()
+console.log(user_id,"user_id");
 
-  const fetchMessages = async (data: any) => {
-    dispach(addCurrentReciever(data))
-  };  
+
+  // const fetchMessages = async (data: any) => {
+  //   dispach(addCurrentReciever(data))
+  // };  
 
   
   return (
     <>
       <div className=" flex sidebar w-96 bg-[#EBE9EF] min-w-60 flex-col border-r border-gray-300 transition-all">
-        <div className="logo flex items-center justify-center py-4 text-3xl font-medium">
+        <div className="logo flex items-center justify-center py-4 my-10 text-3xl font-medium">
           Messages
         </div>
-        <div className="flex justify-center border-b border-gray-300 lg:mt-6">
+        {/* <div className="flex justify-center border-b border-gray-300 lg:mt-6">
           <input
             type="text"
             className=" flex border focus:border-gray-600 border-gray-300 mb-4 px-6 py-1 outline-none rounded-full"
             placeholder="search people"
             />
-        </div>
+        </div> */}
         <div className="overflow-auto scrollbar-hide ">
           {conversations?.length
-            ? conversations?.sort((a:any,b:any)=>{
-              console.log(a,"aaaaaa");
-              // console.log(a.name,"namenamenamename");
-               return a.lastUpdate - b.lastUpdate
-              })
-            .map((data: any, index: number) => {
+            ? conversations.map((data: any, index: number) => {
               // console.log(data,"dataaaaa");  
               
                 return (
@@ -77,7 +74,6 @@ const {user_id} = useParams()
                     </Link>
                     <Link to={`/message/${data.receiverId}`}
                       className="info flex-1"
-                      onClick={() => fetchMessages(data)}
                     >
                       <div className="flex flex-col">
                         <span className=" font-bold">{data?.name}</span>

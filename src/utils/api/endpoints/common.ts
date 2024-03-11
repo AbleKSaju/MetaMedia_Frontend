@@ -64,6 +64,7 @@ export const DeleteComment_Api=`${POST_URL}/deleteComment`
 
 //CHAT
 
+export const CreateConversation_Api=`${CHAT_URL}/conversation`
 export const GetConversations_Api=`${CHAT_URL}/conversations`
 export const GetMessages_Api=`${CHAT_URL}/getMessages`
 export const SendMessage_Api=`${CHAT_URL}/message`

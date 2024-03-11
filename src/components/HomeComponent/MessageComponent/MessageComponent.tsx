@@ -9,7 +9,7 @@ const MessageComponent = () => {
 
   return (
     <div className=" flex h-full w-full overflow-hidden bg-white">
-      <Aside conversations={conversations} setConversations={setConversations} />
+      <Aside conversations={conversations} />
       <MessageListComponent conversations={conversations} setConversations={setConversations}/>
     </div>
   );

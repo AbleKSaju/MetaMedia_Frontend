@@ -16,24 +16,19 @@ import {
   Video,
 } from "lucide-react";
 import profile from "../../../assets/profile.webp";
-import { sendMessageFunction } from "../../../utils/api/methods/ChatService/post/post";
+import { CreateConversationFunction, sendMessageFunction } from "../../../utils/api/methods/ChatService/post/post";
 import { useParams } from "react-router-dom";
 import TimeConvertor from "../../../utils/Helper/TimeConvertor";
 const MessageListComponent = ({ conversations, setConversations }: any) => {
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSendMessage, setIsSendMessage] = useState<boolean>(false);
+  const [conversationCreated, setConversationCreated] = useState<boolean>(false);
   const [messages, setMessages] = useState<any>({});
   const [socket, setSocket] = useState<any>(null);
   const userData = useSelector((state: any) => state.persisted.user.userData);
   const messageRef = useRef<any>(null);
-  const dispach = useDispatch();
   const { user_id } = useParams();
-  const receiverData = useSelector(
-    (state: any) => state.persisted.message.messageData
-  );
-  const MessagesData = useSelector(
-    (state: any) => state.persisted.message.messageData
-  );
 
   console.log("I a MessageListComponent");
 
@@ -61,26 +56,39 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
   useEffect(() => {
     const fetchConversations = async () => {
       const response: any = await GetConversationsFunction();
-      if (response.data.data) {
-        const userId = { ids: response.data.data };
-        const userData: any = await GetUsersDataByIdFunction(userId);
-        const users: any = [];
-        userData.data.data.map((data: any,index:number) => {
-          const userDetails: any = {
-            conversationId: data.conversationId,
-            name: data.user.fullName,
-            email: data.user.email,
-            profile: data.user.profile,
-            receiverId: data.user.receiverId,
-            lastUpdate:response.data.data[index].lastUpdate
-          };
-          users.push(userDetails);
-        });
-        setConversations(users);
+      const userexist = await response.data.data.find((data:any)=>data.id == user_id)     
+      console.log(userexist,"userexistuserexistuserexist");
+       
+      if (!userexist && user_id !== "index" && conversationCreated==false) {        
+        const data={
+          senderId:user_id,
+          receiverId:userData.userId
+        }
+        const response = await CreateConversationFunction(data)
+        setConversationCreated(true)
+        
+      }else{
+        if (response.data.data) {
+          const userId = { ids: response.data.data };
+          const userData: any = await GetUsersDataByIdFunction(userId);        
+          const users: any = [];
+          userData.data.data.map((data: any,index:number) => {
+            const userDetails: any = {
+              conversationId: data.conversationId,
+              name: data.user.fullName,
+              email: data.user.email,
+              profile: data.user.profile,
+              receiverId: data.user.receiverId,
+              lastUpdate:response.data.data[index].lastUpdate
+            };
+            users.push(userDetails);
+          });
+          setConversations(users);
+        }
       }
     };
     fetchConversations();
-  }, []);
+  }, [isSendMessage]);
 
   useEffect(() => {
     (async () => {
@@ -97,7 +105,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
         }
       }
     })();
-  }, [user_id, conversations]);
+  }, [user_id, conversations,isSendMessage]);
 
   const sendMessage = async () => {
     setMessage("");
@@ -107,6 +115,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
       receiverId: messages?.data?.receiverId,
       message,
       conversationId: messages?.data?.conversationId,
+      lastUpdate: Date.now()
     });
 
     const data = {
@@ -116,10 +125,12 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
       receiverId: messages?.data?.receiverId,
       lastUpdate: Date.now()
     };
-    console.log("going to sendMessageFunction");
     
     const response = await sendMessageFunction(data);
+    setIsSendMessage(true)
   };
+
+  
 
   return (
     <>
@@ -132,7 +143,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
                 messages?.data?.profile?.startsWith("https://")
                   ? `${messages?.data?.profile}`
                   : messages?.data?.profile
-                  ? `http://localhost:3000/profile/${receiverData[0]?.profile}`
+                  ? `http://localhost:3000/profile/${messages?.data?.profile}`
                   : `${profile}`
               }
               alt=""
@@ -140,7 +151,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
             />
             <div className="flex flex-col">
               <p className="font-medium md:font-bold">
-                {receiverData[0]?.name}
+                {messages?.data?.name}
               </p>
               <p className="font-light text-sm">5 min ago</p>
             </div>

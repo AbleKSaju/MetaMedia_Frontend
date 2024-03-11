@@ -43,9 +43,12 @@ const UsersListComponent = () => {
   }, [searchUser]);
 
   const ChangeUserStatus = async (userId:any)=>{
+    const data={
+      userId
+    }
     console.log(userId,"stats");
-    const response = await ChangeUserStatusFunction(userId)
-    console.log(response,"");
+    const response = await ChangeUserStatusFunction(data)
+    console.log(response,"ChangeUserStatusFunctionChangeUserStatusFunction");
     
     
 

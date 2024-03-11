@@ -51,7 +51,6 @@ const Home = ({ render,setRender}:any) => {
     })();
   },[addStories,deleteStory])
 
-
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -65,12 +64,9 @@ const Home = ({ render,setRender}:any) => {
           console.error(error);
         }
       };
-  
       fetchData();
-  
     }, [dispatch, userData.userId]);
   
-
   const allowedPaths = ["/", "/post"];
  
   return (
