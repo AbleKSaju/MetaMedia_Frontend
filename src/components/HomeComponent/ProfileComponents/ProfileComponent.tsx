@@ -19,22 +19,11 @@ import {
   getUserByIdFuntion,
 } from "../../../utils/api/methods/UserService/post";
 import { toast } from "sonner";
-import { StoreUserData } from "../../../utils/costumHook/constumHook";
+import { CheckUser } from "../../../utils/Helper/CheckUserFollows";
 import { editUser } from "../../../utils/ReduxStore/Slice/userSlice";
 import StoryProfileShimmer from "../../../pages/shimmer/StoryProfileShimmer";
 
-const CheckUser = async(userData:any,currentUser:any,setIsFollows:any)=>{
-  const userFolowing = await userData.following.filter((data:any)=> data.userId.includes(currentUser));
-console.log(userFolowing.length,"userFolowing.length");
 
-  if(userFolowing.length!=0){
-    console.log("making it true");
-    setIsFollows(true)
-  }else{
-    setIsFollows(false)
-
-  }
-}
 
 const Profile = ({ render, setRender }: any) => {
   const [addHighlight, setAddHighlight] = useState(false);
