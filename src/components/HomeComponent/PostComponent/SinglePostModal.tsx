@@ -30,6 +30,9 @@ import { DeletePostFuntion } from "../../../utils/api/methods/PostService/Post/d
 import { useNavigate } from "react-router-dom";
 import { UpdateCommentFuntion } from "../../../utils/api/methods/PostService/Post/updateComent";
 import { DeleteCommentFuntion } from "../../../utils/api/methods/PostService/Post/deleteComment";
+import { DeleteReplayFunction } from "../../../utils/api/methods/PostService/Post/deleteReplay";
+import { log } from "util";
+import { SavePostFunction } from "../../../utils/api/methods/PostService/Post/savePost";
 const SinglePostModal = ({ render, setRender }: any) => {
   TimeAgo.addDefaultLocale(en);
   const timeAgo = new TimeAgo("en-US");
@@ -91,6 +94,7 @@ const [isDotOpen,setIsDotOpen]=useState(false)
     dispatch(isSinglePostModalClose());
     dispatch(clearPostData());
     dispatch(clearPostUserData());
+    setRender(!render)
   };
 
   function getTimeAgo(createdAt: any) {
@@ -253,6 +257,10 @@ if(responce.status){
 
   }
 
+  useEffect(()=>{
+    console.log(userData,'THIS IS USER ID AND',singlePost._id);
+    
+  },[])
 
   const updateComment=async()=>{
     if(text.trim()==''){
@@ -308,6 +316,49 @@ if(responce.status){
 
 
   }
+
+const deleteReplay=async(comment:any,replay:any)=>{
+  const data={
+    postId:singlePost._id,
+    commentId:comment._id,
+    replayId:replay._id
+  }
+
+  const responce:any = await DeleteReplayFunction(data)
+
+  if(responce.status){
+    setText('')
+    setIsReplay(false)
+    setIsUpdateComment(false)
+    dispatch(clearPostData());
+dispatch(addPostData(responce.data));
+dispatch(isSinglePostModalOpen());
+  }else{
+    toast.error(responce.message)
+  }
+
+}
+
+const hanldeSave=async()=>{
+  const data={
+    postId:singlePost._id,
+    userId:userData.userId
+  }
+
+  const responce=await SavePostFunction(data)
+  if(responce.status){
+    setText('')
+    setIsReplay(false)
+    setIsUpdateComment(false)
+    dispatch(clearPostData());
+dispatch(addPostData(responce.data));
+dispatch(isSinglePostModalOpen());
+  }else{
+    toast.error(responce.message)
+  }
+
+}
+
   return (
     <>
       <div className="fixed z-20 inset-0  w-screen h-screen  bg-black bg-opacity-85   flex flex-col p-5 ">
@@ -355,11 +406,27 @@ if(responce.status){
                       <ChevronLeft size={20} />
                     </button>
                   </div>
-                  <img
-                    className="object-contain opacity-100 w-full h-full"
-                    src={`http://localhost:3002/img/${images[imageIndex]}`}
-                    alt=""
-                  />
+                  {singlePost.postType =='image'&&(<>
+              <img
+              className="object-contain opacity-100 w-full h-full"
+              src={`http://localhost:3002/img/${images[imageIndex]}`}
+              alt=""
+            />
+            </>) }
+            {singlePost.postType =='video'&& (<>
+              <video
+    className="border border-amber-10 w-full h-full object-contain"
+    controls 
+   
+>
+    <source
+        src={`http://localhost:3002/img/${singlePost.mediaUrl[0]}`} // Provide the source URL of the video
+        type="video/mp4" // Set the type of the video file (replace 'mp4' with the actual video format)
+    />
+   
+</video>
+            </>)}
+
 
                  
 
@@ -482,8 +549,8 @@ if(responce.status){
                         </div>
                         {item.replay.length >0 && (
                             <>
-                            {item.replay.map((item:any)=>{
-                              {console.log(item,'hhhhhahshdashdhashdhashdhasdhhsadhas');
+                            {item.replay.map((replay:any)=>{
+                              {console.log(replay,'hhhhhahshdashdhashdhashdhasdhhsadhas');
                               }
                                 return (
                                     <>
@@ -493,9 +560,11 @@ if(responce.status){
                                                 <img src="https://i.pinimg.com/736x/ae/ea/57/aeea57bf10e83de82769db03e9210a17.jpg" className="w-8 h-8 object-cover rounded-full border " alt="" />
                                               </div>
                                               <div className="w-full flex justify-start items-center flex-wrap overflow-y-auto text-sm">
-                                                {item.content}
+                                                {replay.content}
                                               </div>
-                                              <div className="border flex justify-center items-center text-sm p-2 rounded-md border-[#]">delete</div>
+                                              {replay.userId == userData.userId && (<>
+                                              <div className="border flex justify-center items-center text-sm p-2 rounded-md border-[#]" onClick={()=>deleteReplay(item,replay)}>delete</div>
+                                              </>)}
                                             </div>
                                           </div>
                                     </>
@@ -547,7 +616,12 @@ if(responce.status){
                       </div>
                     </div>
                     <div className="w-1/6 flex justify-center items-center">
-                      <Bookmark size={27} />
+                    <Bookmark
+    size={27}
+    color="black"
+    style={{ fill: singlePost?.saved?.includes(userData.userId) ? "black" : undefined }}
+    onClick={hanldeSave}
+/>
                     </div>
                   </div>
                   <div className="w-full h-2/6 flex flex-col pl-5">

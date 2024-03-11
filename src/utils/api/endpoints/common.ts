@@ -24,7 +24,7 @@ export const GetAllUsers_Api=`${USER_URL}/getAllUsersForChat`
 export const getUsersByName_Api=`${USER_URL}/getUsersByname`
 export const getuserById_Api=`${USER_URL}/getUserById`
 export const getAllUsersData_Api=`${USER_URL}/getAllUsers`
-
+export const Suggetion_Api=`${USER_URL}/suggetions`
 // STORY SERVICE
 
         //Story
@@ -57,6 +57,8 @@ export const ReplayToComment_Api=`${POST_URL}/addReplayToComment`
 export const DeletePost_Api=`${POST_URL}/deletePost`
 export const UpdateComment_Api=`${POST_URL}/updateCommnet`
 export const DeleteComment_Api=`${POST_URL}/deleteComment`
+export const DeleteReplay_Api=`${POST_URL}/deleteReplay`
+export const SavePost_api=`${POST_URL}/savePost`
 //CHAT
 
 export const GetConversations_Api=`${CHAT_URL}/conversations`

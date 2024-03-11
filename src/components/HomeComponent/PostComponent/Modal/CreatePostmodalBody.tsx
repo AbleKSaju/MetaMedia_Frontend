@@ -113,14 +113,14 @@ setPostState(4)
                     multiple
                   />
                   <button
-                    className="bg-teal-800 text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40"
+                    className="bg-[#C1506D] text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40"
                     onClick={openGallery}
                   >
                     {" "}
                     Select from gallary
                   </button>
                   <button
-                    className="bg-teal-800 text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40 "
+                    className="bg-[#C1506D] text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40 "
                     onClick={openCamara}
                   >
                     Take a picture{" "}
@@ -205,13 +205,13 @@ const CamaraModal = ({ imgSrc, setImgSrc, setCamaraOn, setPostState }: any) => {
           {imgSrc ? (
             <>
               <button
-                className="bg-teal-800 w-32 text-white text-lg  font-semibold rounded"
+                className="bg-[#C1506D] w-32 text-white text-lg  font-semibold rounded"
                 onClick={retake}
               >
                 Retake
               </button>
               <button
-                className="bg-teal-800 w-32 text-white text-lg  font-semibold rounded "
+                className="bg-[#C1506D] w-32 text-white text-lg  font-semibold rounded "
                 onClick={selectImage}
               >
                 Select
@@ -220,7 +220,7 @@ const CamaraModal = ({ imgSrc, setImgSrc, setCamaraOn, setPostState }: any) => {
           ) : (
             <>
               <button
-                className="bg-teal-800 w-32 text-white text-lg  font-semibold rounded"
+                className="bg-[#C1506D] w-32 text-white text-lg  font-semibold rounded"
                 onClick={takePicture}
               >
                 Click

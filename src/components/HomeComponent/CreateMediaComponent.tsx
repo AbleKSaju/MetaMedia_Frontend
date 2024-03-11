@@ -1,10 +1,11 @@
 import { Film, Image, MoreVertical, Radio } from 'lucide-react'
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
 const CreateMediaComponent = ({setAddStory,setIsAddPost,setIsAddLive}:any) => {
   const [currentMedia, setCurrentMedia] = useState<any>("");
-
+  const userData = useSelector((state: any) => state.persisted.user.userData);
   const setMedia=(media:string)=>{
     console.log(media,"mediamediamediamediamedia");
     if(media=="Story"){
@@ -23,7 +24,7 @@ const CreateMediaComponent = ({setAddStory,setIsAddPost,setIsAddLive}:any) => {
             <div className="w-full h-[130px]  flex justify-between  ">
               <div className="w-full h-[110px]  flex items-center pl-5 gap-2 ">
                 <img
-                  src="https://i.pinimg.com/564x/4f/13/a0/4f13a073215546acc81a2f8a236f4cba.jpg"
+                  src={`http://localhost:3000/profile/${userData?.profile}`}
                   className="sm:w-12 sm:h-12 h-10 w-10 rounded-full  border-2 border-[#C1506D]"
                   alt=""
                 />

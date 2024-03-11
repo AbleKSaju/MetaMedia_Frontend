@@ -17,6 +17,7 @@ import {
 import { FacebookAuth, GoogleAuth } from "../../utils/firebase/firebase";
 import { Eye, EyeOff } from "lucide-react";
 import {  useState } from "react";
+import { log } from "console";
 
 interface ResponseData {
   email?: string;
@@ -32,6 +33,7 @@ interface ResponseData {
   profile: string;
   isGoogle: boolean;
   isFacebook: boolean;
+  
 }
 
 const Login = () => {
@@ -54,7 +56,6 @@ const Login = () => {
 
       if (data.user.email) {
         const response: any = await LoginWithFacebook(userData);        
-
         if (response?.data?.status) {
           // setTimeout(() => {
           //   SaveUserDataInRedux(response);
@@ -73,6 +74,7 @@ const Login = () => {
             phoneNumber: response.data.user.phoneNumber ?? "",
             interests: response.data.user.interests ?? [],
             bio: response.data.user.bio ?? "",
+            
           };
 
           dispatch(clearUser());
