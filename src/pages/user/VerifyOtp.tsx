@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { verifyOtpFunction } from "../../utils/api/methods/AuthService/post";
 import { useRegisterValidate } from "../../utils/formValidation/SignUpValidation";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
-import { addToken } from "../..//utils/ReduxStore/Slice/tokenSlice";
+import { addToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { ResponseData } from "../../utils/interface/userInterface";
 
 const VerifyOtp: React.FC = () => {

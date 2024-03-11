@@ -88,11 +88,27 @@ const PostScroll = ({ data, render, setRender }: any) => {
             className="relative mx-4 mt-0 overflow-hidden text-gray-700  shadow-lg bg-clip-border  rounded-md lg:h-[500px]"
             onClick={() => handlePostClick(data)}
           >
-            <img
+            {data.postType =='image'&&(<>
+              <img
               className="w-full h-full "
               src={`http://localhost:3002/img/${data.mediaUrl[0]}`}
               alt=""
             />
+            </>) }
+            {data.postType =='video'&& (<>
+              <video
+    className="border border-amber-10 w-full h-full object-fill"
+    controls 
+   
+>
+    <source
+        src={`http://localhost:3002/img/${data.mediaUrl[0]}`} // Provide the source URL of the video
+        type="video/mp4" // Set the type of the video file (replace 'mp4' with the actual video format)
+    />
+   
+</video>
+            </>)}
+           
           </div>
           <div className="flex md:pl-7 lg:pl-7 sm:pl-5   sm:pt-4 sm:p-2 lg:p-6 lg:pt-4 lg:gap-5 sm:gap-2 md:gap-4 pl-4 gap-1 pt-3">
             <div onClick={like}>

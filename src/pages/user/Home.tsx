@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import Main from "../../pages/user/newUi/Main"
+
+import MainBody from "../../components/HomeComponent/MainBodyComponent";
+import Main from "./newUi/Main"
+
 import Search from "../../components/HomeComponent/SearchComponent";
 import Message from "../../components/HomeComponent/MessageComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
@@ -14,11 +17,16 @@ import { getStoriesFunction } from "../../utils/api/methods";
 import MainModalBorderPost from "../../components/HomeComponent/PostComponent/Modal/mainModalBorderPost";
 import NewSideBar from "./newUi/Sidebar";
 import Suggetions from "./newUi/Suggetions";
+
 import SearchComponent from "./newUi/Search";
 import Notification from "./newUi/Notification";
 import { StoreUserData } from "../../utils/costumHook/constumHook";
 import { editUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
+
+
+import CreateLive from "../../components/HomeComponent/liveComponent/CreateLive";
+import Golive from "../../components/HomeComponent/liveComponent/goLive";
 
 
 
@@ -31,9 +39,14 @@ const Home = ({ render,setRender}:any) => {
   const [deleteStory, setDeleteStory] = useState<boolean>(false);
   const [showStory,setShowStory] = useState("")
   const [isAddPost,setIsAddPost] = useState(false)
+  const [isAddLive,setIsAddLive]=useState(false)
   const [addPost,setAddPost] = useState(false)
+
   const [openSearch, setOpenSearch] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
+
+
+  const [isgoLive,setIsGoLive]=useState(false)
 
   const dispatch = useDispatch()
   const location = useLocation();
@@ -73,20 +86,33 @@ const Home = ({ render,setRender}:any) => {
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
- <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center">
+
+ {isAddLive &&  (<CreateLive setIsAddLive={setIsAddLive} setIsGoLive={setIsGoLive}/>)}
+ 
+
+ <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
+
     <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
         <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> 
         {openSearch && <SearchComponent setOpenSearch={setOpenSearch}/>}
         {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
+          {isgoLive &&  (<Golive />)}
             <Routes>
-                  <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost}/>} />
-                  {/* <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} /> */}
+
+             
                   <Route path="/message/:user_id" element={<Message />} />
+                  
+
+                  <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
+                  <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
+                  
                   <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
-                  <Route path="/settings/*" element={<Settings />} />
+                  <Route path="/settings/*" element={<Settings  />} />
+                  <Route path="/room/:roomId" element={<Golive  />}/>
+
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

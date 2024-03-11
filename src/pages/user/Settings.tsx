@@ -4,7 +4,7 @@ import { Contactus, EditProfile, Security } from "../../components";
 import { SetSidebarOpenFunction } from "./Home";
 import { Route, Routes } from "react-router-dom";
 
-const Settings = () => {
+const Settings = (  ) => {
 
   return (
     <>

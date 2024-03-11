@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { getAllPostOfUserFunction } from "../../../utils/api/methods/PostService/get/getAllPostOfUser";
 import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
 import { toast } from "sonner";
+import {Play} from 'lucide-react'
 import {
   addPostData,
   clearPostData,
@@ -19,6 +20,9 @@ const PostsComponent = ({ postLength, render, setRender }: any) => {
   const singlePost = useSelector(
     (state: any) => state.persisted.singlePost.singlePost
   );
+
+const [isHovered,setIsHovered]=useState(false)
+  
 
   const user = useSelector((state: any) => state.persisted.user);
 
@@ -81,11 +85,39 @@ const PostsComponent = ({ postLength, render, setRender }: any) => {
                     key={item.id}
                     onClick={() => handlePostClick(item)}
                   >
-                    <img
-                      className=" border border-amber-10 w-full h-full rounded-md object-fill"
-                      src={`http://localhost:3002/img/${item.mediaUrl[0]}`}
-                      alt=""
-                    />
+
+                    
+
+                    {item.postType =='image'&&(<>
+              <img
+              className=" border border-amber-10 w-full h-full object-fill"
+              src={`http://localhost:3002/img/${item.mediaUrl[0]}`}
+              alt=""
+            />
+            </>) }
+            {item.postType =='video'&& (<>
+              <video
+    className="border border-amber-10 w-full  object-fill h-64"
+   muted
+    autoPlay={isHovered}
+    
+       onMouseEnter={()=>setIsHovered(true)}
+       onMouseLeave={()=>setIsHovered(false)}
+
+   
+>
+    <source
+    className="w-full h-full object-fill"
+        src={`http://localhost:3002/img/${item.mediaUrl[0]}`} // Provide the source URL of the video
+        type="video/mp4" // Set the type of the video file (replace 'mp4' with the actual video format)
+    />
+      
+   
+</video>
+
+            </>)}
+
+
                   </div>
                 );
               })

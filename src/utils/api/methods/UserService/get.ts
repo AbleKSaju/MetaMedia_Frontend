@@ -1,5 +1,9 @@
 import axios from "axios";
-import { GetAllUsers_Api, GetAllUsersData_Api, GetSearchUserData_Api } from "../../endpoints/common";
+
+import { GetAllUsers_Api, GetAllUsersData_Api, GetSearchUserData_Api ,Suggetion_Api} from "../../endpoints/common";
+
+
+
 
 export const getAllUsersFunction = async () => {
     try {
@@ -12,6 +16,7 @@ export const getAllUsersFunction = async () => {
     }
   };
 
+
 export const getAllUsersDataFunction = async () => {
     try {
       const response = await axios
@@ -23,11 +28,23 @@ export const getAllUsersDataFunction = async () => {
     }
   };
 
-export const GetSearchUserDataFunction = async (user:string) => {
+  export const GetSearchUserDataFunction = async (user:string) => {
     try {
       const response = await axios
         .create({ withCredentials: true })
         .get(`${GetSearchUserData_Api}/${user}`);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  export const suggetionFuntion = async (userId:any) => {
+    try {
+      const response = await axios
+        .create({ withCredentials: true })
+        .get(`${Suggetion_Api}?userId=${userId}`);
+
       return response.data;
     } catch (error) {
       return error;

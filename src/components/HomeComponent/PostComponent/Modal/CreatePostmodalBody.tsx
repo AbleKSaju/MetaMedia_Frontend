@@ -4,6 +4,8 @@ import { X } from "lucide-react";
 import {
   addImage,
   clearImages,
+  addVideo,
+  clearVideos
 } from "../../../../utils/ReduxStore/Slice/postSlice";
 import { useDispatch } from "react-redux";
 const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
@@ -11,6 +13,7 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
   
   const [CamaraOn, setCamaraOn] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
+ 
   const dispatch = useDispatch();
   const openGallery = () => {
     const fileInput = document.getElementById("fileInput");
@@ -22,10 +25,11 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
   };
   const getImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
-    const files = e.target.files;
+    const files:any = e.target.files;
 
     if (files) {
       dispatch(clearImages());
+      dispatch(clearVideos())
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
@@ -42,11 +46,16 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
           };
 
           reader.readAsDataURL(file);
+          setPostState(2);
         }
         // Check if the file is a video
         else if (file.type.startsWith("video/")) {
-          // Dispatch addVideo action for videos if needed
-          // dispatch(addVideo(file));
+          
+          console.log(file,'THIS SIS VEDIO FILE');
+      
+dispatch(addVideo(file))
+
+setPostState(4)
         } else {
           // Handle invalid file types
           console.error("Invalid file type:", file.type);
@@ -56,7 +65,7 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
         formData.append("files[]", file);
       }
 
-      setPostState(2);
+     
     }
   };
 
@@ -106,14 +115,14 @@ const CreatePostModalBody = ({ setIsAddPost, setPostState }: any) => {
                     multiple
                   />
                   <button
-                    className="bg-teal-800 text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40"
+                    className="bg-[#C1506D] text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40"
                     onClick={openGallery}
                   >
                     {" "}
                     Select from gallary
                   </button>
                   <button
-                    className="bg-teal-800 text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40 "
+                    className="bg-[#C1506D] text-white p-2 text-[10px] sm:text-[15px] rounded-lg w-28 h-10 sm:w-40 "
                     onClick={openCamara}
                   >
                     Take a picture{" "}
@@ -198,13 +207,13 @@ const CamaraModal = ({ imgSrc, setImgSrc, setCamaraOn, setPostState }: any) => {
           {imgSrc ? (
             <>
               <button
-                className="bg-teal-800 w-32 text-white text-lg  font-semibold rounded"
+                className="bg-[#C1506D] w-32 text-white text-lg  font-semibold rounded"
                 onClick={retake}
               >
                 Retake
               </button>
               <button
-                className="bg-teal-800 w-32 text-white text-lg  font-semibold rounded "
+                className="bg-[#C1506D] w-32 text-white text-lg  font-semibold rounded "
                 onClick={selectImage}
               >
                 Select
@@ -213,7 +222,7 @@ const CamaraModal = ({ imgSrc, setImgSrc, setCamaraOn, setPostState }: any) => {
           ) : (
             <>
               <button
-                className="bg-teal-800 w-32 text-white text-lg  font-semibold rounded"
+                className="bg-[#C1506D] w-32 text-white text-lg  font-semibold rounded"
                 onClick={takePicture}
               >
                 Click

@@ -183,11 +183,11 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
             to={`/profile/${userData?.userId}`}
             className=" h-full w-full sm:flex justify-center  items-center"
           >
-            <div className="bg-[#FADBE1] w-10 h-10 rounded-full flex justify-center items-center ">
+            <div className="bg-[#FADBE1] w-11 h-11 rounded-full flex justify-center items-center ">
               <div className="rounded-full w-5/6 h-5/6 sm:w-[45px] sm:h-[45px] flex justify-center items-center">
                 <img
-                  src="https://i.pinimg.com/564x/66/af/ad/66afadeda60eb0192a850b46bc75f78a.jpg"
-                  className="rounded-full border-2 border-[#C1506D] object-cover"
+                  src={`http://localhost:3000/profile/${userData?.profile}`}
+                  className="rounded-full w-full h-full  border-2 border-[#C1506D] object-fill"
                   alt=""
                 />
               </div>

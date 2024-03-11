@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllStoriesFunction } from "../../utils/api/methods/StoryService/Story/get";
 import { addOtherUserStories } from "../../utils/ReduxStore/Slice/storySlice";
 
-import { showAllPostFuntion } from "../..//utils/api/methods/PostService/get/showAllPost";
+import { showAllPostFuntion } from "../../utils/api/methods/PostService/get/showAllPost";
 import { toast } from "sonner";
 import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 

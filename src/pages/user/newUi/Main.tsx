@@ -24,9 +24,11 @@ interface MainBodyProps {
   setShowStory: (value: string) => void;
   setAddStory: (value: boolean) => void;
   setIsAddPost: (value: boolean) => void;
+  setIsAddLive: (value: boolean) => void;
+
   // other props if any
 }
-const MainBody = ({  setShowStory, setAddStory, setIsAddPost }: MainBodyProps) => {
+const MainBody = ({  setShowStory, setAddStory, setIsAddPost,setIsAddLive }: MainBodyProps) => {
 
     const dispatch = useDispatch();
     const [render, setRender] = useState(false);
@@ -87,7 +89,7 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost }: MainBodyProps) =
 
           {/* create option -------------------- */}
           
-            <CreateMediaComponent setAddStory={setAddStory} setIsAddPost={setIsAddPost}/>
+            <CreateMediaComponent setAddStory={setAddStory} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive} />
           
             {/* sepration 2 
           </div>

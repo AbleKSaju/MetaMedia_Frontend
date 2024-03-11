@@ -19,6 +19,7 @@ import { searchLocationFuntion } from "../../../../utils/api/methods/PostService
 import { getLatAndLogFuntion } from "../../../../utils/api/methods/PostService/Post/getLatAndLog";
 import { useNavigate } from "react-router-dom";
 import { getUsersByNameFunction } from "../../../../utils/api/methods/UserService/post";
+import axios from "axios";
 
 const AddPostDetailsBody = ({
   setIsAddPost,
@@ -38,26 +39,58 @@ const AddPostDetailsBody = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [isLocation, setIslocation] = useState(false);
-  const [selectedImageSrc, setSelectedImageSrc] = useState(post.images[0][0]);
+  const [selectedImageSrc, setSelectedImageSrc]:any = useState(null);
   const [text, setText] = useState("");
   const [imglength, setImageLength] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [hideLike, setHideLike] = useState(false);
+  const [isImage,setIsImage]=useState(false)
+  const [isVideo,setIsvideo]=useState(false)
+  const [vedioFile,setVideoFile]:any=useState([])
+  const [vedioUrl,setVedioUrl]:any=useState(null)
   const [hideComment, setHideComment] = useState(false);
   const [location, setLocation] = useState("");
   const [responceLocation, setResponceLocatoin] = useState([]);
   const [tageUser, setTagUsers] = useState("");
   const [resTagUser, setResTagUsers] = useState([]);
-  const [selectedLocationlatAndLog, setSelectedLocationlatAndLog]: any =
-    useState("");
+  const [selectedLocationlatAndLog, setSelectedLocationlatAndLog]: any = useState("");
   const [isSelected, setIsSelcted] = useState(false);
   const [tagedUserData, setTagedUserData]: any = useState([]);
   const maxLength = 500;
 
   useEffect(() => {
+ 
+try {
+  if(post?.images && post?.images[0]?.length > 0 ){
     setImageLength(post.images[0].length);
+    setSelectedImageSrc(post.images[0][0])
     setSelectedImageIndex(0);
+
+    console.log(selectedImageSrc, "PPPPP");
+    setIsImage(true)
+
     setSelectedImageSrc(post.images[0][selectedImageIndex]);
+   }else if(post.videos.length > 0){
+  console.log('JJJJJJJJJJJJJJJJJJJJJJJJJ',post.videos.length);
+  
+    toast.error('in the vedio ')
+    setVideoFile(post.videos[0])
+    const videoURL = URL.createObjectURL(post.videos[0]);
+    console.log('THIS IS TRIMED URL FROM LAST',vedioUrl);
+    
+    if(videoURL){
+      setVedioUrl(videoURL)
+    setIsvideo(true)
+    }else{
+      console.log('trimed url not foud');
+      
+    }
+   }
+} catch (error) {
+  console.log('ERROR FROM CATCH ',error);
+  
+}
+    
   }, [post]);
 
   const handleChange = (event: any) => {
@@ -184,51 +217,63 @@ const AddPostDetailsBody = ({
   };
 
   const AddPost = async () => {
-    var files = base64toFile(post.images[0]);
+    const tagedUserIds = tagedUserData.map((userData: any) => userData.userId);
+    let media, postType:string;
 
-    console.log(files, "files", user.userData);
-
-    if (user.userData == undefined) {
-      toast.error("Please login to make this post");
-      navigate("login");
-      return;
-    } else if (text.trim() === "") {
-      toast.error("Add a caption for your post");
-      return;
+    if (isImage) {
+        const files = base64toFile(post.images[0]);
+        media = files;
+        postType = 'image';
     } else {
-      console.log(user.userDara, "htia is is ");
-      toast.success("here");
-      const tagedUserIds = tagedUserData.map(
-        (userData: any) => userData.userId
-      );
-      const data: PostData = {
+        media = vedioFile;
+        postType= 'video';
+    }
+
+    if (!user.userData) {
+        toast.error("Please login to make this post");
+        navigate("login");
+        return;
+    }
+
+    if (text.trim() === "") {
+        toast.error("Add a caption for your post");
+        return;
+    }
+
+    const data: PostData = {
         userId: user.userData.userId,
         description: text,
         likes: [],
         comments: [],
-        images: files,
+        media: media,
         shareCount: 0,
         tags: tagedUserIds,
         location: selectedLocationlatAndLog,
         reports: [],
         postCropSize: post.aspectRatio,
-        postType: "image",
+        postType:postType,
         showComment: hideComment,
         showLikes: hideLike,
-      };
+    };
 
-      const res: any = await AddPostFuntion({ data });
-      console.log(res, "THIS is responce from the server");
-      if (res.status) {
-        setRender(!render);
-        setAddPost(!addPost);
-        setPostState(false);
-        toast.success("the status from the responce is true");
-        navigate(`/profile/${user?.userData?.userId}`);  
-        setIsAddPost(false)
-      }
+
+    try {
+        const res: any = await AddPostFuntion({ data });
+        console.log(res, "THIS is response from the server");
+        if (res.status) {
+            setRender(!render);
+            setAddPost(!addPost);
+            setPostState(false);
+            toast.success("The status from the response is true");
+            navigate(`/profile/${user?.userData?.userId}`);
+            setIsAddPost(false)
+        }
+    } catch (error) {
+        console.error("Error:", error);
+
     }
-  };
+};
+
 
   const serchLocation = async (data: string) => {
     setLocation(data);
@@ -286,12 +331,17 @@ const AddPostDetailsBody = ({
             <div className="w-full h-full flex flex-row">
               <div className="w-4/6">
                 <div className="w-full h-full">
-                  <img
+                  {isImage && (<>
+                    <img
                     className="w-full h-full object-cover"
                     src={selectedImageSrc}
                     alt=""
                     style={{ width: "100%", height: "100%" }}
                   />
+                  </>)}
+                  {isVideo && (<>
+                  <video src={vedioUrl} className="w-full h-full object-contain" controls/>
+                  </>)}
                 </div>
               </div>
               <div className="w-2/6  p-2 ">
