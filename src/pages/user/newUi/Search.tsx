@@ -14,6 +14,7 @@ const SearchComponent = ({ setOpenSearch }: any) => {
   const [userLoading, setUserLoading] = useState<any>("");
   const [searchedUsers, setsearchedUsers] = useState<any>([]);
   const [noUserFound, setNoUserFound] = useState(false);
+  const [followUser,setFollowUser] = useState(false)
   const wrapperRef: any = useRef(null);
 
   const dispatch = useDispatch()
@@ -39,6 +40,8 @@ const SearchComponent = ({ setOpenSearch }: any) => {
       const getData = setTimeout(async () => {
         console.log("MAKING REQUEST with", searchUser);
         const response = await GetSearchUserDataFunction(searchUser);
+        console.log(response,"responseresponse");
+        
         if (response.status) {
           setsearchedUsers(response?.data);
         } else {
@@ -48,7 +51,7 @@ const SearchComponent = ({ setOpenSearch }: any) => {
       }, 1000);
       return () => clearTimeout(getData);
     }
-  }, [searchUser]);
+  }, [searchUser,followUser]);
 
   const FollowUser = async (id: string) => {
     const data = {
@@ -68,6 +71,7 @@ const SearchComponent = ({ setOpenSearch }: any) => {
       } catch (error) {
         console.error(error);
       }
+        setFollowUser(!followUser)
     }else{
       toast.error(response.data.message);
     }
@@ -135,9 +139,9 @@ const SearchComponent = ({ setOpenSearch }: any) => {
                       </p>
                     </Link>
                     <div className="w-3/12 flex justify-center items-center">
-                      <button className="w-16 h-6 border border-[#C1506D] rounded-full flex justify-center items-center font-semibold text-[13px] text-[#C1506D] "
+                      <button className="w-16 h-6 border border-[#C1506D] rounded-full flex justify-center items-center font-semibold text-[11px] text-[#C1506D] "
                       onClick={()=>FollowUser(data?.id)}>
-                        Follow
+                        {data?.follow?"Following":"Follow"}
                       </button>
                     </div>
                   </div>
