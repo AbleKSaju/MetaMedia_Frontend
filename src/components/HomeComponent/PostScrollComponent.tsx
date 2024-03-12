@@ -112,11 +112,20 @@ const PostScroll = ({ data, render, setRender }: any) => {
           </div>
           <div className="flex md:pl-7 lg:pl-7 sm:pl-5   sm:pt-4 sm:p-2 lg:p-6 lg:pt-4 lg:gap-5 sm:gap-2 md:gap-4 pl-4 gap-1 pt-3">
             <div onClick={like}>
-              <Heart
-                style={{ fill: liked ? "red" : "white" }}
-                color={liked ? "red" : undefined}
+
+              {data.likes.includes(userData.userId) ? (<>
+                <Heart
+                style={{ fill: "red"  }}
+                color={  "red"}
                 size={30}
               />
+              </>):(<>
+                <Heart
+               
+                size={30}
+              />
+              </>)}
+              
             </div>
             <div>
               <MessageCircle
