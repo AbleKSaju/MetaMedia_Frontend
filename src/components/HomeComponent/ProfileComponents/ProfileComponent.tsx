@@ -81,7 +81,6 @@ const checkUser = useMemo(
     }
   };
 
-
   useEffect(() => {
     (async () => {
       if (user_id) {
@@ -227,9 +226,7 @@ const checkUser = useMemo(
                   className=" flex flex-col"
                   onClick={() => setOpenFollowings(true)}
                 >
-                  <p className="text-center font-medium">
-                    {currentUser.socialConections?.following.length}
-                  </p>
+                  <p className="text-center font-medium">{currentUser.socialConections?.following.length}</p>
                   <p className="font-light text-black">following</p>
                 </div>
               </div>
