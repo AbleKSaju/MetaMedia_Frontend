@@ -96,15 +96,14 @@ const Home = ({ render,setRender}:any) => {
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
           {isgoLive &&  (<Golive />)}
             <Routes>
-                  <Route path="/message/:user_id" element={<Message />} />
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
+                  <Route path="/message/:user_id" element={<Message />} />
                   <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/settings/*" element={<Settings  />} />
                   <Route path="/room/:roomId" element={<Golive  />}/>
-
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

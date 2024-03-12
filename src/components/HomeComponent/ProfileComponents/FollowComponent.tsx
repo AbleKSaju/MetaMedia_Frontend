@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { editUser } from "../../../utils/ReduxStore/Slice/userSlice";
 import { followUserFunction, getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
+import profile from '../../../assets/profile.webp'
 
 const FollowComponent = ({
   users,
@@ -17,12 +18,12 @@ const FollowComponent = ({
   
   
   const [searchUser, setSearchUser] = useState("");
-  const [followers, setfollowers] = useState([]);
+  const [followers, setfollowers] = useState<any>([]);
   const [following, setfollowing] = useState([]);
-  
+  const [followUser,setFollowUser] = useState(false)
+
   const wrapperRef: any = useRef(null);
   const dispatch = useDispatch()
-
   const userData = useSelector((state: any) => state.persisted.user.userData);
 
   const RemoveFollowingUser = async(id:string)=>{
@@ -62,11 +63,7 @@ const FollowComponent = ({
       setfollowers(users)
     }
   })()
-  },[searchUser,RemoveFollowingUser])
-  console.log(followers,"followersfollowersfollowers");
-  
-  
-
+  },[searchUser,RemoveFollowingUser,followUser])
 
 
   const handleClickOutside = (event: any) => {
@@ -82,6 +79,29 @@ const FollowComponent = ({
     };
   }, []);
 
+  const FollowUser = async (id: string) => {
+    const data = {
+      currentUserId: userData.userId,
+      followedUserId: id,
+    };
+    const response: any = await followUserFunction(data);    
+    if (response.data.status) {
+      toast.success(response.data.message);
+      try {
+        const response = await getUserByIdFuntion(userData.userId);
+        if (response?.status) {
+          dispatch(editUser(response.data.socialConections));
+        } else {
+          throw new Error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+        setFollowUser(!followUser)
+    }else{
+      toast.error(response.data.message);
+    }
+  };
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-900 bg-opacity-50" ref={wrapperRef}>
       <div className="relative w-72 sm:w-[450px] h-[400px] sm:h-[500px] bg-white border border-teal-900 rounded-lg">
@@ -113,8 +133,9 @@ const FollowComponent = ({
           </div>
           <div className=" h-64 sm:h-96 w-auto mx-4 sm:mx-16 sm:pt-5 scrollbar-hide overflow-y-auto ">
             {openFollowers &&
-              followers.map((val:any, index) => {
-                console.log(val,"I AM VALLLL");
+              followers.map((val:any, index:number) => {
+                console.log(val,"aaall");
+                
                 
                 return (
                 <div key={index} className="h-11 mb-2">
@@ -128,15 +149,18 @@ const FollowComponent = ({
                           ? `${val.profile}`
                           : val.profile
                           ? `http://localhost:3000/profile/${val.profile}`
-                          : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                          : profile
                       }
                       alt=""
                     />
                   <p className="ml-2 w-96 flex items-center">{val.fullName}</p>
                     <div className=" flex items-center w-full justify-end">
-                      <button className="border border-black hover:bg-red-600 hover:text-amber-50 rounded-full hidden sm:flex px-3" >
-                        remove
+                      {userData.userId !== val.userId &&   
+                      <button onClick={()=>FollowUser(val?.userId)}
+                      className="w-16 h-6 border border-[#C1506D] rounded-lg sm:flex justify-center items-center font-semibold text-[12px] text-[#C1506D] hidden " >
+                      {userData.following.some((follow:any) => follow.userId === val.userId) ? "unfollow" : (userData.userId === val.userId ? "" : "follow")}
                       </button>
+                      }
                       <button className="border border-black hover:bg-black rounded-full sm:hidden">
                           <X size={17} />
                       </button>
@@ -158,16 +182,18 @@ const FollowComponent = ({
                           ? `${val.profile}`
                           : val.profile
                           ? `http://localhost:3000/profile/${val.profile}`
-                          : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                          : profile
                       }
                       alt=""
                     />
                     <p className="ml-2 w-96 flex items-center">{val.fullName}</p>
                     <div className=" flex items-center justify-end">
+                    {userData.userId !== val.userId &&   
                       <button onClick={()=>RemoveFollowingUser(val.userId)}
-                       className="border border-black hover:bg-red-600 hover:text-amber-50 rounded-full hidden sm:flex px-3" >
-                        remove
+                       className="w-16 h-6 border border-[#C1506D] rounded-lg sm:flex justify-center items-center font-semibold text-[12px] text-[#C1506D] hidden " >
+                        <p className="text-center w-full"> {userData.following.some((follow:any) => follow.userId === val.userId) ? "unfollow" : (userData.userId === val.userId ? "" : "follow")}</p>
                       </button>
+              }
                       <button className="border border-black hover:bg-black rounded-full sm:hidden">
                         <X size={17} />
                       </button>

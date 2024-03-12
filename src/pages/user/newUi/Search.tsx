@@ -139,7 +139,7 @@ const SearchComponent = ({ setOpenSearch }: any) => {
                       </p>
                     </Link>
                     <div className="w-3/12 flex justify-center items-center">
-                      <button className="w-16 h-6 border border-[#C1506D] rounded-full flex justify-center items-center font-semibold text-[11px] text-[#C1506D] "
+                      <button className="w-16 h-6 border border-[#C1506D] rounded-lg flex justify-center items-center font-semibold text-[12px] text-[#C1506D] "
                       onClick={()=>FollowUser(data?.id)}>
                         {data?.follow?"Following":"Follow"}
                       </button>
