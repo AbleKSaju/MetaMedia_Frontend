@@ -41,13 +41,9 @@ const Home = ({ render,setRender}:any) => {
   const [isAddPost,setIsAddPost] = useState(false)
   const [isAddLive,setIsAddLive]=useState(false)
   const [addPost,setAddPost] = useState(false)
-
   const [openSearch, setOpenSearch] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
-
-
   const [isgoLive,setIsGoLive]=useState(false)
-
   const dispatch = useDispatch()
   const location = useLocation();
   const userData=useSelector((state:any)=>state.persisted.user.userData)
@@ -81,6 +77,7 @@ const Home = ({ render,setRender}:any) => {
     }, [dispatch, userData.userId]);
   
   const allowedPaths = ["/", "/post"];
+ console.log("I AM HOME");
  
   return (
     <>
@@ -99,14 +96,9 @@ const Home = ({ render,setRender}:any) => {
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
           {isgoLive &&  (<Golive />)}
             <Routes>
-
-             
                   <Route path="/message/:user_id" element={<Message />} />
-                  
-
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
-                  
                   <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />

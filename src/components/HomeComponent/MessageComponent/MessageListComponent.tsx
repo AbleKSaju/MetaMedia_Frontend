@@ -23,7 +23,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSendMessage, setIsSendMessage] = useState<boolean>(false);
-  const [conversationCreated, setConversationCreated] = useState<boolean>(false);
+  const [newState, setNewState] = useState(false);
   const [messages, setMessages] = useState<any>({});
   const [socket, setSocket] = useState<any>(null);
   const userData = useSelector((state: any) => state.persisted.user.userData);
@@ -37,6 +37,8 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
   }, []);
 
   useEffect(() => {
+    console.log("I am socket");
+    
     socket?.emit("addUser", userData?.userId);
     socket?.on("getUsers", (users: any) => {
       console.log("activeUsers :>> ", users);
@@ -53,48 +55,48 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
     messageRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+
   useEffect(() => {
     const fetchConversations = async () => {
-      const response: any = await GetConversationsFunction();
-      const userexist = await response.data.data.find((data:any)=>data.id == user_id)     
-      console.log(userexist,"userexistuserexistuserexist");
-       
-      if (!userexist && user_id !== "index" && conversationCreated==false) {        
-        const data={
-          senderId:user_id,
-          receiverId:userData.userId
-        }
-        const response = await CreateConversationFunction(data)
-        setConversationCreated(true)
-        
-      }else{
-        if (response.data.data) {
-          const userId = { ids: response.data.data };
-          const userData: any = await GetUsersDataByIdFunction(userId);        
-          const users: any = [];
-          userData.data.data.map((data: any,index:number) => {
-            const userDetails: any = {
-              conversationId: data.conversationId,
-              name: data.user.fullName,
-              email: data.user.email,
-              profile: data.user.profile,
-              receiverId: data.user.receiverId,
-              lastUpdate:response.data.data[index].lastUpdate
-            };
-            users.push(userDetails);
-          });
-          setConversations(users);
-        }
+      const response:any = await GetConversationsFunction();
+    const userExist = response.data.data.find((data: any) => data.id === user_id);
+    
+    if (!userExist && user_id !== "index") {
+      const data = {
+        senderId: user_id,
+        receiverId: userData.userId
+      };
+      await CreateConversationFunction(data);
+      setNewState(true);
+        }else{
+          if (response.data.data) {
+            const userId = { ids: response.data.data };
+            const userData: any = await GetUsersDataByIdFunction(userId);                  
+            const users: any = [];
+            userData.data.data.map((data: any,index:number) => {
+              const userDetails: any = {
+                conversationId: data.conversationId,
+                name: data.user.fullName,
+                email: data.user.email,
+                profile: data.user.profile,
+                receiverId: data.user.receiverId,
+                lastUpdate:response.data.data[index].lastUpdate
+              };
+              users.push(userDetails);
+            });
+            setConversations(users);
+          }
+      };
       }
-    };
     fetchConversations();
-  }, [isSendMessage]);
+  }, [isSendMessage,user_id,newState]);
+
 
   useEffect(() => {
     (async () => {
       if (user_id) {
-        const response = await conversations.filter((data: any) => data.receiverId === user_id);        
-        if (response) {
+        const response = await conversations?.filter((data: any) => data.receiverId === user_id);   
+        if (response) {          
           const message: any = await getMessagesFunction(response[0]);
           if (message.data.status) {
             setMessages({
@@ -105,31 +107,33 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
         }
       }
     })();
-  }, [user_id, conversations,isSendMessage]);
-
-  const sendMessage = async () => {
-    setMessage("");
-
-    socket?.emit("sendMessage", {
-      senderId: userData?.userId,
-      receiverId: messages?.data?.receiverId,
-      message,
-      conversationId: messages?.data?.conversationId,
-      lastUpdate: Date.now()
-    });
-
-    const data = {
-      conversationId: messages?.data?.conversationId || "new",
-      senderId: userData?.userId,
-      message,
-      receiverId: messages?.data?.receiverId,
-      lastUpdate: Date.now()
+  }, [user_id,conversations,isSendMessage,newState]);
+  
+  
+    const sendMessage = async () => {    
+      setMessage("");
+      socket?.emit("sendMessage", {
+        senderId: userData?.userId,
+        receiverId: messages?.data?.receiverId,
+        message,
+        conversationId: messages?.data?.conversationId,
+        lastUpdate: Date.now()
+      });
+  
+      const data = {
+        conversationId: messages?.data?.conversationId || "new",
+        senderId: userData?.userId,
+        message,
+        receiverId: messages?.data?.receiverId,
+        lastUpdate: Date.now()
+      };
+      const response = await sendMessageFunction(data);
+      console.log(response,"RRRRR");
+      if(response){
+        setIsSendMessage(!isSendMessage)
+      }
+      
     };
-    
-    const response = await sendMessageFunction(data);
-    setIsSendMessage(true)
-  };
-
   
 
   return (

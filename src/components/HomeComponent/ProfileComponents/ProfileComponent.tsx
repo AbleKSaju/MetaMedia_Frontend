@@ -4,7 +4,7 @@ import { Edit } from "lucide-react";
 import Highlight from "../HighlightComponent/HighlightComponent";
 import { GetHighlightData } from "../../../utils/api/methods";
 import profile from "../../../assets/profile.webp";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FollowComponent from "./FollowComponent";
 import AddHighlightComponent from "./AddHighlightComponent";
@@ -42,6 +42,7 @@ const Profile = ({ render, setRender }: any) => {
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.persisted.user.userData);
   let { user_id } = useParams();
+  const Navigate = useNavigate()
 
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
 
@@ -126,6 +127,11 @@ const checkUser = useMemo(
   const postLength = (data: any) => {
     setPostCount(data);
   };
+  const Message=(id:string)=>{
+    console.log("I AM NAVIGATING");
+    
+    Navigate(`/message/${id}`)
+  }
 
 
   return (
@@ -196,10 +202,8 @@ const checkUser = useMemo(
                     >
                           {isFollows ? "Following" : "Follow"}
                     </button>
-                    <button className="border border-black w-28 py-1 hover:border-[#C1506D] rounded-3xl">
-                      <Link to={`/message/${currentUser?.basicInformation?.userId}`}>
+                    <button onClick={()=>Message(currentUser?.basicInformation?.userId)} className="border border-black w-28 py-1 hover:border-[#C1506D] rounded-3xl">
                       Message
-                    </Link>
                     </button>
                   </div>
                 )}
