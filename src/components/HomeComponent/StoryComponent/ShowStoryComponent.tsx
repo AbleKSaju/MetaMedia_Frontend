@@ -7,6 +7,8 @@ const ShowStoryComponent = ({
   deleteStory,
   setDeleteStory,
 }: any) => {
+  console.log("I AM STORY");
+  
   return (
     <div className="fixed z-20 inset-0  w-full h-full backdrop-blur bg-opacity-50 bg-black flex flex-col p-5 ">
         <div className="flex justify-end">

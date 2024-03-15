@@ -1,10 +1,5 @@
-import {
-  ChevronLeft,
-  ChevronLeftCircle,
-  ChevronRight,
-  ChevronRightCircle,
-  MoreVertical,
-} from "lucide-react";
+import {ChevronLeft,ChevronLeftCircle,ChevronRight,ChevronRightCircle,MoreVertical,} from "lucide-react";
+import {ThreeDots} from 'react-loader-spinner'
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -31,6 +26,8 @@ const StorySliderComponent = ({
   const [video, setVideo] = useState<boolean>(false);
   const [currentStory, setCurrentStory] = useState<any>([]);
   const [currentProfile, setCurrentProfile] = useState("");
+  const [currentUser, setCurrentUser] = useState("");
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const durationPerImage = 5000;
 
   const userData = useSelector((state: any) => state.persisted.user.userData);
@@ -42,7 +39,10 @@ const StorySliderComponent = ({
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-console.log(myStory,"myStorymyStorymyStory");
+
+  const handleLoadedData = () => {
+    setVideoLoaded(true);
+  };
 
   useEffect(() => {
     if (myStory[0]?.length == 0 && stories[0]?.length == 0) {
@@ -51,12 +51,15 @@ console.log(myStory,"myStorymyStorymyStory");
       const story = stories[0]?.filter(
         (value: any) => value.userId == showStory
       );
+      console.log(story[0], "story[0]");
       if (story?.length) {
         setCurrentStory(story[0].data);
         setCurrentProfile(story[0]?.profile);
+        setCurrentUser(story[0]?.userId);
       } else {
         setCurrentStory(myStory[0]);
         setCurrentProfile(userData?.profile);
+        setCurrentUser(userData?.userId);
       }
     }
   }, [myStory, stories, currentIndex, showStory]);
@@ -167,46 +170,47 @@ console.log(myStory,"myStorymyStorymyStory");
   };
 
   return (
-    <div className="flex justify-center items-center w-[100%] h-[80%] mt-5 mb-36 relative">
+    <div className="flex justify-center items-center w-[100%] bg-black rounded-lg h-[80%] mt-5 mb-36 relative">
       <div className="flex justify-center w-full absolute top-2">
         {currentStory.map((_: any, index: number) => {
-        console.log(currentStory,"currentStorycurrentStory")
-        
-        return (
-          <>
-            <Link
-              to={`/profile/${userData?.userId}`}
-              onClick={() => setShowStory("")}
-            >
-              <img
-                className={`w-10 absolute h-10 top-5 left-2 border-2 border-[#C1506D] rounded-full  text-black  `}
-                src={
-                  currentProfile
-                    ? `http://localhost:3000/profile/${currentProfile}`
-                    : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
-                }
-              />
-            </Link>
-            {!video && (
-              <div
-                key={index}
-                className={`w-full h-1 rounded-full mx-0.5 ${
-                  index >= watchedStory ? "bg-amber-50" : "bg-[#C1506D]"
-                }`}
+          console.log(currentStory, "currentStorycurrentStory");
+
+          return (
+            <>
+              <Link
+                to={`/profile/${currentUser}`}
+                onClick={() => setShowStory("")}
               >
+                <img
+                  className={`w-10 absolute h-10 top-5 left-2 border-2 border-[#C1506D] rounded-full  text-black  `}
+                  src={
+                    currentProfile
+                      ? `http://localhost:3000/profile/${currentProfile}`
+                      : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                  }
+                />
+              </Link>
+              {!video && (
                 <div
-                  className={`h-1 rounded-full ${
-                    index === watchedStory ? "bg-[#C1506D]" : ""
+                  key={index}
+                  className={`w-full h-1 rounded-full mx-0.5 ${
+                    index >= watchedStory ? "bg-amber-50" : "bg-[#C1506D]"
                   }`}
-                  style={{
-                    width: `${loading}%`,
-                    transition: `${loading ? "width 0.5s ease-in-out" : ""}`,
-                  }}
-                ></div>
-              </div>
-            )}
-          </>
-        )})}
+                >
+                  <div
+                    className={`h-1 rounded-full ${
+                      index === watchedStory ? "bg-[#C1506D]" : ""
+                    }`}
+                    style={{
+                      width: `${loading}%`,
+                      transition: `${loading ? "width 0.5s ease-in-out" : ""}`,
+                    }}
+                  ></div>
+                </div>
+              )}
+            </>
+          );
+        })}
       </div>
       <div className="absolute top-7 right-1 z-20">
         <MoreVertical onClick={toggleDropdown} className="text-amber-50 mr-3" />
@@ -263,22 +267,39 @@ console.log(myStory,"myStorymyStorymyStory");
           className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10"
           onClick={prevImage}
         >
-          <ChevronLeft className="text-white"/>
+          <ChevronLeft className="text-white" />
         </button>
       )}
-      {currentStory?.map((story: any, index: number) => {        
+      {currentStory?.map((story: any, index: number) => {
         return (
           <>
             {story?.storyUrl?.startsWith("https://") &&
-            currentIndex == index ? (
-              <video
-                src={`${story?.storyUrl}`}
-                controls
-                muted
-                autoPlay
-                onLoadedData={() => setVideo(true)}
-                onEnded={nextImage}
-              ></video>
+            currentIndex === index ? (
+              <>
+                {!videoLoaded && (
+                  <p className="">
+                    <ThreeDots
+                  visible={true}
+                  height="80"
+                  width="80"
+                  color="#C1506D"
+                  radius="9"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  /></p>
+                )}
+                <video
+                  src={`${story?.storyUrl}`}
+                  controls
+                  muted
+                  autoPlay
+                  onLoad={() => setVideo(true)}
+                  onLoadedData={handleLoadedData}
+                  onEnded={nextImage}
+                  style={{ display: videoLoaded ? "block" : "none" }}
+                ></video>
+              </>
             ) : (
               <img
                 key={index}
@@ -290,6 +311,7 @@ console.log(myStory,"myStorymyStorymyStory");
                 }`}
               />
             )}
+
             <div className="absolute -bottom-8 font-medium shadow-black cursor-pointer">
               <p
                 className={`text-white  ${

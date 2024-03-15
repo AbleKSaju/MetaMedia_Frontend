@@ -6,6 +6,7 @@ export const Login_Api = `${AUTH_URL}/login`
 export const Logout_APi = `${AUTH_URL}/logout`
 export const SignUp_Api = `${AUTH_URL}/signup`
 export const VerifyOtp_Api = `${AUTH_URL}/verifyOtp`
+export const sendOtp_Api = `${AUTH_URL}/sendOtp`
 export const LoginWithGoogle_Api=`${AUTH_URL}/loginWithGoogle`
 export const LoginWithFacebook_Api=`${AUTH_URL}/loginWithFaceBook`
 export const ForgotPassword_Api=`${AUTH_URL}/forgotPassword`
@@ -25,12 +26,11 @@ export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
 export const GetAllUsers_Api=`${USER_URL}/getAllUsersForChat`
 export const getUsersByName_Api=`${USER_URL}/getUsersByname`
 export const getuserById_Api=`${USER_URL}/getUserById`
-
 export const GetAllUsersData_Api=`${USER_URL}/getAllUsers`
 export const GetSearchUserData_Api=`${USER_URL}/getSearchUser`
 export const ChangeUserStatus_Api=`${USER_URL}/changeUserStatus`
-
 export const Suggetion_Api=`${USER_URL}/suggetions`
+export const BlockAndUnblockUser_Api=`${USER_URL}/BlockAndUnblockUser`
 
 // STORY SERVICE
 

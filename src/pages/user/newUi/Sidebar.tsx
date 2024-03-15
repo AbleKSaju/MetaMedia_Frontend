@@ -7,6 +7,7 @@ import {
   Bell,
   ListCollapse,
 } from "lucide-react";
+import profile from '../../../assets/profile.webp'
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { LogoutFunction } from "../../../utils/api/methods";
@@ -18,10 +19,8 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
   const location = useLocation();
   const Navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [isOpen, setIsOpen] = useState(false);
   const userData = useSelector((state: any) => state.persisted.user.userData);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const modal = document.querySelector(".fixed") as HTMLElement;
@@ -49,8 +48,6 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
     }
     persistor.purge();
   };
-
-
 
   return (
     <>
@@ -186,7 +183,11 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
             <div className="bg-[#FADBE1] w-11 h-11 rounded-full flex justify-center items-center ">
               <div className="rounded-full w-5/6 h-5/6 sm:w-[45px] sm:h-[45px] flex justify-center items-center">
                 <img
-                  src={`http://localhost:3000/profile/${userData?.profile}`}
+                 src={  userData?.profile.startsWith('https://graph') ?
+                 profile
+                   : userData?.profile ?
+                   `http://localhost:3000/profile/${userData?.profile}`
+                   : profile}
                   className="rounded-full w-full h-full  border-2 border-[#C1506D] object-fill"
                   alt=""
                 />
@@ -196,13 +197,10 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
           {/* profile  */}
         </div>
         {/* sidebar content main part  */}
-        {/* sidebar content setting part  */}
         <div className="hidden h-2/6 sm:flex justify-center items-end p-8">
           {/* more  */}
           <div className=" h-full w-full flex justify-center  items-end ">
-            <div
-              className={`bg-[#FADBE1] w-10 h-10 ${"w-12 h-12"} rounded-full flex justify-center items-center`}
-            >
+            <div className={`bg-[#FADBE1] w-10 h-10 ${"w-12 h-12"} rounded-full flex justify-center items-center`}>
               <>
                 <ListCollapse className="text-gray-600 size-6 sm:size-6 " onClick={()=>setIsOpen(!isOpen)}/>
               </>
@@ -216,14 +214,15 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
                       Settings
                     </Link>
                     </li>
-                    <li  className="py-2 px-4 hover:bg-[#C1506D] hover:text-amber-50 border-b border-black cursor-pointer">
-                      forward
-                    </li>
                     <li
-                      className="py-2 px-4 hover:bg-[#C1506D] hover:text-amber-50 rounded-b-lg cursor-pointer"
+                      className="py-2 px-4 hover:bg-[#C1506D] hover:text-amber-50 border-b border-black cursor-pointer"
                       onClick={handleLogout}
                     >
                       Logout
+                    </li>
+                    <li onClick={()=>setIsOpen(!isOpen)}
+                     className="py-2 px-4 hover:bg-[#C1506D] hover:text-amber-50 cursor-pointer">
+                      Cancel
                     </li>
                   </ul>
                 </div>

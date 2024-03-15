@@ -1,6 +1,7 @@
 import { Film, Image, MoreVertical, Radio } from 'lucide-react'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
+import profile from '../../assets/profile.webp'
 import { toast } from 'sonner';
 
 const CreateMediaComponent = ({setAddStory,setIsAddPost,setIsAddLive}:any) => {
@@ -24,7 +25,11 @@ const CreateMediaComponent = ({setAddStory,setIsAddPost,setIsAddLive}:any) => {
             <div className="w-full h-[130px]  flex justify-between  ">
               <div className="w-full h-[110px]  flex items-center pl-5 gap-2 ">
                 <img
-                  src={`http://localhost:3000/profile/${userData?.profile}`}
+                  src={  userData?.profile.startsWith('https://graph') ?
+                  profile
+                    : userData?.profile ?
+                    `http://localhost:3000/profile/${userData?.profile}`
+                    : profile}
                   className="sm:w-12 sm:h-12 h-10 w-10 rounded-full  border-2 border-[#C1506D]"
                   alt=""
                 />

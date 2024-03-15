@@ -80,9 +80,6 @@ const PostScroll = ({ data, render, setRender }: any) => {
             </p>
             <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-black  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
             </p>
-            <p className="lg:ml-[210px] lg:text-lg font-bold  text-black md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
-              ...
-            </p>
           </div>
           <div
             className="relative mx-4 mt-0 overflow-hidden text-gray-700  shadow-lg bg-clip-border  rounded-md lg:h-[500px]"

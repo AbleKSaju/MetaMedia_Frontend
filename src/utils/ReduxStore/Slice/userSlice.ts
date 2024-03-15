@@ -19,11 +19,14 @@ const userSlice=createSlice({
        addProfileImage:(state,action)=>{
         state.userData = {...state.userData,...action.payload}
        },
+       blockedUsers:(state,action)=>{        
+        state.userData = {...state.userData,...action.payload}
+       },
        getUser:()=>{},
        updateUser:()=>{}
     }
 })
 
-export const {addUser,clearUser,editUser,getUser,updateUser,addProfileImage} =userSlice.actions
+export const {addUser,clearUser,editUser,getUser,updateUser,addProfileImage,blockedUsers} =userSlice.actions
 
 export default userSlice.reducer;

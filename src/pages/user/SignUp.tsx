@@ -64,7 +64,6 @@ const SignUp = () => {
             dispatch(addToken(response.data.accesstoken));
   
             if (response?.data?.newUser) {
-              console.log("IAMnewUSER");
               toast.success(response?.data?.message);
               Navigate("/chooseinterest",{ replace: true });
             } else {
@@ -105,7 +104,6 @@ const SignUp = () => {
       });
     };
 
-
   const handleGoogle = async(e: any) => {
     e.preventDefault();
     await GoogleAuth().then(async (data: any) => {
@@ -135,7 +133,6 @@ const SignUp = () => {
           dispatch(addUser(data));
           dispatch(addToken(response.data.accesstoken))
 
-         
           if (data) {
             toast.success(response?.data?.message);
             Navigate("/chooseinterest",{ replace: true });
@@ -149,7 +146,6 @@ const SignUp = () => {
             isGoogle: response.data.user.isGoogle,
             isFacebook: response.data.user.isFacebook,
           };
-          
          
           dispatch(clearUser());
           dispatch(addUser(data));
@@ -166,9 +162,13 @@ const SignUp = () => {
       }
     });
   };
+
   const formSubmit = async (Data: RegisterFormData) => {
     const response: any = await SignUpFunction({ ...Data });
+    console.log(Data.email,"Data.email");
+    
     if (response?.data?.status) {
+      localStorage.setItem("email",Data.email)
       Navigate("/verifyOtp",{ replace: true });
     } else {
       toast.error(response?.data?.message);
@@ -177,109 +177,120 @@ const SignUp = () => {
 
   return (
     <>
-      <div className="relative flex justify-center align-middle mt-16">
-
-        {/* wrapper div  */}
-        <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
-          <form
-            className="grid grid-cols-8 grid-rows-14 gap-3 text-center"
-            onSubmit={handleSubmit(formSubmit)}
-          >
-            {/* header */}
-            <div className="col-span-4 col-start-2 row-start-1">
-              <h1 className="text-3xl md:text-4xl lg:text-4xl font-roboto text-teal-800 text-start">
-                Sign Up
-              </h1>
-            </div>
-            {/* name input */}
-            <div className="col-span-8 col-start-2 col-end-8 row-start-3">
-              <p className="text-start text-teal-800 font-light">name</p>
+      <div className="h-screen w-screen flex fixed bg ">
+        <div className="flex justify-center w-full ">
+          <div className="w-full md:w-7/12 h-full flex justify-center items-center md:pl-7">
+            <form onSubmit={handleSubmit(formSubmit)}
+             className="w-full sm:w-8/12 md:w-10/12 lg:w-8/12 h-5/6  flex justify-between flex-col items-center">
+              <div className="w-full h-36   flex justify-center md:justify-start  md:items-start items-center">
+                <h1 className="text-[#C1506D]  font-semibold font-sans text-2xl  md:text-center md:text-2xl  pl-5     ">
+                  Get Started Now
+                </h1>
+              </div>
+              <div className="w-full h-32   flex  justify-center p-5 flex-col gap-2">
+                <label className="pl-1 font-semibold text-[#C1506D]">
+                  Name
+                </label>
+              <div>
               <input
-                className="p-5 outline-noneborder  border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
-                placeholder="abc"
-                type="text"
-                // value="Able K Saju"
-                {...register("name")}
-              />
-              <p className="text-red-600 text-xs text-start">
-                {errors && errors.name && <p>{errors.name.message}</p>}
-              </p>
-            </div>
-
-            {/* email input */}
-            <div className="col-span-8 col-start-2 col-end-8 row-start-4">
-              <p className="text-start text-teal-800 font-light">email</p>
+                  type="text"
+                  placeholder="name"
+                  className="outline-none border border-[#C1506D] w-full rounded-md pl-2 h-10"
+                  {...register("name")}
+                  />
+              </div>
+                  <p className="text-red-600 text-xs text-start">
+                    {errors && errors.name && <p>{errors.name.message}</p>}
+                  </p>
+              </div>
+              <div className="w-full h-32   flex  justify-center p-5 flex-col gap-2">
+                <label className="pl-1 font-semibold text-[#C1506D]">
+                  Email
+                </label>
+              <div>
               <input
-                className="p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
-                placeholder="abc@gmai.com"
-                type="text"
-                // value="ableksaju3@gmail.com"
-                {...register("email")}
-              />
-              <p className="text-red-600 text-xs text-start">
-                {errors && errors.email && <p>{errors.email.message}</p>}
-              </p>
-            </div>
+                  type="email"
+                  placeholder="email"
+                  className="outline-none border border-[#C1506D] w-full rounded-md pl-2 h-10"
+                  {...register("email")}
+                  />
+              </div>
+                  <p className="text-red-600 text-xs text-start">
+                    {errors && errors.email && <p>{errors.email.message}</p>}
+                  </p>
+              </div>
 
-            {/* password input */}
-            <div className="col-span-8 col-start-2 col-end-8 row-start-5 relative">
-              <p className="text-start text-teal-800 font-light">Password</p>
-              <input
-                className=" p-5 outline-none border border-amber-100 h-10 w-full rounded-md text-teal-800 placeholder:font-thin placeholder:text-zinc-300 placeholder:text-sm"
-                placeholder="********"
-                // value="1234"
-                type={showPassword ? "text" : "password"}
-                {...register("password")}
-              />
-           
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-0 mr-3 mt-2 text-teal-900">{showPassword ? <Eye /> : <EyeOff />}</button>
-              <p className="text-red-600 text-xs text-start">
-                {errors && errors.password && <p>{errors.password.message}</p>}
-              </p>
-            </div>
-
-            {/* submit */}
-            <div className="col-span-8 col-start-3 col-end-7 row-start-6">
-              <button
-                type="submit"
-                className="py-2 px-3 flex justify-center items-center bg-teal-800 hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md"
-              >
-                Sign Up
-              </button>
-            </div>
-            <div className="col-span-4 col-start-3 row-start-7 p-2">
-              <p className="text-teal-800 font-light">or continue with</p>
-            </div>
-            <button onClick={handleGoogle} className="col-start-3 row-start-9">
-              {
-                <div>
-                  <img src="/fonts/google.png" alt="G" />
-
+                <div className="w-full h-32 flex justify-center p-5 flex-col gap-2">
+                <label className="pl-1 font-semibold text-[#C1506D]">
+                  Password
+                </label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    className="outline-none border w-full border-[#C1506D] rounded-md pl-2 pr-10 h-10"
+                    placeholder="********"
+                    type={showPassword ? "text" : "password"}
+                    {...register("password")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-0 bottom-0 flex items-center justify-center"
+                  >
+                    {showPassword ? <Eye /> : <EyeOff />}
+                  </button>
                 </div>
-              }
-            </button>
-            <button
-              type="button"
-              onClick={SignInWithFacebook}
-              className="col-start-6 row-start-9"
-            >
-              <img src="/fonts/facebook.png" alt="G" />
-            </button>
-
-            {/* Create account */}
-            <div className="col-span-4 col-start-3 row-start-10">
-              <p className="text-teal-800 font-light">
-                have an account ?{" "}
-                <span className="text-bold text-black text-bold hover:underline">
-                  <Link to="/login">Log In</Link>
-                </span>{" "}
-              </p>
-            </div>
-          </form>
+                <p className="text-red-600 text-xs text-start">
+                  {errors && errors.password && (
+                    <p>{errors.password.message}</p>
+                  )}
+                </p>
+              </div>
+              <div className="w-full h-36   flex justify-center items-center p-5">
+                <button type="submit" className="w-full h-10 border border-[#C1506D] bg-[#C1506D] rounded-md    text-white font-sans   font-bold text-sm  ">
+                  Sign Up
+                </button>
+              </div>
+              <Link to={"/login"}>
+                <p className="text-black font-roboto font-light text-sm whitespace-nowrap ml-8 mt-2 ">
+                  Back to Login ? {" "}
+                  <span className="whitespace-nowrap font-medium hover:underline">
+                    Login{" "}
+                  </span>
+                  <span className="whitespace-nowrap font-medium hover:underline">
+                  </span>
+                </p>
+              </Link>
+              <div className="w-full h-32   flex justify-evenly items-center">
+                <div className="inline-flex items-center justify-center w-full">
+                  <hr className="w-64 h-1 my-8 bg-gray-200 border-0 rounded " />
+                  <div className="absolute px-4  bg-white text-[#C1506D] ">
+                    or
+                  </div>
+                </div>
+              </div>
+              <div className="w-full h-32   flex justify-evenly items-center">
+                <div className="w-5/12 border h-10 rounded-md border-[#C1506D] flex items-center pl-2 justify-center ">
+                  <img
+                    src="/fonts/google.png"
+                    className="w-6 h-6 rounded-full object-fill"
+                    alt=""
+                  />
+                  <p onClick={handleGoogle} className="text-sm pl-2">Sign in with google</p>
+                </div>
+                <div className="w-5/12 border h-10 rounded-md border-[#C1506D] items-center flex pl-2 justify-center">
+                  <img
+                    src="/fonts/facebook.png"
+                    className="w-6 h-6 rounded-full object-fill"
+                    alt=""
+                  />
+                  <p onClick={SignInWithFacebook} className="text-sm pl-2">Sign in with Facebook</p>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </>
   );
 };
-
 export default SignUp;

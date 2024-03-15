@@ -9,6 +9,9 @@ const UsersListComponent = () => {
   const [users, setUsers] = useState<any>([]);
   const [currentUsers, setCurrentUsers] = useState<any>();
   const [searchUser, setSearchUser] = useState<string>("");
+  const [blockUser,setBlockUser] = useState(false)
+  console.log();
+  
 
   useEffect(() => {
     (async () => {
@@ -20,7 +23,7 @@ const UsersListComponent = () => {
         toast.error("Users not found");
       }
     })();
-  }, []);
+  }, [blockUser]);
 
   useEffect(() => {
     (async () => {
@@ -47,15 +50,17 @@ const UsersListComponent = () => {
       userId
     }
     console.log(userId,"stats");
-    const response = await ChangeUserStatusFunction(data)
+    const response:any = await ChangeUserStatusFunction(data)
     console.log(response,"ChangeUserStatusFunctionChangeUserStatusFunction");
-    
-    
-
+    if(response.data.status){
+      toast.success("Status Changed")
+      setBlockUser(!blockUser)
+    }
   }
+  
 
   return (
-    <section className="container mx-auto p-6 pt-0 mt-10 font-mono overflow-auto scrollbar-hide">
+    <section className="container mx-auto p-6 pt-0 mt-10 font-mono overflow-auto scrollbar-hide cursor-pointer">
       <div className="max-w-md mx-full ">
         <div className="relative flex items-center w-full h-12 mb-5 rounded-lg focus-within:shadow-lg bg-white overflow-hidden">
           <div className="grid place-items-center h-full w-12 text-gray-300">
@@ -97,6 +102,8 @@ const UsersListComponent = () => {
             </thead>
             <tbody className="bg-white">
               {currentUsers?.map((data: any, index: number) => {
+                console.log(data.blocked,"BBLL");
+                
                 return (
                   <tr className="text-black font-roboto" key={data.fullName}>
                     <>

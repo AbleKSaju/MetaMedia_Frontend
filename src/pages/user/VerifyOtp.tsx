@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { verifyOtpFunction } from "../../utils/api/methods/AuthService/post";
+import { sendOtpFunction, verifyOtpFunction } from "../../utils/api/methods/AuthService/post";
 import { useRegisterValidate } from "../../utils/formValidation/SignUpValidation";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { addToken } from "../../utils/ReduxStore/Slice/tokenSlice";
@@ -21,9 +21,9 @@ const VerifyOtp: React.FC = () => {
 const dispatch=useDispatch()
 
   const [otpNumber, setOtp] = useState(["", "", "", ""]);
-  const [timer, setTimer] = useState(60); // Initial timer value in seconds
+  const [timer, setTimer] = useState(10);
   const [showResendMessage, setShowResendMessage] = useState(false);
-  const [focusedInput, setFocusedInput] = useState<number>(0);
+  // const [focusedInput, setFocusedInput] = useState<number>(0);
   const Navigate = useNavigate();
   const inputRefs = [
     useRef<HTMLInputElement>(null),
@@ -43,11 +43,19 @@ const dispatch=useDispatch()
       clearInterval(countdown);
     }
     return () => clearInterval(countdown);
-  }, [timer]);
+  }, [timer]);  
 
-  const handleResend = () => {
+  const handleResend = async() => {
+    const email = localStorage.getItem("email")    
     setTimer(60);
-    setShowResendMessage(false);
+    const data={email}
+    const response:any = await sendOtpFunction(data)
+    if(response){
+      setShowResendMessage(false);
+      toast.success(response.data.message)
+    }else{
+      toast.error(response.data.message)
+    }
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -55,7 +63,7 @@ const dispatch=useDispatch()
     newOtp[index] = value;
     setOtp(newOtp);
     if (value !== "" && index < 3) {
-      setFocusedInput(index + 1);
+      // setFocusedInput(index + 1);
       if (inputRefs[index + 1]?.current) {
         inputRefs[index + 1]?.current?.focus();
       }
@@ -67,7 +75,7 @@ const dispatch=useDispatch()
     event: KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Backspace" && index > 0 && otpNumber[index] === "") {
-      setFocusedInput(index - 1);
+      // setFocusedInput(index - 1);
       if (inputRefs[index - 1]?.current) {
         inputRefs[index - 1]?.current?.focus();
       }
@@ -100,6 +108,7 @@ const dispatch=useDispatch()
         dispatch(clearUser());
         dispatch(addUser(data));
         dispatch(addToken(response.data.accesstoken));
+        console.log(response?.data,"response?.data?.status");
         if (response?.data?.status) {
           toast.success(response?.data?.message);
           Navigate("/chooseinterest",{ replace: true });
@@ -113,17 +122,17 @@ const dispatch=useDispatch()
   }
     return (
     <div className="relative flex justify-center align-middle overflow-hidden bg-gray-50 m-0 sm:py-12">
-      <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
+      <div className="relative px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
         <form
           className="grid grid-cols-6 grid-rows-12 gap-8"
           onSubmit={formSumbit}
         >
-          <div className="col-span-7  col-start-1 row-start-2 bg-red-30  text-teal-800 text-3xl">
+          <div className="col-span-7  col-start-1 row-start-2 bg-red-30  text-black text-3xl">
             <h1 className="font-roboto text-4xl lg:text-5xl">
               Verification Code
             </h1>
           </div>
-          <div className="row-span-2 col-span-6 col-start-1 row-start-4 text-teal-800 ">
+          <div className="row-span-2 col-span-6 col-start-1 row-start-4 text-black ">
             We have sent the verification code to your email address
           </div>
           <div className="col-start-1 row-start-7">
@@ -132,7 +141,7 @@ const dispatch=useDispatch()
                 <div key={index} className="ml-7 md:ml-10 lg:ml-12">
                   <input
                     ref={inputRefs[index]}
-                    className="border border-teal-800 remove-arrow h-10 w-10 text-center form-control rounded"
+                    className="border border-[#C1506D] remove-arrow h-10 w-10 text-center form-control rounded"
                     maxLength={1}
                     value={digit}
                     type="number"
@@ -146,12 +155,12 @@ const dispatch=useDispatch()
           <div className="col-start-2 col-span-4 row-start-9">
             <button
               type="submit"
-              className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-teal-800 border-none text-white text-sm shadow-sm"
+              className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-3 bg-[#C1506D] border-none text-white text-sm shadow-sm"
             >
               Verify Account
             </button>
           </div>
-          <div className="col-start-2 col-span-5 row-start-11">
+          <div className="col-start-2 col-span-5 row-start-11 cursor-pointer">
             <div className="flex flex-row items-center text-sm font-medium space-x-1 text-gray-500">
               {!showResendMessage && (
                 <p className="md:ml-6">{`Resend OTP in ${timer} seconds`}</p>
@@ -159,7 +168,7 @@ const dispatch=useDispatch()
               {showResendMessage && (
                 <p className="md:pl-4">
                   Didn't recieve code?{" "}
-                  <span onClick={handleResend} className="text-teal-800">
+                  <span onClick={handleResend} className="text-black">
                     Resend
                   </span>
                 </p>

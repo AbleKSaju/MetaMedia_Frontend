@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-import useMediaQuery from "../../../utils/costumHook/mediaqueri";
 import { useDispatch, useSelector } from "react-redux";
 import {
   GetConversationsFunction,
@@ -16,9 +15,18 @@ import {
   Video,
 } from "lucide-react";
 import profile from "../../../assets/profile.webp";
-import { CreateConversationFunction, sendMessageFunction } from "../../../utils/api/methods/ChatService/post/post";
-import { useParams } from "react-router-dom";
-import TimeConvertor from "../../../utils/Helper/TimeConvertor";
+import {
+  BlockAndUnblockUserFunction,
+  CreateConversationFunction,
+  sendMessageFunction,
+} from "../../../utils/api/methods/ChatService/post/post";
+import { Link, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import {
+  blockedUsers,
+  editUser,
+} from "../../../utils/ReduxStore/Slice/userSlice";
+import { none } from "@cloudinary/url-gen/qualifiers/fontHinting";
 const MessageListComponent = ({ conversations, setConversations }: any) => {
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -29,6 +37,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
   const userData = useSelector((state: any) => state.persisted.user.userData);
   const messageRef = useRef<any>(null);
   const { user_id } = useParams();
+  const dispatch = useDispatch();
 
   console.log("I a MessageListComponent");
 
@@ -38,7 +47,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
 
   useEffect(() => {
     console.log("I am socket");
-    
+
     socket?.emit("addUser", userData?.userId);
     socket?.on("getUsers", (users: any) => {
       console.log("activeUsers :>> ", users);
@@ -55,48 +64,50 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
     messageRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-
   useEffect(() => {
     const fetchConversations = async () => {
-      const response:any = await GetConversationsFunction();
-    const userExist = response.data.data.find((data: any) => data.id === user_id);
-    
-    if (!userExist && user_id !== "index") {
-      const data = {
-        senderId: user_id,
-        receiverId: userData.userId
-      };
-      await CreateConversationFunction(data);
-      setNewState(true);
-        }else{
-          if (response.data.data) {
-            const userId = { ids: response.data.data };
-            const userData: any = await GetUsersDataByIdFunction(userId);                  
-            const users: any = [];
-            userData.data.data.map((data: any,index:number) => {
-              const userDetails: any = {
-                conversationId: data.conversationId,
-                name: data.user.fullName,
-                email: data.user.email,
-                profile: data.user.profile,
-                receiverId: data.user.receiverId,
-                lastUpdate:response.data.data[index].lastUpdate
-              };
-              users.push(userDetails);
-            });
-            setConversations(users);
-          }
-      };
-      }
-    fetchConversations();
-  }, [isSendMessage,user_id,newState]);
+      const response: any = await GetConversationsFunction();
+      const userExist = response.data.data.find(
+        (data: any) => data.id === user_id
+      );
 
+      if (!userExist && user_id !== "index") {
+        const data = {
+          senderId: user_id,
+          receiverId: userData.userId,
+        };
+        await CreateConversationFunction(data);
+        setNewState(true);
+      } else {
+        if (response.data.data) {
+          const userId = { ids: response.data.data };
+          const userData: any = await GetUsersDataByIdFunction(userId);
+          const users: any = [];
+          userData.data.data.map((data: any, index: number) => {
+            const userDetails: any = {
+              conversationId: data.conversationId,
+              name: data.user.fullName,
+              email: data.user.email,
+              profile: data.user.profile,
+              receiverId: data.user.receiverId,
+              lastUpdate: response.data.data[index].lastUpdate,
+            };
+            users.push(userDetails);
+          });
+          setConversations(users);
+        }
+      }
+    };
+    fetchConversations();
+  }, [isSendMessage, user_id, newState]);
 
   useEffect(() => {
     (async () => {
       if (user_id) {
-        const response = await conversations?.filter((data: any) => data.receiverId === user_id);   
-        if (response) {          
+        const response = await conversations?.filter(
+          (data: any) => data.receiverId === user_id
+        );
+        if (response) {
           const message: any = await getMessagesFunction(response[0]);
           if (message.data.status) {
             setMessages({
@@ -107,35 +118,47 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
         }
       }
     })();
-  }, [user_id,conversations,isSendMessage,newState]);
-  
-  
-    const sendMessage = async () => {    
-      setMessage("");
-      socket?.emit("sendMessage", {
-        senderId: userData?.userId,
-        receiverId: messages?.data?.receiverId,
-        message,
-        conversationId: messages?.data?.conversationId,
-        lastUpdate: Date.now()
-      });
-  
-      const data = {
-        conversationId: messages?.data?.conversationId || "new",
-        senderId: userData?.userId,
-        message,
-        receiverId: messages?.data?.receiverId,
-        lastUpdate: Date.now()
-      };
-      const response = await sendMessageFunction(data);
-      console.log(response,"RRRRR");
-      if(response){
-        setIsSendMessage(!isSendMessage)
-      }
-      
-    };
-  
+  }, [user_id, conversations, isSendMessage, newState]);
 
+  const sendMessage = async () => {
+    setMessage("");
+    socket?.emit("sendMessage", {
+      senderId: userData?.userId,
+      receiverId: messages?.data?.receiverId,
+      message,
+      conversationId: messages?.data?.conversationId,
+      lastUpdate: Date.now(),
+    });
+
+    const data = {
+      conversationId: messages?.data?.conversationId || "new",
+      senderId: userData?.userId,
+      message,
+      receiverId: messages?.data?.receiverId,
+      lastUpdate: Date.now(),
+    };
+    const response = await sendMessageFunction(data);
+    console.log(response, "RRRRR");
+    if (response) {
+      setIsSendMessage(!isSendMessage);
+    }
+  };
+
+  const BlockAndUnblockUser = async (userId: string) => {
+    const data = {
+      userId,
+    };
+    const response: any = await BlockAndUnblockUserFunction(data);
+    if (response.data.status) {
+      dispatch(editUser(response.data.data));
+      toast.success(response.data.message);
+    } else {
+      toast.error(response.data.message);
+    }
+  };
+  const isBlocked = userData.blockedUsers.some(
+    (user: any) => user.userId === messages?.data?.receiverId
+  );
   return (
     <>
       <div className="flex flex-col w-full ">
@@ -154,31 +177,43 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
               className="rounded-full mr-4 w-[35px] h-[35px]"
             />
             <div className="flex flex-col">
-              <p className="font-medium md:font-bold">
-                {messages?.data?.name}
-              </p>
+              <p className="font-medium md:font-bold">{messages?.data?.name}</p>
               <p className="font-light text-sm">5 min ago</p>
             </div>
             <div className=" text-gray-600 ml-auto flex gap-2 sm:gap-5">
-              <Phone className="mt-0.5 size-4 lg:size-6" />
-              <Video className="ml-2 size-5 lg:size-7" />
+              <Phone className={`${isBlocked ? "text-gray-400":""} mt-0.5 size-4 lg:size-6`}/>
+              <Video className={`${isBlocked ? "text-gray-400":""} ml-2 size-5 lg:size-7`} />
               <MoreVertical
                 onClick={() => setIsOpen(!isOpen)}
                 className="size-4 lg:size-7"
               />
             </div>
             {isOpen && (
-              <div className="absolute top-14 right-6 w-40 bg-teal-900 rounded-tr-none rounded-lg shadow-lg z-10 border">
+              <div className="absolute top-14 right-6 w-40 bg-white z-20 rounded-tr-none rounded-lg shadow-lg border">
                 <ul>
-                  <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
-                    Profile
+                  <li
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="py-2 px-4 hover:bg-[#C1506D] hover:rounded-lg hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer"
+                  >
+                    <Link to={`/profile/${messages?.data?.receiverId}`}>
+                      {" "}
+                      Profile
+                    </Link>
                   </li>
-                  <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer">
-                    Search
+                  <li
+                    onClick={() => {
+                      BlockAndUnblockUser(messages?.data?.receiverId);
+                      setIsOpen(!isOpen);
+                    }}
+                    className="py-2 px-4 hover:bg-[#C1506D] hover:rounded-lg hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer"
+                  >
+                    {isBlocked ? "Unblock" : "Block"}
                   </li>
-                  <li className="py-2 px-4 hover:bg-teal-800 hover:text-amber-50 rounded-lg cursor-pointer">
-                    {" "}
-                    Block
+                  <li
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="py-2 px-4 hover:bg-[#C1506D] hover:rounded-lg hover:text-amber-50 rounded-lg rounded-b-none border-b cursor-pointer"
+                  >
+                    Cancel
                   </li>
                 </ul>
               </div>
@@ -235,33 +270,40 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
               No Messages or No Conversation Selected
             </div>
           )}
+                  <p className="text-red-500 text-center font-bold">
+                    {isBlocked && "unblock to start messaging"}
+                  </p>
         </div>
-        <footer className="fixed bottom-0 w-full">
-          <div className="relative flex items-center">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type message ..."
-              className="rounded-lg bg-gray-100 py-3 sm:py-4 px-4 w-full outline-none border-t border-gray-300"
-            />
-          </div>
-        </footer>
-        <div className="absolute right-5 bottom-3 flex z-50">
-          {!message.length ? (
-            <>
-              <Mic className="size-5 lg:size-6 mr-3" />
-              <Image className="size-5 lg:size-6" />
-            </>
-          ) : (
-            <p
-              className="hover:text-teal-800 font-bold cursor-pointer"
-              onClick={() => sendMessage()}
-            >
-              Send
-            </p>
-          )}
-        </div>
+        {user_id !== "index" && !isBlocked && (
+          <>
+            <footer className="fixed bottom-0 w-full">
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type message ..."
+                  className="rounded-lg bg-gray-100 py-3 sm:py-4 px-4 w-full outline-none border-t border-gray-300"
+                />
+              </div>
+            </footer>
+            <div className="absolute right-5 bottom-3 flex z-50">
+              {!message.length ? (
+                <>
+                  <Mic className="size-5 lg:size-6 mr-3" />
+                  <Image className="size-5 lg:size-6" />
+                </>
+              ) : (
+                <p
+                  className="hover:text-teal-800 font-bold cursor-pointer"
+                  onClick={() => sendMessage()}
+                >
+                  Send
+                </p>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </>
   );

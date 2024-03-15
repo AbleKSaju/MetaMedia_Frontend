@@ -10,7 +10,6 @@ const Story = ({setShowStory,setAddStory}:any) => {
   const myStory = useSelector((state: any) => state.persisted.story.storyData);
   const userData = useSelector((state: any) => state.persisted.user.userData);
   const stories = useSelector((state: any) => state.persisted.story.otherUsersStoryData);
-  console.log(myStory,"myStorymyStorymyStorymyStory");
   
   
   return (

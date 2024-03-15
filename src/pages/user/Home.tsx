@@ -8,7 +8,7 @@ import Message from "../../components/HomeComponent/MessageComponent/MessageComp
 import Post from "../../components/HomeComponent/PostComponent";
 import Profile from "../../components/HomeComponent/ProfileComponents/ProfileComponent";
 import Settings from "./Settings";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useParams } from "react-router-dom";
 import StoryModal from "../../components/HomeComponent/StoryComponent/StoryModal";
 import ShowStoryComponent from "../../components/HomeComponent/StoryComponent/ShowStoryComponent";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +27,7 @@ import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 
 import CreateLive from "../../components/HomeComponent/liveComponent/CreateLive";
 import Golive from "../../components/HomeComponent/liveComponent/goLive";
+import VideoCallComponent from "../../components/HomeComponent/MessageComponent/CallComponents/VideoCallComponent";
 
 
 
@@ -46,7 +47,9 @@ const Home = ({ render,setRender}:any) => {
   const [isgoLive,setIsGoLive]=useState(false)
   const dispatch = useDispatch()
   const location = useLocation();
+  const currentRoute = location.pathname;
   const userData=useSelector((state:any)=>state.persisted.user.userData)
+console.log(currentRoute,"PPP");
 
   useEffect(()=>{
     (async ()=>{
@@ -77,33 +80,29 @@ const Home = ({ render,setRender}:any) => {
     }, [dispatch, userData.userId]);
   
   const allowedPaths = ["/", "/post"];
- console.log("I AM HOME");
  
   return (
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
-
  {isAddLive &&  (<CreateLive setIsAddLive={setIsAddLive} setIsGoLive={setIsGoLive}/>)}
- 
 
  <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
-
     <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
-        <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> 
-        {openSearch && <SearchComponent setOpenSearch={setOpenSearch}/>}
+        {currentRoute !== '/videoCall' && <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> }
+        {openSearch && <SearchComponent setOpenSearch={setOpenSearch} setRender={setRender} render={render}/>}
         {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
           {isgoLive &&  (<Golive />)}
             <Routes>
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/message/:user_id" element={<Message />} />
-                  <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/settings/*" element={<Settings  />} />
                   <Route path="/room/:roomId" element={<Golive  />}/>
+                  <Route path="/videoCall" element={<VideoCallComponent  />}/>
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

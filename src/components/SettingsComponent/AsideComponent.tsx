@@ -10,7 +10,7 @@ import { persistor } from "../../utils/ReduxStore/Store/Store";
 import profile from '../../assets/profile.webp'
 
 
-const Aside = () => {
+const Aside = ({blockedUsers,setBlockedUsers,changePassword,setChangePassword}:any) => {
   const location = useLocation();
   const userData = useSelector((state: any) => state.persisted.user.userData);
 
@@ -103,53 +103,53 @@ const Aside = () => {
                 </div>
                 {/* </div> */}
               </div>
-              <div className="w-[100vw] sm:w-64 lg:w-[295px] absolute bottom-16 sm:bottom-3 cursor-pointer bg-red-900">
+              <div className="w-[100vw] sm:w-64 lg:w-[298px] absolute bottom-16 sm:bottom-3 cursor-pointer bg-red-900">
                 <div className="grid grid-cols-12 grid-rows-12 text-center text-black bg-[#FADBE1] mx-5 sm:mx-0  font-medium text-lg">
                   <Link
                     to="/settings"
                     className={`${
                       location.pathname === "/settings"
-                        ? "bg-[#C1506D] "
+                        ? "bg-[#e27a94] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-1 w-full py-2 sm:px-2 `}
                   >
                     Edit Profile
                   </Link>
                   <Link
-                    to="/settings/activity"
+                    to="/settings/accountInfo"
                     className={`${
-                      location.pathname == "/settings/activity"
-                        ? "bg-[#C1506D] "
-                        :""
-                    } col-span-12 border-b border-black row-span-2 col-start-1 row-start-3 w-full py-2 md:py-2.5 sm:px-2`}
-                  >
-                    Activity
-                  </Link>
-                  <Link
-                    to="/settings/security"
-                    className={`${
-                      location.pathname == "/settings/security"
-                        ? "bg-[#C1506D] "
+                      location.pathname == "/settings/accountInfo"
+                        ? "bg-[#e27a94] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-5 w-full py-2 md:py-2.5 sm:px-2 `}
                   >
-                    Security
+                    Account Info
                   </Link>
-                  <Link
-                    to="/settings/notification"
+                  <div
+                  onClick={()=>setChangePassword(!changePassword)}
                     className={`${
-                      location.pathname === "/settings/notification"
-                        ? "bg-[#C1506D] "
+                      location.pathname == "/settings/changePassword"
+                        ? "bg-[#e27a94] "
+                        :""
+                    } col-span-12 border-b border-black row-span-2 col-start-1 row-start-3 w-full py-2 md:py-2.5 sm:px-2`}
+                  >
+                    Change Password
+                  </div>
+                  <div
+                  onClick={()=>setBlockedUsers(!blockedUsers)}
+                    className={`${
+                      location.pathname === "/settings/blockedUsers"
+                        ? "bg-[#e27a94] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-7 w-full py-2 md:py-2.5 sm:px-2 `}
                   >
-                    Notification
-                  </Link>
+                    Blocked Users
+                  </div>
                   <Link
                     to="/settings/contactUs"
                     className={`${
                       location.pathname == "/settings/contactUs"
-                        ? "bg-[#C1506D] "
+                        ? "bg-[#e27a94] "
                         : ""
                     } col-span-12 border-b border-black row-span-2 col-start-1 row-start-9 w-full py-2 md:py-2.5 sm:px-2 `}
                   >

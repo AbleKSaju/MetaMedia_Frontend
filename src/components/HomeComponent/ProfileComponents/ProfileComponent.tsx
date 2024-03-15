@@ -107,6 +107,7 @@ const checkUser = useMemo(
           highlight = response?.data?.data?.highlights;
           dispatch(addHighlights(highlight));
         } else {
+          dispatch(addHighlights([]));
           dispatch(deleteHighlights());
         }
       } else {
@@ -114,7 +115,7 @@ const checkUser = useMemo(
       }
     })();
     setDeleteHighlight(false);
-  }, [addHighlight, highlightList, highlight, deleteHighlight]);
+  }, [addHighlight, highlightList, highlight, deleteHighlight,user_id]);
 
   useEffect(() => {
     if (highlights.length == 0) {
@@ -131,7 +132,6 @@ const checkUser = useMemo(
     
     Navigate(`/message/${id}`)
   }
-
 
   return (
     <>
@@ -219,14 +219,14 @@ const checkUser = useMemo(
                   className=" flex flex-col"
                   onClick={() => setOpenFollowers(true)}
                 >
-                  <p className="text-center font-medium">{currentUser.socialConections?.followers.length}</p>
+                  <p className="text-center font-medium">{currentUser?.socialConections?.followers.length ?? 0}</p>
                   <p className="font-light text-black">followers</p>
                 </div>
                 <div
                   className=" flex flex-col"
                   onClick={() => setOpenFollowings(true)}
                 >
-                  <p className="text-center font-medium">{currentUser.socialConections?.following.length}</p>
+                  <p className="text-center font-medium">{currentUser?.socialConections?.following.length ?? 0}</p>
                   <p className="font-light text-black">following</p>
                 </div>
               </div>
@@ -276,7 +276,7 @@ const checkUser = useMemo(
           )}
           {openFollowers && (
             <FollowComponent
-              users={currentUser.socialConections.followers}
+              users={currentUser?.socialConections.followers}
               openFollowers={openFollowers}
               openFollowings={openFollowings}
               setOpenFollowers={setOpenFollowers}
@@ -285,7 +285,7 @@ const checkUser = useMemo(
           )}
           {openFollowings && (
             <FollowComponent
-              users={currentUser.socialConections.following}
+              users={currentUser?.socialConections.following}
               openFollowers={openFollowers}
               openFollowings={openFollowings}
               setOpenFollowers={setOpenFollowers}
