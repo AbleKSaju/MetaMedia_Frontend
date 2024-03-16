@@ -73,7 +73,10 @@ export const CreateConversation_Api=`${CHAT_URL}/conversation`
 export const GetConversations_Api=`${CHAT_URL}/conversations`
 export const GetMessages_Api=`${CHAT_URL}/getMessages`
 export const SendMessage_Api=`${CHAT_URL}/message`
-
+export const CreateNewGroup_Api=`${CHAT_URL}/createNewgroup`
+export const GetAllGroupsOfUser_Api=`${CHAT_URL}/getAllGroupOfUser`
+export const getGroupMessages_Api=`${CHAT_URL}/getSingleGroupMessage`
+export const GetGroupData_Api=`${CHAT_URL}/getGroupDataById`
 //Admin
 
 

@@ -97,6 +97,8 @@ const Home = ({ render,setRender}:any) => {
           {isgoLive &&  (<Golive />)}
             <Routes>
                   <Route path="/message/:user_id" element={<Message />} />
+                  <Route path="/group/:group_id" element={<Message />} />
+
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />

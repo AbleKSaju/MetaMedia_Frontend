@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateConversation_Api, SendMessage_Api } from "../../../endpoints/common";
+import { CreateConversation_Api, CreateNewGroup_Api, SendMessage_Api } from "../../../endpoints/common";
 
 export const sendMessageFunction = (data:any) => {
   try {
@@ -16,3 +16,18 @@ export const CreateConversationFunction = (data:any) => {
     return error;
   }
 };
+
+
+
+export const CreateNewGroupFuntion=async(data:any)=>{
+  try {
+    
+   const responce=await axios.create({ withCredentials: true ,headers: {'Content-Type': 'multipart/form-data'}}).post(CreateNewGroup_Api,data);
+   return responce.data 
+
+
+  } catch (error) {
+     return error
+  }
+
+}
