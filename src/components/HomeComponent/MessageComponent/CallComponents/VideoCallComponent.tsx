@@ -1,33 +1,72 @@
 import { Camera, Mic, PhoneOff, SendHorizonal } from "lucide-react";
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import AgoraRtc from "agora-rtc-sdk-ng"
-
-declare namespace NodeJS {
-  interface ProcessEnv {
-    RTC_APP_ID: string;
-    // Define other environment variables here
-  }
-}
-const VideoCallComponent = () => {
-const url = useParams()
-const RTC_APP_ID=process?.env?.RTC_APP_ID;
-const userData = useSelector((state:any)=>state.persisted.user.userData)
-let uid = userData.userId
-let token = null
-let client:any
-let localTrack=[]
-let remoteUsers=[]
-let JoinRoomInit = async ()=>{
-  console.log(RTC_APP_ID,"process.env.RTC_APP_ID");
-  console.log(url,"process.env.urlurlurlurl");
-  
-  client=AgoraRtc.createClient({mode:'rtc',codec:'vp8'})
-  await client.join(process.env.RTC_APP_ID,url,token,uid)
-}
+import AgoraRTC from "agora-rtc-sdk-ng";
+import { useEffect, useState } from "react";
 
 
-JoinRoomInit()
+
+const VideoCallComponent: React.FC = () => {
+  const [client, setClient] = useState<any>(null);
+  const [localTracks, setLocalTracks] = useState<any>([]);
+  const [players, setPlayers] = useState<any>([]);
+  const [error, setError] = useState<any>(null);
+  const token = null;
+
+  useEffect(() => {
+    const joinRoomInit = async () => {
+      const agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+      const uid = Math.floor(Math.random()*10000);
+      try {
+        await agoraClient.join("b56527dc778946b0ace2fb95b11bdf43", "123", token, uid);
+        agoraClient.on('user-published', handleUserPublished);
+        agoraClient.on('user-left', handleUserLeft);
+        setClient(agoraClient);
+        joinStream(uid);
+      } catch (error) {
+        setError(error?.message);
+      }
+    };
+    joinRoomInit();
+  }, []);
+
+  const joinStream = async (uid: any) => {
+    try {
+      const [microphoneTrack, cameraTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+      setLocalTracks([microphoneTrack, cameraTrack]);
+      setPlayers((prev: any) => [...prev, { uid, cameraTrack, microphoneTrack }]);
+      await client.publish([microphoneTrack, cameraTrack]);
+    } catch (error) {
+      console.error("Error creating or playing tracks:", error);
+    }
+  };
+
+  const handleUserPublished = async (user: any, mediaType: any) => {
+    try {
+      await client.subscribe(user, mediaType);
+      setPlayers((prev: any) => [...prev, { uid: user.uid, cameraTrack: user.videoTrack, microphoneTrack: user.audioTrack }]);
+    } catch (error) {
+      console.error("Error subscribing to user:", error);
+    }
+  };
+
+  const handleUserLeft = async (user: any, mediaType: any) => {
+    try {
+      const uid = user.uid;
+      setPlayers((prevPlayers: any) => {
+        const updatedPlayers = prevPlayers.filter((player: any) => player.uid !== uid);
+        return updatedPlayers;
+      });
+    } catch (error) {
+      console.error("Error handling user left:", error);
+    }
+  };
+
+
+
+
+console.log(players,"playersplayers");
+
   return (
     <>
       <main className="flex">
@@ -52,18 +91,54 @@ JoinRoomInit()
           <section className="w-full overflow-y-auto scrollbar-hide">
             <div className="h-[65vh] w-full bg-blue-800"></div>
             <div className="flex flex-wrap justify-center gap-[2em] items-center mt-[25px] mb-[200px]">
-              <div className="">
-                <h1 className="flex justify-center items-center border border-[#C1506D] rounded-full h-[250px] w-[250px] overflow-hidden cursor-pointer">1</h1>
+              <div className="streams_container">
+                <h1
+                  id=""
+                  className="flex justify-center items-center border border-[#C1506D] rounded-full h-[250px] w-[250px] overflow-hidden cursor-pointer"
+                >
+                  1
+                </h1>
               </div>
-              <div>
-                <h1 className="flex justify-center items-center border border-[#C1506D] rounded-full h-[250px] w-[250px] overflow-hidden cursor-pointer">1</h1>
-              </div>
-              <div>
-                <h1 className="flex justify-center items-center border border-[#C1506D] rounded-full h-[250px] w-[250px] overflow-hidden cursor-pointer">1</h1>
-              </div>
-              <div>
-                <h1 className="flex justify-center items-center border border-[#C1506D] rounded-full h-[250px] w-[250px] overflow-hidden cursor-pointer">1</h1>
-              </div>
+              {error && (
+                <div>
+                    Error: {error}. It seems to be unrelated to the Agora SDK. It might be caused by network.
+                </div>
+            )}
+       
+       <div>
+       {error && <div>Error: {error}</div>}
+       {players.length > 0 ? (
+             players.map((player: any) => {
+              return (
+                <div key={player.uid} className="flex justify-center items-center border border-[#C1506D] rounded-full h-[250px] w-[250px] overflow-hidden cursor-pointer">
+                  <video
+                    id={`user-${player.uid}`}
+                    autoPlay
+                    playsInline
+                    className="w-full h-full"
+                    ref={(videoRef) => {
+                      if (videoRef && player.cameraTrack) {
+                        player.cameraTrack.play(videoRef);
+                      }
+                    }}
+                  ></video>
+                  <audio
+                    id={`audio-user-${player.uid}`}
+                    autoPlay
+                    playsInline
+                    ref={(audioRef) => {
+                      if (audioRef && player.microphoneTrack) {
+                        player.microphoneTrack.play(audioRef);
+                      }
+                    }}
+                  ></audio>
+                </div>
+              );
+            })
+          ) : (
+            <div>Loading...</div>
+          )}
+    </div>
             </div>
           </section>
           <section>

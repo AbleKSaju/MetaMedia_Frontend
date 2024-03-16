@@ -6,11 +6,11 @@ import { Provider } from "react-redux";
 import { Store, persistor } from "./utils/ReduxStore/Store/Store.ts";
 import { PersistGate } from "redux-persist/integration/react";
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={Store}>
       <PersistGate loading={null} persistor={persistor}>
         <App />
       </PersistGate>
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

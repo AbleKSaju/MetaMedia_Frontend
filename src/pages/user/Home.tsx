@@ -49,7 +49,6 @@ const Home = ({ render,setRender}:any) => {
   const location = useLocation();
   const currentRoute = location.pathname;
   const userData=useSelector((state:any)=>state.persisted.user.userData)
-console.log(currentRoute,"PPP");
 
   useEffect(()=>{
     (async ()=>{

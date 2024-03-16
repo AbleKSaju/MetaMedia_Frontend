@@ -26,6 +26,7 @@
     "@types/react-slick": "^0.23.13",
     "@types/video-react": "^0.15.6",
     "@zegocloud/zego-uikit-prebuilt": "^1.11.0",
+    "agora-rtc-react": "^2.1.0",
     "agora-rtc-sdk-ng": "^4.20.1",
     "antd": "^5.15.1",
     "aws-amplify": "^6.0.13",

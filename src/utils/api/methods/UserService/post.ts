@@ -69,9 +69,7 @@ export const getUsersByNameFunction = async (data: string) => {
 
 export const getUserByIdFuntion = async (data: any) => {
   try {
-    const datas = { id: data };
-    console.log(datas,"datasdatasdatas");
-    
+    const datas = { id: data };    
     const response = await axios
       .create({ withCredentials: true })
       .post(getuserById_Api, datas);
