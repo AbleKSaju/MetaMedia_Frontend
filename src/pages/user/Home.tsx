@@ -28,6 +28,7 @@ import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 import CreateLive from "../../components/HomeComponent/liveComponent/CreateLive";
 import Golive from "../../components/HomeComponent/liveComponent/goLive";
 import VideoCallComponent from "../../components/HomeComponent/MessageComponent/CallComponents/VideoCallComponent";
+// import SocketProvider from "../../utils/context/SocketProvider";
 
 
 
@@ -45,6 +46,7 @@ const Home = ({ render,setRender}:any) => {
   const [openSearch, setOpenSearch] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
   const [isgoLive,setIsGoLive]=useState(false)
+
   const dispatch = useDispatch()
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -88,7 +90,7 @@ const Home = ({ render,setRender}:any) => {
 
  <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
     <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
-        {currentRoute !== '/videoCall' && <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> }
+        {!currentRoute.startsWith('/videoCall') && <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> }
         {openSearch && <SearchComponent setOpenSearch={setOpenSearch} setRender={setRender} render={render}/>}
         {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
@@ -101,7 +103,8 @@ const Home = ({ render,setRender}:any) => {
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/settings/*" element={<Settings  />} />
                   <Route path="/room/:roomId" element={<Golive  />}/>
-                  <Route path="/videoCall" element={<VideoCallComponent  />}/>
+                  <Route path="/videoCall/:callId" element={<VideoCallComponent  />}/>
+                  {/* <Route path="/call" element={<SocketProvider  />}/> */}
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

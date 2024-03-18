@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,13 +20,14 @@ import {
   CreateConversationFunction,
   sendMessageFunction,
 } from "../../../utils/api/methods/ChatService/post/post";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
   blockedUsers,
   editUser,
 } from "../../../utils/ReduxStore/Slice/userSlice";
 import { none } from "@cloudinary/url-gen/qualifiers/fontHinting";
+import { addSocketData } from "../../../utils/ReduxStore/Slice/videoCallSlice";
 const MessageListComponent = ({ conversations, setConversations }: any) => {
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -38,12 +39,53 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
   const messageRef = useRef<any>(null);
   const { user_id } = useParams();
   const dispatch = useDispatch();
-
-  console.log("I a MessageListComponent");
+const navigate = useNavigate()
+  const [videoCall,setVideoCall] = useState(false)
 
   useEffect(() => {
-    setSocket(io("http://localhost:8080"));
+    setSocket(io("http://localhost:8081"));    
   }, []);
+  if(socket){    
+  dispatch(addSocketData(socket))
+}
+  const handleSubmitForm = useCallback(
+    () => {
+      socket?.emit("room:join", { name: userData.name, room: 123 });
+    },
+    [socket, userData.name]
+  );
+  console.log(videoCall,"videoCallvideoCallvideoCall");
+  
+  useEffect(() => {
+    if (videoCall) {
+      console.log("I AM videoCall")
+        handleSubmitForm();
+    }
+  }, [videoCall, handleSubmitForm]);
+
+  useEffect(() => {
+    socket?.on('room:join', (data:any) =>{      
+console.log(data,"Dsss");
+    });
+  }, [socket,videoCall]);
+
+
+  const handleJoinRoom = useCallback(
+    (data:any) => {
+      const { email, room } = data;
+      console.log(email, room,"email, room");
+      navigate(`/videoCall/${room}`);
+    },
+    []
+  );
+
+  useEffect(() => {
+    socket?.on("room:join", handleJoinRoom);
+    return () => {
+      socket?.off("room:join", handleJoinRoom);
+    };
+  }, [socket, handleJoinRoom]);
+  
 
   useEffect(() => {
     console.log("I am socket");
@@ -99,7 +141,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
       }
     };
     fetchConversations();
-  }, [isSendMessage, user_id, newState]);
+  }, [isSendMessage, user_id, newState,videoCall]);
 
   useEffect(() => {
     (async () => {
@@ -118,7 +160,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
         }
       }
     })();
-  }, [user_id, conversations, isSendMessage, newState]);
+  }, [user_id, conversations, isSendMessage,videoCall, newState]);
 
   const sendMessage = async () => {
     setMessage("");
@@ -181,8 +223,8 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
               <p className="font-light text-sm">5 min ago</p>
             </div>
             <div className=" text-gray-600 ml-auto flex gap-2 sm:gap-5">
-              <Phone className={`${isBlocked ? "text-gray-400":""} mt-0.5 size-4 lg:size-6`}/>
-              <Video className={`${isBlocked ? "text-gray-400":""} ml-2 size-5 lg:size-7`} />
+              {/* <Phone className={`${isBlocked ? "text-gray-400":""} mt-0.5 size-4 lg:size-6`}/> */}
+              <Video onClick={()=>setVideoCall(!videoCall)} className={`${isBlocked ? "text-gray-400":""} ml-2 size-5 lg:size-7`} />
               <MoreVertical
                 onClick={() => setIsOpen(!isOpen)}
                 className="size-4 lg:size-7"
@@ -288,7 +330,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
               </div>
             </footer>
             <div className="absolute right-5 bottom-3 flex z-50">
-              {!message.length ? (
+              {!message?.length ? (
                 <>
                   <Mic className="size-5 lg:size-6 mr-3" />
                   <Image className="size-5 lg:size-6" />

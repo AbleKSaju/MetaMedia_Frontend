@@ -1,112 +1,218 @@
-import { Camera, Mic, PhoneOff, SendHorizonal } from "lucide-react";
+import { Camera, CameraOff, Mic, MicOff, PhoneOff, SendHorizonal } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { useEffect, useState } from "react";
-
-
+import ReactPlayer from "react-player";
+import peer from "../../../../utils/WebRTC/peer";
+import { useCallback, useEffect, useState } from "react";
 
 const VideoCallComponent: React.FC = () => {
-  const [client, setClient] = useState<any>(null);
-  const [localTracks, setLocalTracks] = useState<any>([]);
-  const [players, setPlayers] = useState<any>([]);
-  const [error, setError] = useState<any>(null);
-  const token = null;
+  const [remoteSocketId, setRemoteSocketId] = useState(null);
+  const [myStream, setMyStream] = useState<any>();
+  const [remoteStream, setRemoteStream] = useState();
+  const [users,setUsers] = useState(null)
+  const [cameraActive, setCameraActive] = useState(true);
+  const [audioActive, setAudioActive] = useState(true);
+  const userData=useSelector((state:any)=>state.persisted.user.userData)
 
-  useEffect(() => {
-    const joinRoomInit = async () => {
-      const agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-      const uid = Math.floor(Math.random()*10000);
-      try {
-        await agoraClient.join("b56527dc778946b0ace2fb95b11bdf43", "123", token, uid);
-        agoraClient.on('user-published', handleUserPublished);
-        agoraClient.on('user-left', handleUserLeft);
-        setClient(agoraClient);
-        joinStream(uid);
-      } catch (error) {
-        setError(error?.message);
-      }
-    };
-    joinRoomInit();
+  const socket = useSelector(
+    (state: any) => state.persisted.videoCall.socketData
+  );
+
+  const handleUserJoined = useCallback(({ name, id }: any) => {
+    console.log(`Email ${name} joined room`);
+    setUsers(name)
+    setRemoteSocketId(id);
   }, []);
 
-  const joinStream = async (uid: any) => {
-    try {
-      const [microphoneTrack, cameraTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
-      setLocalTracks([microphoneTrack, cameraTrack]);
-      setPlayers((prev: any) => [...prev, { uid, cameraTrack, microphoneTrack }]);
-      await client.publish([microphoneTrack, cameraTrack]);
-    } catch (error) {
-      console.error("Error creating or playing tracks:", error);
-    }
-  };
+  const handleCallUser = useCallback(async () => {
+    const stream: any = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
+    const offer = await peer.getOffer();
+    socket.emit("user:call", { to: remoteSocketId, offer });
+    setMyStream(stream);
+  }, [remoteSocketId, socket]);
 
-  const handleUserPublished = async (user: any, mediaType: any) => {
-    try {
-      await client.subscribe(user, mediaType);
-      setPlayers((prev: any) => [...prev, { uid: user.uid, cameraTrack: user.videoTrack, microphoneTrack: user.audioTrack }]);
-    } catch (error) {
-      console.error("Error subscribing to user:", error);
-    }
-  };
-
-  const handleUserLeft = async (user: any, mediaType: any) => {
-    try {
-      const uid = user.uid;
-      setPlayers((prevPlayers: any) => {
-        const updatedPlayers = prevPlayers.filter((player: any) => player.uid !== uid);
-        return updatedPlayers;
+  const handleIncommingCall = useCallback(
+    async ({ from, offer }: any) => {
+      setRemoteSocketId(from);
+      const stream: any = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
       });
-    } catch (error) {
-      console.error("Error handling user left:", error);
+      setMyStream(stream);
+      console.log(`Incoming Call`, from, offer);
+      const ans = await peer.getAnswer(offer);
+      socket.emit("call:accepted", { to: from, ans });
+    },
+    [socket]
+  );
+
+  const sendStreams = useCallback(() => {
+    for (const track of myStream.getTracks()) {
+      peer.peer.addTrack(track, myStream);
+    }
+  }, [myStream]);
+
+  const handleCallAccepted = useCallback(
+    ({ from, ans }: any) => {
+      peer.setLocalDescription(ans);
+      console.log("Call Accepted!");
+      sendStreams();
+    },
+    [sendStreams]
+  );
+
+  const handleNegoNeeded = useCallback(async () => {
+    const offer = await peer.getOffer();
+    socket.emit("peer:nego:needed", { offer, to: remoteSocketId });
+  }, [remoteSocketId, socket]);
+
+  useEffect(() => {
+    peer.peer.addEventListener("negotiationneeded", handleNegoNeeded);
+    return () => {
+      peer.peer.removeEventListener("negotiationneeded", handleNegoNeeded);
+    };
+  }, [handleNegoNeeded]);
+
+  const handleNegoNeedIncomming = useCallback(
+    async ({ from, offer }: any) => {
+      const ans = await peer.getAnswer(offer);
+      socket.emit("peer:nego:done", { to: from, ans });
+    },
+    [socket]
+  );
+
+  const handleNegoNeedFinal = useCallback(async ({ ans }: any) => {
+    await peer.setLocalDescription(ans);
+  }, []);
+
+  useEffect(() => {
+    peer.peer.addEventListener("track", async (ev: any) => {
+      const remoteStream = ev.streams;
+      console.log("GOT TRACKS!!");
+      setRemoteStream(remoteStream[0]);
+    });
+  }, []);
+
+  useEffect(() => {
+    peer.peer.addEventListener("track", async (ev: any) => {
+      const remoteStream = ev.streams;
+      console.log("GOT TRACKS!!");
+      setRemoteStream(remoteStream[0]);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket?.on("user:joined", handleUserJoined);
+    socket?.on("incomming:call", handleIncommingCall);
+    socket?.on("call:accepted", handleCallAccepted);
+    socket?.on("peer:nego:needed", handleNegoNeedIncomming);
+    socket?.on("peer:nego:final", handleNegoNeedFinal);
+
+    return () => {
+      socket?.off("user:joined", handleUserJoined);
+      socket?.off("incomming:call", handleIncommingCall);
+      socket?.off("call:accepted", handleCallAccepted);
+      socket?.off("peer:nego:needed", handleNegoNeedIncomming);
+      socket?.off("peer:nego:final", handleNegoNeedFinal);
+    };
+  }, [
+    socket,
+    handleUserJoined,
+    handleIncommingCall,
+    handleCallAccepted,
+    handleNegoNeedIncomming,
+    handleNegoNeedFinal,
+  ]);
+
+
+  const handleToggleCamera = () => {
+    if (myStream) {
+      const tracks = myStream.getTracks();
+      tracks.forEach(track => {
+        if (track.kind === 'video') {
+          track.enabled = !cameraActive;
+        }
+      });
+      setCameraActive(prevState => !prevState);
     }
   };
 
-
-
-
-console.log(players,"playersplayers");
+  const handleToggleAudio = () => {
+    if (myStream) {
+      const tracks = myStream.getTracks();
+      tracks.forEach(track => {
+        if (track.kind === 'audio') {
+          track.enabled = !audioActive;
+        }
+      });
+      setAudioActive(prevState => !prevState);
+    }
+  };
 
   return (
     <>
-      <main className="flex">
+      <main className="flex w-full">
         <div className="flex w-full">
-          <section className="w-80 h-full overflow-y-auto border-r border-gray-700 ">
+          {/* <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4> */}
+
+          <section className="w-80 h-full overflow-y-auto border-r bg-[#EBE9EF] border-gray-700 ">
             <div className="flex items-center justify-between py-5 px-4 text-black font-medium">
               <p>Participants</p>
-              <strong>27</strong>
+              <strong>    {users ? "2" : "1"}</strong>
             </div>
             <hr className="h-0.5 bg-black" />
             <div className="pt-10 pb-5 px-4">
               <div className="member__wrapper flex items-center space-x-2">
                 <span className="green__icon bg-green-500 rounded-full h-2 w-2"></span>
-                <p className="member_name">Sulammita</p>
+                <p className="member_name">{userData?.name}</p>
               </div>
+              {users &&
               <div className="member__wrapper flex items-center space-x-2">
                 <span className="green__icon bg-green-500 rounded-full h-2 w-2"></span>
-                <p className="member_name">Dennis Ivy</p>
+                <p className="member_name">{users}</p>
               </div>
+              }
             </div>
           </section>
-          <section className="w-full overflow-y-auto scrollbar-hide">
-            <div className="h-[65vh] w-full bg-blue-800"></div>
-            <div className="flex flex-wrap justify-center gap-[2em] items-center mt-[25px] mb-[200px]">
-              <div className="streams_container">
-                <h1
+          <section className="w-full relative bg-white overflow-y-auto scrollbar-hide">
+            <div className="h-[90vh] mt-2 w-full relative">
+              {remoteStream && (
+                <ReactPlayer
+                  style={{ position: "absolute", top: 0, left: 0 }}
+                  height="100%"
+                  width="100%"
+                  playing
+                  url={remoteStream}
+                />
+              )}
+            </div>
+            <div className="flex absolute flex-wrap justify-center gap-[2em] right-32 rounded-lg bottom-5 items-center">
+              <div className="streams_container w-full flex justify-end">
+                <div
                   id=""
-                  className="flex justify-center items-center border border-[#C1506D] rounded-full h-[250px] w-[250px] overflow-hidden cursor-pointer"
+                  className="flex justify-center relative items-center border border-[#C1506D] rounded-lg h-[200px] w-[270px] overflow-hidden cursor-pointer"
                 >
-                  1
-                </h1>
-              </div>
-              {error && (
-                <div>
-                    Error: {error}. It seems to be unrelated to the Agora SDK. It might be caused by network.
+                  {myStream && (
+                    <ReactPlayer
+                      height="100%"
+                      width="100%"
+                      playing
+                      url={myStream}
+                    />
+                  )}
                 </div>
-            )}
-       
-       <div>
-       {error && <div>Error: {error}</div>}
+              </div>
+
+              <div>
+                {myStream && <button onClick={sendStreams}>Send Stream</button>}
+                {remoteSocketId && (
+                  <button onClick={handleCallUser}>CALL</button>
+                )}
+                {/* {error && <div>Error: {error}</div>}
        {players.length > 0 ? (
              players.map((player: any) => {
               return (
@@ -137,49 +243,26 @@ console.log(players,"playersplayers");
             })
           ) : (
             <div>Loading...</div>
-          )}
-    </div>
+          )} */}
+              </div>
             </div>
           </section>
           <section>
             <div className="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-[#FADBE1] p-4 flex gap-4">
-              <button className="text-white hover:bg-[#C1506D] bg-[#c65b76] px-4 py-2 rounded focus:outline-none flex items-center justify-center">
-                <Camera />
+              <button onClick={handleToggleCamera} className="text-white hover:bg-[#C1506D] bg-[#c65b76] px-4 py-2 rounded focus:outline-none flex items-center justify-center">
+              {cameraActive ? <Camera /> : <CameraOff />} 
               </button>
               <button className="text-white bg-red-500 active:bg-purple-600 px-4 py-2 rounded focus:outline-none flex items-center justify-center">
                 <PhoneOff />
               </button>
-              <button className="text-white hover:bg-[#C1506D] bg-[#c65b76] px-4 py-2 rounded focus:outline-none flex items-center justify-center">
-                <Mic />
+              <button onClick={handleToggleAudio} className="text-white hover:bg-[#C1506D] bg-[#c65b76] px-4 py-2 rounded focus:outline-none flex items-center justify-center">
+              {audioActive ? <Mic /> : <MicOff />} 
               </button>
             </div>
           </section>
-          <section className="w-[35vw] right-0 h-screen overflow-y-auto border-l border-gray-700">
-            <div className="h-full overflow-y-auto">
-              <div className="message__wrapper flex gap-4 p-4">
-                <div className="message__body__bot text-gray-400 max-w-prose">
-                  <strong className="message__author__bot text-pink-600">
-                    {" "}
-                    Mumble Bot
-                  </strong>
-                  <p className="message__text__bot">
-                    Welcome to the room, Don't be shy, say helroom, Don't be
-                    shy, say helroom, Don't be shy, say helroom, Don't be shy,
-                    say hello!
-                  </p>
-                </div>
-              </div>
-              <div className="message__wrapper flex gap-4 p-4">
-                <div className="message__body__bot text-gray-400 max-w-prose">
-                  <strong className="message__author__bot text-pink-600">
-                    {" "}
-                    Mumble Bot
-                  </strong>
-                  <p className="message__text__bot">
-                    Dennis Ivy just entered the room!
-                  </p>
-                </div>
-              </div>
+          {/* <section className="w-[35vw] bg-red-800 right-0 h-screen overflow-y-auto border-l border-gray-700">
+            <div className="h-full overflow-y-auto bg-blue-700">
+             
             </div>
             <form className="fixed bottom-0 w-full flex bg-[#FADBE1] p-4">
               <input
@@ -192,7 +275,7 @@ console.log(players,"playersplayers");
                 <SendHorizonal className=" text-center size-7" />
               </div>
             </form>
-          </section>
+          </section> */}
         </div>
       </main>
     </>

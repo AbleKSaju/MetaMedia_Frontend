@@ -10,9 +10,10 @@ import postSlice from "../Slice/postSlice";
 import singlePostSlice from "../Slice/singlePostSlice";
 import messageSlice from "../Slice/messageSlice";
 import liveSlice from "../Slice/liveSlice";
+import videoCallSlice from "../Slice/videoCallSlice";
 const persistConfig = {
   key: "root",
-  whitelist: ["user", "token", "story", "highlight", 'post','singlePost','message','live'],
+  whitelist: ["user", "token", "story", "highlight", 'post','singlePost','message','live','videoCall'],
   storage,
 };
 
@@ -24,7 +25,8 @@ const reducer = combineReducers({
   message: messageSlice,
   post:postSlice,
   singlePost:singlePostSlice,
-  live:liveSlice
+  live:liveSlice,
+  videoCall:videoCallSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);
