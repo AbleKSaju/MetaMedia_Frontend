@@ -19,7 +19,8 @@ import profile from "../../../assets/profile.webp";
 import { CreateConversationFunction, sendMessageFunction } from "../../../utils/api/methods/ChatService/post/post";
 import { useParams } from "react-router-dom";
 import TimeConvertor from "../../../utils/Helper/TimeConvertor";
-const MessageListComponent = ({ conversations, setConversations }: any) => {
+import { toast } from "sonner";
+const   MessageListComponent = ({ conversations, setConversations,aside,isGroupChat }: any) => {
   const [message, setMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSendMessage, setIsSendMessage] = useState<boolean>(false);
@@ -33,8 +34,12 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
   console.log("I a MessageListComponent");
 
   useEffect(() => {
-    setSocket(io("http://localhost:8080"));
+    setSocket(io("http://localhost:8081"));
+   
   }, []);
+
+
+
 
   useEffect(() => {
     console.log("I am socket");
@@ -46,7 +51,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
     socket?.on("getMessage", (data: any) => {
       setMessages((prev: any) => ({
         ...prev,
-        messages: [...prev.messages, data],
+        messages:[...prev.messages, data],
       }));
     });
   }, [socket]);
@@ -57,16 +62,23 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
 
 
   useEffect(() => {
-    const fetchConversations = async () => {
-      const response:any = await GetConversationsFunction();
-    const userExist = response.data.data.find((data: any) => data.id === user_id);
     
-    if (!userExist && user_id !== "index") {
+    const fetchConversations = async () => {
+     
+      const response:any = await GetConversationsFunction();
+     
+      let userExist
+      if(response.data.status){
+         userExist = response?.data?.data?.find((data: any) => data?.id === user_id);
+      }
+    
+    if (!userExist && user_id !== "index" || !response.data.status) {
       const data = {
         senderId: user_id,
         receiverId: userData.userId
       };
       await CreateConversationFunction(data);
+      
       setNewState(true);
         }else{
           if (response.data.data) {
@@ -88,8 +100,8 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
           }
       };
       }
-    fetchConversations();
-  }, [isSendMessage,user_id,newState]);
+    fetchConversations()
+  }, [isSendMessage,user_id,newState,aside,isGroupChat]);
 
 
   useEffect(() => {
@@ -107,7 +119,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
         }
       }
     })();
-  }, [user_id,conversations,isSendMessage,newState]);
+  }, [user_id,conversations,isSendMessage,newState,aside,isGroupChat]);
   
   
     const sendMessage = async () => {    
@@ -134,7 +146,7 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
       }
       
     };
-  
+   
 
   return (
     <>
@@ -247,21 +259,21 @@ const MessageListComponent = ({ conversations, setConversations }: any) => {
             />
           </div>
         </footer>
-        <div className="absolute right-5 bottom-3 flex z-50">
-          {!message.length ? (
-            <>
-              <Mic className="size-5 lg:size-6 mr-3" />
-              <Image className="size-5 lg:size-6" />
-            </>
-          ) : (
-            <p
-              className="hover:text-teal-800 font-bold cursor-pointer"
-              onClick={() => sendMessage()}
-            >
-              Send
-            </p>
-          )}
-        </div>
+          <div className="absolute right-5 bottom-3 flex z-50">
+            {!message.length ? (
+              <>
+                <Mic className="size-5 lg:size-6 mr-3" />
+                <Image className="size-5 lg:size-6" />
+              </>
+            ) : (
+              <p
+                className="hover:text-teal-800 font-bold cursor-pointer"
+                onClick={() => sendMessage()}
+              >
+                Send
+              </p>
+            )}
+          </div>
       </div>
     </>
   );

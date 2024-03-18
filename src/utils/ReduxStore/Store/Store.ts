@@ -10,6 +10,7 @@ import postSlice from "../Slice/postSlice";
 import singlePostSlice from "../Slice/singlePostSlice";
 import messageSlice from "../Slice/messageSlice";
 import liveSlice from "../Slice/liveSlice";
+import newGropSlice from "../Slice/newGropSlice";
 const persistConfig = {
   key: "root",
   whitelist: ["user", "token", "story", "highlight", 'post','singlePost','message','live'],
@@ -24,7 +25,8 @@ const reducer = combineReducers({
   message: messageSlice,
   post:postSlice,
   singlePost:singlePostSlice,
-  live:liveSlice
+  live:liveSlice,
+  group:newGropSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

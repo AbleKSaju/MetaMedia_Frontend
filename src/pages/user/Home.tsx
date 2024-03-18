@@ -96,6 +96,12 @@ const Home = ({ render,setRender}:any) => {
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
           {isgoLive &&  (<Golive />)}
             <Routes>
+<<<<<<< HEAD
+=======
+                  <Route path="/message/:user_id" element={<Message />} />
+                  <Route path="/group/:group_id" element={<Message />} />
+
+>>>>>>> rashik
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/message/:user_id" element={<Message />} />
                   <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
