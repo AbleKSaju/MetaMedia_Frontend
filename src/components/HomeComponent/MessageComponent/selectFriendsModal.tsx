@@ -36,15 +36,19 @@ const SelectFriendsModal = ({ setewGroup }: any) => {
         return [...prevSelected, user];
       }
     });
+    console.log(selected,'HHHHIELLOOOO');
+    
   };
 
   const handleCreate=async()=>{
 
    dispatch(addMembers(selected))
+   console.log('HHHHHHHHHHHHHHHH',selected);
+   const userIds = selected.map((user:any) => user.basicInformation.userId);
    const data={
      title:GroupData.title,
      description:GroupData.description,
-     members:selected,
+     members:userIds,
      image:GroupData.file,
      admin:GroupData.admin,
      adminName:userData.userName

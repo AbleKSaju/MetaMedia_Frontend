@@ -18,7 +18,7 @@ const GroupChatAside=({setIsMore,isMore,setewGroup,setIsGroupChat,setAside,setCl
 (async()=>{
     const response=await GetAllGroupsOfuser(userData.userId)
     if(response.status){
-        toast.success("sucess")
+    
         setGroupData(response.data)
     }else{
         console.log(response.message);
@@ -67,13 +67,12 @@ const GroupChatAside=({setIsMore,isMore,setewGroup,setIsGroupChat,setAside,setCl
         </div>
         <div className="overflow-auto scrollbar-hide ">
 
-{GroupData.length >0 && (<>
+{GroupData.length >0 ?(<>
 
  {GroupData.map((item:any)=>{
     return (
         <>
-        {console.log(item,'JJJJINTINNNN')
-        }
+        
  {/* one div  */}
  <div className={`list flex cursor-pointer border-b border-gray-300 transition-all p-2 items-center   `} onClick={()=>handleGroupChat(item)}>
         <img src={`http://localhost:3005/Chat/${item.profile}`} alt="P"  className="rounded-full mr-2 w-[50px] h-[50px]"/>
@@ -95,6 +94,10 @@ const GroupChatAside=({setIsMore,isMore,setewGroup,setIsGroupChat,setAside,setCl
  })}
 
 
+</>):(<>
+<div className="w-full  h-10 flex justify-center items-center">
+     No Groups
+</div>
 </>)}
            
             

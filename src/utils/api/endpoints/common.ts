@@ -77,6 +77,9 @@ export const CreateNewGroup_Api=`${CHAT_URL}/createNewgroup`
 export const GetAllGroupsOfUser_Api=`${CHAT_URL}/getAllGroupOfUser`
 export const getGroupMessages_Api=`${CHAT_URL}/getSingleGroupMessage`
 export const GetGroupData_Api=`${CHAT_URL}/getGroupDataById`
+export const SendGroupMessage_Api=`${CHAT_URL}/sendGroupMessage`
+export const SendVoiceMessge_Api=`${CHAT_URL}/groupVoiceMessage`
+export const sendFileMessage_Api=`${CHAT_URL}/groupSendFile`
 //Admin
 
 
