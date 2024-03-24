@@ -37,6 +37,8 @@ const FollowComponent = ({
     if (response.data.status) {
       try {
         const response = await getUserByIdFuntion(userData.userId);
+        console.log(response,"respon");
+        
         if (response?.status) {
           dispatch(editUser(response.data.socialConections));
         } else {
@@ -56,9 +58,7 @@ const FollowComponent = ({
         const searchedUsers = users.filter((item:any) => item.fullName.toLowerCase().startsWith(searchUser));
         setfollowing(searchedUsers)
         setfollowers(searchedUsers)
-    }else{
-      console.log("SETTING TO FOLLL");
-      
+    }else{      
       setfollowing(users)
       setfollowers(users)
     }
@@ -103,7 +103,7 @@ const FollowComponent = ({
     }
   };
   return (
-    <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-900 bg-opacity-50" ref={wrapperRef}>
+    <div className="fixed inset-0 z-20 flex items-center justify-center backdrop-blur bg-opacity-50 bg-black" ref={wrapperRef}>
       <div className="relative w-72 sm:w-[450px] h-[400px] sm:h-[500px] bg-white border border-teal-900 rounded-lg">
         <div className="flex h-[370px] sm:h-[500px] flex-col p-1">
           <button
@@ -133,9 +133,7 @@ const FollowComponent = ({
           </div>
           <div className=" h-64 sm:h-96 w-auto mx-4 sm:mx-16 sm:pt-5 scrollbar-hide overflow-y-auto ">
             {openFollowers &&
-              followers.map((val:any, index:number) => {
-                console.log(val,"aaall");
-                
+              followers.map((val:any, index:number) => {                
                 
                 return (
                 <div key={index} className="h-11 mb-2">

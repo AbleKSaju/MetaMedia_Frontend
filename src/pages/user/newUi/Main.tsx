@@ -34,7 +34,6 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost,setIsAddLive }: Mai
     const [render, setRender] = useState(false);
     const [postData, setPostData] = useState([]);
 
-
     useEffect(() => {
       (async () => {
         const response: any = await getAllStoriesFunction();        
@@ -60,23 +59,19 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost,setIsAddLive }: Mai
                 };
                 return postDataWithUserData;
               } else {
-                // Handle error while fetching user data
                 return null;
               }
             })
           );
-  
           const filteredPosts = postsWithData.filter(
             (post: any) => post !== null
           );
-  
           setPostData(filteredPosts);
         } else {
           toast.error("Responce error");
         }
       })();
     }, [render]);
-
 
   return (
     <>
@@ -88,12 +83,7 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost,setIsAddLive }: Mai
           {/* story main div ------------------- */}
 
           {/* create option -------------------- */}
-          
             <CreateMediaComponent setAddStory={setAddStory} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive} />
-          
-            {/* sepration 2 
-          </div>
-          {/* create option -------------------- */}
 
           {/* post showing ---------------------- */}
 

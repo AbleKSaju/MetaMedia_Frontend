@@ -6,9 +6,18 @@ import { ZodType, z } from "zod";
 export type ChangePasswordFormData = {
     password: string;
     confirmpassword: string; 
+    oldPassword:string;
   };
   
   export const schema: ZodType<ChangePasswordFormData> = z.object({
+    oldPassword: z
+    .string()
+    .min(4, {
+      message: "password must contain at least 4 character(s)",
+    })
+    .max(20, {
+      message: "password cannot exceed 20 characters",
+    }),
     password: z
     .string()
     .min(4, {

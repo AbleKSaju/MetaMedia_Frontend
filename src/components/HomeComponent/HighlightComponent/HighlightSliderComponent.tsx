@@ -1,11 +1,9 @@
 import {
-  ChevronLeft,
   ChevronLeftCircle,
-  ChevronRight,
   ChevronRightCircle,
   MoreVertical,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { DeleteHighlightFunction } from "../../../utils/api/methods/StoryService/Highlight/post";
@@ -107,8 +105,8 @@ const HighlightSliderComponent = ({
   };
 
   return (
-    <div className="flex justify-center items-center w-[100%] h-[80%] mt-5 mb-36 relative">
-      <div className="flex justify-center w-full absolute top-2">
+    <div className="flex justify-center w-full h-full mt-20 sm:mt-5 mb-36 relative">
+      <div className="flex justify-center w-full h-40 absolute top-2">
         {highlights[openHighlight]?.media.map((_: any, index: number) => (
           <div
             key={index}
@@ -184,7 +182,7 @@ const HighlightSliderComponent = ({
             key={index}
             src={`http://localhost:3003/story/${highlight}`}
             alt=""
-            className={`w-full h-full border-2 rounded-lg border-black ${
+            className={`w-full h-[40%] sm:h-[70%] md:h-[80%] border-2 rounded-lg border-black ${
               index === currentIndex ? "" : "hidden"
             }`}
           />

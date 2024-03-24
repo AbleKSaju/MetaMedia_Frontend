@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-
-import MainBody from "../../components/HomeComponent/MainBodyComponent";
 import Main from "./newUi/Main"
-
-import Search from "../../components/HomeComponent/SearchComponent";
 import Message from "../../components/HomeComponent/MessageComponent/MessageComponent";
 import Post from "../../components/HomeComponent/PostComponent";
 import Profile from "../../components/HomeComponent/ProfileComponents/ProfileComponent";
@@ -17,24 +13,19 @@ import { getStoriesFunction } from "../../utils/api/methods";
 import MainModalBorderPost from "../../components/HomeComponent/PostComponent/Modal/mainModalBorderPost";
 import NewSideBar from "./newUi/Sidebar";
 import Suggetions from "./newUi/Suggetions";
-
 import SearchComponent from "./newUi/Search";
 import Notification from "./newUi/Notification";
-import { StoreUserData } from "../../utils/costumHook/constumHook";
 import { editUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
-
-
 import CreateLive from "../../components/HomeComponent/liveComponent/CreateLive";
 import Golive from "../../components/HomeComponent/liveComponent/goLive";
-
-
+import VideoCallComponent from "../../components/HomeComponent/MessageComponent/CallComponents/VideoCallComponent";
+import AudioCallComponent from "../../components/HomeComponent/MessageComponent/CallComponents/AudioCallComponent";
 
 export interface SetSidebarOpenFunction {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Home = ({ render,setRender}:any) => {
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [addStories, setAddStories] = useState<boolean>(false);
   const [deleteStory, setDeleteStory] = useState<boolean>(false);
   const [showStory,setShowStory] = useState("")
@@ -46,6 +37,7 @@ const Home = ({ render,setRender}:any) => {
   const [isgoLive,setIsGoLive]=useState(false)
   const dispatch = useDispatch()
   const location = useLocation();
+  const currentRoute = location.pathname;
   const userData=useSelector((state:any)=>state.persisted.user.userData)
 
   useEffect(()=>{
@@ -77,39 +69,31 @@ const Home = ({ render,setRender}:any) => {
     }, [dispatch, userData.userId]);
   
   const allowedPaths = ["/", "/post"];
- console.log("I AM HOME");
  
   return (
     <>
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
-
  {isAddLive &&  (<CreateLive setIsAddLive={setIsAddLive} setIsGoLive={setIsGoLive}/>)}
- 
 
  <div className="fixed w-screen h-screen bg-[#ece9f0] flex justify-center items-center ">
-
     <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
-        <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> 
-        {openSearch && <SearchComponent setOpenSearch={setOpenSearch}/>}
+        {!currentRoute.startsWith('/videoCall') && <NewSideBar setOpenNotification={setOpenNotification} setOpenSearch={setOpenSearch}/> }
+        {openSearch && <SearchComponent setOpenSearch={setOpenSearch} setRender={setRender} render={render}/>}
         {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
           {isgoLive &&  (<Golive />)}
             <Routes>
-<<<<<<< HEAD
-=======
-                  <Route path="/message/:user_id" element={<Message />} />
-                  <Route path="/group/:group_id" element={<Message />} />
-
->>>>>>> rashik
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/message/:user_id" element={<Message />} />
-                  <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
-                  <Route path="/post" element={<Post setSidebarOpen={setSidebarOpen}/>} />
+                  <Route path="/group/:group_id" element={<Message />} />
+                  <Route path="/post" element={<Post />} />
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
-                  <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
+                  <Route path="/profile/tagged/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/settings/*" element={<Settings  />} />
                   <Route path="/room/:roomId" element={<Golive  />}/>
+                  <Route path="/videoCall/:callId" element={<VideoCallComponent  />}/>
+                  <Route path="/audioCall/:callId" element={<AudioCallComponent  />}/>
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

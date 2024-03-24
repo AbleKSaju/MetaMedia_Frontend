@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearImages } from "../../../../utils/ReduxStore/Slice/postSlice";
 import { toast } from "sonner";
-import { log } from "console";
 import { PostData } from "../../../../utils/interface/postInterface";
 import { AddPostFuntion } from "../../../../utils/api/methods/PostService/Post/addPost";
 import { Base64 } from "js-base64";
@@ -19,8 +18,7 @@ import { searchLocationFuntion } from "../../../../utils/api/methods/PostService
 import { getLatAndLogFuntion } from "../../../../utils/api/methods/PostService/Post/getLatAndLog";
 import { useNavigate } from "react-router-dom";
 import { getUsersByNameFunction } from "../../../../utils/api/methods/UserService/post";
-import axios from "axios";
-
+import profile from '../../../../assets/profile.webp'
 const AddPostDetailsBody = ({
   setIsAddPost,
   setPostState,
@@ -201,15 +199,11 @@ try {
   }, [tageUser]);
 
   const selectLocation = async (data: any) => {
-    console.log("HHHHHHHHHHHHHHHHHHHHHHH", data);
-
     const responce = await getLatAndLogFuntion(data.mapbox_id);
-    console.log(responce, "this is responce");
     const savedPlace = {
       name: data.name,
       lat: responce,
     };
-    console.log(responce, "this is responce----------", savedPlace);
     setSelectedLocationlatAndLog({});
     setSelectedLocationlatAndLog(savedPlace);
     setIslocation(false);
@@ -217,8 +211,9 @@ try {
   };
 
   const AddPost = async () => {
-    const tagedUserIds = tagedUserData.map((userData: any) => userData.userId);
-    let media, postType:string;
+    const tagedUserIds = await tagedUserData.map((userData:any) => userData.userId);
+    
+        let media, postType:string;
 
     if (isImage) {
         const files = base64toFile(post.images[0]);
@@ -240,7 +235,7 @@ try {
         return;
     }
 
-    const data: PostData = {
+    const data: any = {
         userId: user.userData.userId,
         description: text,
         likes: [],
@@ -255,16 +250,14 @@ try {
         showComment: hideComment,
         showLikes: hideLike,
     };
-
+console.log(data,"DATTA");
 
     try {
         const res: any = await AddPostFuntion({ data });
-        console.log(res, "THIS is response from the server");
         if (res.status) {
             setRender(!render);
             setAddPost(!addPost);
             setPostState(false);
-            toast.success("The status from the response is true");
             navigate(`/profile/${user?.userData?.userId}`);
             setIsAddPost(false)
         }
@@ -280,9 +273,7 @@ try {
   };
 
   const selectTagPeople = (user: any) => {
-    const userId = user._id;
-
-    // Check if userId already exists in tagedUserData array
+    const userId = user.basicInformation.userId;
     if (!tagedUserData.some((data: any) => data.userId === userId)) {
       const data = {
         userId: userId,
@@ -299,7 +290,6 @@ try {
     const updatedTagedUserData = tagedUserData.filter(
       (user: any) => user.userId !== userId
     );
-
     setTagedUserData(updatedTagedUserData);
   };
   return (
@@ -559,7 +549,7 @@ try {
                                       >
                                         <img
                                           className="w-6 h-6 me-2 rounded-full"
-                                          src={user.profile.profileUrl}
+                                          src={profile}
                                           alt={`image`}
                                         />
                                         {user.basicInformation.fullName}

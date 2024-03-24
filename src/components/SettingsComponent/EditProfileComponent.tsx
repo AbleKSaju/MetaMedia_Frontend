@@ -13,7 +13,6 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const Navigate=useNavigate()
   const userData = useSelector((state: any) => state.persisted.user.userData);
-  console.log(userData,"userDatauserDatauserDatauserData");
   
   const { errors, handleSubmit, register } = useEditProfileValidate({
     fullname: userData?.name,
@@ -50,7 +49,7 @@ const EditProfile = () => {
 
   return (
     <>
-      <div className="hidden sm:flex lg:ml-3 ustify-center w-100% ">
+      <div className="hidden sm:flex lg:ml-3 justify-center w-100% ">
         <form onSubmit={handleSubmit(formSubmit)} className="flex-col sm:flex">
           <h1 className="flex justify-center text-4xl font-roboto lg:mt-14 mt-6 text-black">
             Edit Profile
@@ -130,7 +129,7 @@ const EditProfile = () => {
             </p>
           </div>
           <div className="mt-5 lg:mt-20 flex justify-center ">
-            <button className="h-12  w-52 hover:shadow-lg transition duration-300 ease-in-out hover:bg-[#C1506D] focus:outline-none focus:ring focus:border-teal-800 bg-[#ce4f6f] text-black font-md border border-black rounded-lg text-xl">
+            <button className="h-12 w-52 hover:shadow-lg transition duration-300 ease-in-out hover:bg-[#C1506D] focus:outline-none focus:ring bg-[#e27a94] text-black font-md border border-black rounded-lg text-xl">
               Submit
             </button>
           </div>

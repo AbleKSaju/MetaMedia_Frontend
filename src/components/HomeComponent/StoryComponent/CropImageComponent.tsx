@@ -2,7 +2,7 @@ import { ZoomIn, ZoomOut } from "lucide-react";
 import { useState } from "react";
 import Cropper from "react-easy-crop";
 
-const CropImageComponent = ({ selectedFile ,imageUrl,setCroppedImage}: any) => {
+const CropImageComponent = ({ selectedFile ,imageUrl,setCroppedImage,setTrimVideo}: any) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [aspect, setAspect]: any = useState([1 / 1]);
@@ -43,8 +43,7 @@ const CropImageComponent = ({ selectedFile ,imageUrl,setCroppedImage}: any) => {
         );
     
         const croppedImageBase64:any = canvas.toDataURL('image/jpeg');
-        console.log(croppedImageBase64,"croppedImageBase64croppedImageBase64");
-        
+        setTrimVideo(true)
         setCroppedImage(croppedImageBase64)
   }
 

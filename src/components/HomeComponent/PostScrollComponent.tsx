@@ -28,6 +28,8 @@ const PostScroll = ({ data, render, setRender }: any) => {
   }, []);
   const handlePostClick = async (item: any) => {
     const responce = await getUserByIdFuntion(item.userId);
+    console.log(responce.data,"DATTT");
+    
 
     if (responce.status) {
       dispatch(clearPostData());
@@ -78,67 +80,59 @@ const PostScroll = ({ data, render, setRender }: any) => {
             <p className="lg:pt-3 lg:pl-4 text-sm md:text-md font-semibold text-black md:pt-4 md:pl-3 p-2 pt-3  pl-5 ">
               {data.userData.basicInformation.fullName}
             </p>
-            <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-black  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  ">
-            </p>
-            <p className="lg:ml-[210px] lg:text-lg font-bold  text-black md:pt-2 pl-10 lg:pl-0 pt-3 md:pl-52 sm:pl-24 ">
-              ...
-            </p>
+            <p className="lg:pt-4 lg:pl-4 sm:text-sm text-[3px]  font-roboto text-black  md:pt-5  md:pl-0 p-2 pt-4 pl-0  sm:pl-5 sm:pt-4  "></p>
           </div>
           <div
             className="relative mx-4 mt-0 overflow-hidden text-gray-700  shadow-lg bg-clip-border  rounded-md lg:h-[500px]"
             onClick={() => handlePostClick(data)}
           >
-            {data.postType =='image'&&(<>
-              <img
-              className="w-full h-full "
-              src={`http://localhost:3002/img/${data.mediaUrl[0]}`}
-              alt=""
-            />
-            </>) }
-            {data.postType =='video'&& (<>
-              <video
-    className="border border-amber-10 w-full h-full object-fill"
-    controls 
-   
->
-    <source
-        src={`http://localhost:3002/img/${data.mediaUrl[0]}`} // Provide the source URL of the video
-        type="video/mp4" // Set the type of the video file (replace 'mp4' with the actual video format)
-    />
-   
-</video>
-            </>)}
-           
+            {data.postType == "image" && (
+              <>
+                <img
+                  className="w-full h-full "
+                  src={`http://localhost:3002/img/${data.mediaUrl[0]}`}
+                  alt=""
+                />
+              </>
+            )}
+            {data.postType == "video" && (
+              <>
+                <video
+                  className="border border-amber-10 w-full h-full object-fill"
+                  controls
+                >
+                  <source
+                    src={`http://localhost:3002/img/${data.mediaUrl[0]}`} // Provide the source URL of the video
+                    type="video/mp4" // Set the type of the video file (replace 'mp4' with the actual video format)
+                  />
+                </video>
+              </>
+            )}
           </div>
           <div className="flex md:pl-7 lg:pl-7 sm:pl-5   sm:pt-4 sm:p-2 lg:p-6 lg:pt-4 lg:gap-5 sm:gap-2 md:gap-4 pl-4 gap-1 pt-3">
             <div onClick={like}>
-
-              {data.likes.includes(userData.userId) ? (<>
-                <Heart
-                style={{ fill: "red"  }}
-                color={  "red"}
-                size={30}
-              />
-              </>):(<>
-                <Heart
-               
-                size={30}
-              />
-              </>)}
-              
+              {data.likes.includes(userData.userId) ? (
+                <>
+                  <Heart style={{ fill: "red" }} color={"red"} size={30} />
+                </>
+              ) : (
+                <>
+                  <Heart size={30} />
+                </>
+              )}
             </div>
             <div>
               <MessageCircle
-                      size={30}
+                size={30}
                 className="text-black "
                 onClick={() => handlePostClick(data)}
               />
             </div>
             <div>
-              <Send className="text-black" size={30}/>
+              <Send className="text-black" size={30} />
             </div>
             <div className="lg:pl-74 sm:pl-[55%] md:pl-[62%] pl-28 ">
-              <Bookmark className="text-black" size={30}/>
+              <Bookmark className="text-black" size={30} />
             </div>
           </div>
           <div className="lg:pl-8 pt-2 pl-5 text-[10px] sm:text-sm md:pl-8 md:pt-2 font-semibold font-roboto text-black sm:pl-8 sm:p-1">

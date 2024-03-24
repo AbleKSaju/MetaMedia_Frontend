@@ -5,21 +5,30 @@ import { toast } from 'sonner';
 const ChooseImageComponent = ({selectedFile,setSelectedFile,setImageUrl}:any) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file:any = e?.target?.files?.[0];
+    const file: any = e?.target?.files?.[0];
+  
     if (file) {
-      console.log(file,"FILEEE");
       const formData = new FormData();
-      setSelectedFile(file);       
-      formData.append("file", file);
+      
+      // Check file type
+      const fileType = file.type.split('/')[0]; // Get the type (e.g., "image" or "video")
+      const minSize = fileType === 'image' ? 5 * 1024 * 1024 : 20 * 1024 * 1024; // Minimum size in bytes
+      
+      if (file.size < minSize) {
+        setSelectedFile(file);
+        formData.append("file", file);
+        const reader: any = new FileReader();
+        reader.onload = () => {
+          setImageUrl(reader.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        toast.error(`File size must be at least ${minSize / (1024 * 1024)} MB for ${fileType}s.`);
+      }
     } else {
       toast.error("No file selected");
     }
-    const reader:any = new FileReader();
-    reader.onload = () => {
-      setImageUrl(reader.result);
-    };
-    reader.readAsDataURL(file);
-      };
+  };
     
       const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -27,10 +36,22 @@ const ChooseImageComponent = ({selectedFile,setSelectedFile,setImageUrl}:any) =>
       const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const file:any = e?.dataTransfer?.files?.[0];
+        
         if (file) {
+          const fileType = file.type.split('/')[0]; 
+          const minSize = fileType === 'image' ? 5 * 1024 * 1024 : 20 * 1024 * 1024; 
+          if (file.size < minSize) {
           const formData = new FormData();
           setSelectedFile(file);          
           formData.append("file", file);
+          const reader: any = new FileReader();
+          reader.onload = () => {
+            setImageUrl(reader.result);
+          };
+          reader.readAsDataURL(file);
+          }else{
+            toast.error(`File size must be at least ${minSize / (1024 * 1024)} MB for ${fileType}s.`);
+          }
         } else {
           toast.error("No file selected");
         }

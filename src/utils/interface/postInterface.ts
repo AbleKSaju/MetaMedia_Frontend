@@ -8,7 +8,7 @@ export interface PostData {
     comments:any,
     shareCount:number,
     media:any,
-    tags:any,
+    tags:string[],
     location:{ },
     reports:any,
     postCropSize:any,

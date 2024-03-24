@@ -4,7 +4,7 @@ import { Edit } from "lucide-react";
 import Highlight from "../HighlightComponent/HighlightComponent";
 import { GetHighlightData } from "../../../utils/api/methods";
 import profile from "../../../assets/profile.webp";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FollowComponent from "./FollowComponent";
 import AddHighlightComponent from "./AddHighlightComponent";
@@ -30,7 +30,6 @@ const Profile = ({ render, setRender }: any) => {
   const [deleteHighlight, setDeleteHighlight] = useState(false);
   const [openFollowings, setOpenFollowings] = useState(false);
   const [openFollowers, setOpenFollowers] = useState(false);
-  const [postComponent, setPostComponent] = useState(false);
   const [postCount, setPostCount] = useState(0);
   const [currentUser, setCurrentUser] = useState<any>([]);
   const [isFollows, setIsFollows] = useState(false);
@@ -42,9 +41,13 @@ const Profile = ({ render, setRender }: any) => {
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.persisted.user.userData);
   let { user_id } = useParams();
+  let { pathname } = useLocation();
   const Navigate = useNavigate()
-
   const highlights = useSelector((state: any) => state.persisted.highlight.highlightData);
+
+  const currentPath:any=pathname.split('/')
+  const path = currentPath.splice(currentPath.length-2,1).toString()
+  
 
 const checkUser = useMemo(
     () => async () => {
@@ -107,6 +110,7 @@ const checkUser = useMemo(
           highlight = response?.data?.data?.highlights;
           dispatch(addHighlights(highlight));
         } else {
+          dispatch(addHighlights([]));
           dispatch(deleteHighlights());
         }
       } else {
@@ -114,7 +118,7 @@ const checkUser = useMemo(
       }
     })();
     setDeleteHighlight(false);
-  }, [addHighlight, highlightList, highlight, deleteHighlight]);
+  }, [addHighlight, highlightList, highlight, deleteHighlight,user_id]);
 
   useEffect(() => {
     if (highlights.length == 0) {
@@ -126,12 +130,9 @@ const checkUser = useMemo(
   const postLength = (data: any) => {
     setPostCount(data);
   };
-  const Message=(id:string)=>{
-    console.log("I AM NAVIGATING");
-    
+  const Message=(id:string)=>{    
     Navigate(`/message/${id}`)
   }
-
 
   return (
     <>
@@ -219,14 +220,14 @@ const checkUser = useMemo(
                   className=" flex flex-col"
                   onClick={() => setOpenFollowers(true)}
                 >
-                  <p className="text-center font-medium">{currentUser.socialConections?.followers.length}</p>
+                  <p className="text-center font-medium">{currentUser?.socialConections?.followers.length ?? 0}</p>
                   <p className="font-light text-black">followers</p>
                 </div>
                 <div
                   className=" flex flex-col"
                   onClick={() => setOpenFollowings(true)}
                 >
-                  <p className="text-center font-medium">{currentUser.socialConections?.following.length}</p>
+                  <p className="text-center font-medium">{currentUser?.socialConections?.following.length ?? 0}</p>
                   <p className="font-light text-black">following</p>
                 </div>
               </div>
@@ -276,7 +277,7 @@ const checkUser = useMemo(
           )}
           {openFollowers && (
             <FollowComponent
-              users={currentUser.socialConections.followers}
+              users={currentUser?.socialConections.followers}
               openFollowers={openFollowers}
               openFollowings={openFollowings}
               setOpenFollowers={setOpenFollowers}
@@ -285,7 +286,7 @@ const checkUser = useMemo(
           )}
           {openFollowings && (
             <FollowComponent
-              users={currentUser.socialConections.following}
+              users={currentUser?.socialConections.following}
               openFollowers={openFollowers}
               openFollowings={openFollowings}
               setOpenFollowers={setOpenFollowers}
@@ -308,26 +309,24 @@ const checkUser = useMemo(
             />
           )}
           <div className="flex justify-around mt-10 px-10 lg:px-64 font-medium cursor-pointer">
-            <p
-              onClick={() => setPostComponent(true)}
+          <Link to={`/profile/${user_id}`}
               className={
-                postComponent
+                path != "tagged"
                   ? "underline font-extrabold text-black"
                   : "text-black"
               }
             >
               posts
-            </p>
-            <p
-              onClick={() => setPostComponent(false)}
+            </Link>
+            <Link to={`/profile/tagged/${user_id}`}
               className={
-                !postComponent
+                path == "tagged"
                   ? "underline font-extrabold text-black"
                   : "text-black"
               }
             >
-              saved
-            </p>
+              tagged
+            </Link>
           </div>
         </div>
         <div className="lg:px-16">

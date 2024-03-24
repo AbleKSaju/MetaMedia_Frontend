@@ -20,7 +20,6 @@ import {
 } from "../../../utils/ReduxStore/Slice/singlePostSlice";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
-import { color } from "framer-motion";
 import { LikePostFuntion } from "../../../utils/api/methods/PostService/Post/likePost";
 import { toast } from "sonner";
 import { AddCommentFunction } from "../../../utils/api/methods/PostService/Post/addComment";
@@ -31,7 +30,6 @@ import { useNavigate } from "react-router-dom";
 import { UpdateCommentFuntion } from "../../../utils/api/methods/PostService/Post/updateComent";
 import { DeleteCommentFuntion } from "../../../utils/api/methods/PostService/Post/deleteComment";
 import { DeleteReplayFunction } from "../../../utils/api/methods/PostService/Post/deleteReplay";
-import { log } from "util";
 import { SavePostFunction } from "../../../utils/api/methods/PostService/Post/savePost";
 const SinglePostModal = ({ render, setRender }: any) => {
   TimeAgo.addDefaultLocale(en);
@@ -520,16 +518,12 @@ const SinglePostModal = ({ render, setRender }: any) => {
                   {/* one comment end */}
                   {singlePost?.comments?.length > 0 ? (
                     <>
-                      
-
                       {singlePost.comments.map((item: any) => {
                         {
                           /* one comment  */
                         }
                         return (
                           <>
-                            
-
                             <div
                               key={item._id}
                               className="flex justify-between w-full  items-center border-b "
@@ -591,12 +585,6 @@ const SinglePostModal = ({ render, setRender }: any) => {
                                 {item.replay.length > 0 && (
                                   <>
                                     {item.replay.map((replay: any) => {
-                                      {
-                                        console.log(
-                                          replay,
-                                          "hhhhhahshdashdhashdhashdhasdhhsadhas"
-                                        );
-                                      }
                                       return (
                                         <>
                                           <div className="flex flex-col  mt-2 ">
@@ -608,7 +596,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
                                                   alt=""
                                                 />
                                               </div>
-                                              <div className="w-full flex justify-start items-center flex-wrap overflow-y-auto text-sm">
+                                              <div className="w-full scrollbar-hide flex justify-start items-center flex-wrap overflow-y-auto text-sm">
                                                 {replay.content}
                                               </div>
                                               {replay.userId ==

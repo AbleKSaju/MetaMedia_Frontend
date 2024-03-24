@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editUser } from "../../../utils/ReduxStore/Slice/userSlice";
 import { toast } from "sonner";
 
-const SearchComponent = ({ setOpenSearch }: any) => {
+const SearchComponent = ({ setOpenSearch,setRender,render }: any) => {
   const [searchUser, setSearchUser] = useState("");
   const [userLoading, setUserLoading] = useState<any>("");
   const [searchedUsers, setsearchedUsers] = useState<any>([]);
@@ -130,7 +130,7 @@ const SearchComponent = ({ setOpenSearch }: any) => {
                       />
                     </div>
                     <Link to={`/profile/${data.id}`} className="h-full w-6/12 flex justify-center flex-col  "
-                      onClick={()=>setOpenSearch(false)}>
+                      onClick={()=>{setOpenSearch(false);setRender(!render)}}>
                       <p className="font-semibold text-gray-500 text-md">
                         {data?.userName}
                       </p>

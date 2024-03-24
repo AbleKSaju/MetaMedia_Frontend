@@ -9,15 +9,13 @@ import ChangePassword from "../pages/user/ChangePassword";
 import AddProfile from "../pages/user/AddProfile";
 import Home from "../pages/user/Home";
 import Mods from "../pages/user/Mods";
-import S from "../pages/user/S";
-import AddPostModal from "../components/HomeComponent/AddPostcomponent";
 import ProtectedAuthRoute from "./ProtectedAuthRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { isSinglePostModalClose } from "../utils/ReduxStore/Slice/singlePostSlice";
 import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePostModal";
-import NewSignUp from "../pages/user/NewSignUp";
-import NewLogin from "../pages/user/newLogin";
+import NewSignUp from "../pages/user/SignUp";
+import NewLogin from "../pages/user/Login";
 
 const 
 UserRouter = () => {
@@ -42,7 +40,6 @@ UserRouter = () => {
       <Route path="/changepassword" element={<ChangePassword />} />
       <Route path="/addprofile" element={<AddProfile />} />
       <Route path="/selectMod" element={<Mods />} />
-      <Route path="/s" element={<S />} />
       <Route path="/selectPost" element={<SinglePostModal/>} />
       <Route path="/newSignUp" element={<NewSignUp />}/>
       <Route path="/newLogin" element={<NewLogin />}/>

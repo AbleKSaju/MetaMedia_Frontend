@@ -6,23 +6,26 @@ import CreateStoryComponent from "./CreateStoryComponent";
 import { toast } from "sonner";
 import { AddStoryFunction } from "../../../utils/api/methods";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { AddVideoToStoryFunction } from "../../../utils/api/methods/StoryService/Story/post";
+import TrimVideoComponent from "./TrimVideoComponent";
+import { clearVideos } from "../../../utils/ReduxStore/Slice/postSlice";
 
 const StoryModal = ({ setAddStory }: any) => {
-  
   const [caption, setCaption] = useState("");
   const [selectedFile, setSelectedFile] = useState<any | null>(null);
   const [cropImage,setCropImage] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
   const [isVideo, setIsVideo] = useState(false);
+  const [trimVideo, setTrimVideo] = useState(false);
   const [croppedImage, setCroppedImage] = useState<any>(null);
   const [back,setBack] = useState(false)
   const [loading, setLoading] = useState(false);
-
+  const dispatch=useDispatch()
   const Navigate = useNavigate()
   const userData = useSelector((state: any) => state.persisted.user.userData);
+  const post = useSelector((state: any) => state.persisted.post.videos);
 
   useEffect(()=>{
     if(selectedFile?.type?.startsWith('video/') && back==false){
@@ -33,6 +36,16 @@ const StoryModal = ({ setAddStory }: any) => {
     }
 },[setSelectedFile,cropImage])
 const video = croppedImage
+
+useEffect(()=>{
+  console.log(post[0],"PPPPPPPPP");
+  console.log(post[0]?.name,"post[0].name");
+  if(post[0]?.name){
+    setTrimVideo(true)
+    setCroppedImage(post[0])
+    dispatch(clearVideos())
+  }
+},[post])
 
   function base64StringToFormDataImageFile(croppedImage:any, fileName:any, fileType:any) {
     croppedImage = croppedImage.replace(/^data:image\/\w+;base64,/, "");
@@ -132,7 +145,6 @@ const uploadFile = async ( timestamp:any, signature:any) => {
           <div className="w-full  p-4 flex justify-center sm:border-b sm:border-b-teal-900">
             <div className="w-full h-full">
               {cropImage && <ArrowLeft size={30} onClick={()=>{setCropImage(false);setCroppedImage(null);setBack(true)}} className="absolute text-teal-900"/>}
-              {/* {cropImage && !selectedFile &&÷ <p onClick={()=>setCropImage(true)} className= "text-teal-900 absolute right-5 font-bold">Next</p> } */}
               <p onClick={submitHandler} className="text-teal-900 absolute right-5 font-bold"> {caption.trim() && croppedImage && <p>Post</p>}</p>{!selectedFile ? <X onClick={() => setAddStory(false)} className="text-teal-900 absolute right-5"/>: <p onClick={()=>{setCropImage(true);setBack(false);}} className={`${cropImage?"hidden":" text-teal-900 absolute right-5 font-bold"}`}>Next</p> }
                 <p className="text-center mb-5 sm:mb-20 md:mb-0 font-sans font-bold sm:font-semibold text-[#042F2C] text-md sm:text-lg">
                   Create new story
@@ -140,8 +152,9 @@ const uploadFile = async ( timestamp:any, signature:any) => {
             </div>
           </div>
           {!cropImage && <ChooseImageComponent selectedFile={selectedFile} setSelectedFile={setSelectedFile} setImageUrl={setImageUrl}/>}
-          {cropImage && !croppedImage && !isVideo && <CropImageComponent selectedFile={selectedFile} imageUrl={imageUrl} setCroppedImage={setCroppedImage}/>}
-          {croppedImage && cropImage && <CreateStoryComponent croppedImage={croppedImage} caption={caption} setCaption={setCaption}/> }
+          {cropImage && !croppedImage && !isVideo && <CropImageComponent selectedFile={selectedFile} imageUrl={imageUrl} setCroppedImage={setCroppedImage} setTrimVideo={setTrimVideo}/>}
+          {croppedImage && cropImage && !trimVideo && <TrimVideoComponent croppedImage={croppedImage} /> }
+          {croppedImage && cropImage && trimVideo && <CreateStoryComponent croppedImage={croppedImage} caption={caption} setCaption={setCaption}/> }
           </div>
         </div>
       </div>

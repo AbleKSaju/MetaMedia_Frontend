@@ -6,6 +6,7 @@ export const Login_Api = `${AUTH_URL}/login`
 export const Logout_APi = `${AUTH_URL}/logout`
 export const SignUp_Api = `${AUTH_URL}/signup`
 export const VerifyOtp_Api = `${AUTH_URL}/verifyOtp`
+export const sendOtp_Api = `${AUTH_URL}/sendOtp`
 export const LoginWithGoogle_Api=`${AUTH_URL}/loginWithGoogle`
 export const LoginWithFacebook_Api=`${AUTH_URL}/loginWithFaceBook`
 export const ForgotPassword_Api=`${AUTH_URL}/forgotPassword`
@@ -25,12 +26,11 @@ export const AddProfileImage_Api=`${USER_URL}/addProfileImage`
 export const GetAllUsers_Api=`${USER_URL}/getAllUsersForChat`
 export const getUsersByName_Api=`${USER_URL}/getUsersByname`
 export const getuserById_Api=`${USER_URL}/getUserById`
-
 export const GetAllUsersData_Api=`${USER_URL}/getAllUsers`
 export const GetSearchUserData_Api=`${USER_URL}/getSearchUser`
 export const ChangeUserStatus_Api=`${USER_URL}/changeUserStatus`
-
 export const Suggetion_Api=`${USER_URL}/suggetions`
+export const BlockAndUnblockUser_Api=`${USER_URL}/BlockAndUnblockUser`
 
 // STORY SERVICE
 
@@ -56,6 +56,8 @@ export const AddPost_Api=`${POST_URL}/addPost`
 export const SearchLocation_Api=`${POST_URL}/searchLocation`
 export const getLatAndLong_Api=`${POST_URL}/getLatandLog`
 export const getUserPosts_Api=`${POST_URL}/getAllPost`
+export const ChangePostStatus_Api=`${POST_URL}/changePostStatus`
+export const GetLikedAndComentedPost_Api=`${POST_URL}/getLikedAndCommentedPost`
 export const showAllPost_Api=`${POST_URL}/showAllPost`
 export const likePost_Api=`${POST_URL}/likePost`
 export const AddComent_Api=`${POST_URL}/addComment`
@@ -73,13 +75,15 @@ export const CreateConversation_Api=`${CHAT_URL}/conversation`
 export const GetConversations_Api=`${CHAT_URL}/conversations`
 export const GetMessages_Api=`${CHAT_URL}/getMessages`
 export const SendMessage_Api=`${CHAT_URL}/message`
+export const DeleteMessage_Api=`${CHAT_URL}/deleteMessage`
 export const CreateNewGroup_Api=`${CHAT_URL}/createNewgroup`
 export const GetAllGroupsOfUser_Api=`${CHAT_URL}/getAllGroupOfUser`
 export const getGroupMessages_Api=`${CHAT_URL}/getSingleGroupMessage`
 export const GetGroupData_Api=`${CHAT_URL}/getGroupDataById`
 export const SendGroupMessage_Api=`${CHAT_URL}/sendGroupMessage`
 export const SendVoiceMessge_Api=`${CHAT_URL}/groupVoiceMessage`
+export const SendVoice_Api=`${CHAT_URL}/SendVoice_Api`
 export const sendFileMessage_Api=`${CHAT_URL}/groupSendFile`
-//Admin
+export const SendFileForMessage_Api=`${CHAT_URL}/singleUserSendFile`
 
 

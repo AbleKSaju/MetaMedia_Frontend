@@ -59,22 +59,29 @@ const HighlightListComponent = ({
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50">
       <div className="flex justify-center w-full h-full bg-transparent">
-        <div className="fixed top-24 h-[500px] md:h-[700px] w-full sm:w-[500px] md:w-[600px] md:top-10 z-30 flex justify-center border text-white rounded-lg border-teal-900  bg-white">
+        <div className="fixed top-24 h-[500px] md:h-[700px] w-full sm:w-[500px] md:w-[600px] md:top-10 z-30 flex justify-center border text-white rounded-lg border-black  bg-white">
           <div className="absolute left-3 top-3">
             <X
-              className="text-teal-900"
+              className="text-black"
               onClick={() => setHighlightList(false)}
             />
           </div>
-          <p className="absolute top-3 font-extrabold text-teal-900 cursor-pointer">
+          <p className="absolute top-3 font-extrabold text-black cursor-pointer">
             Select your Highlght
           </p>
+          {selectedImages.length ?
           <p
-            className="absolute top-3 right-3 cursor-pointer font-extrabold text-teal-900"
+            className="absolute top-3 right-3 cursor-pointer font-extrabold text-black"
             onClick={handleNext}
           >
             Post
           </p>
+          :    <p
+          className="absolute top-3 right-3 cursor-pointer font-extrabold text-gray-300"
+        >
+          Post
+        </p>
+}
           <div className="flex-col w-full mt-12 mb-5 overflow-y-scroll scrollbar-hide">
             <div className="w-full px-3 flex justify-center">
               <div className="w-full h-full">
@@ -87,7 +94,7 @@ const HighlightListComponent = ({
                           selectedImages.some(
                             (selectedItem) => selectedItem.id === item?.id
                           )
-                            ? "border border-teal-950 opacity-60"
+                            ? "border border-black opacity-60"
                             : ""
                         }`}
                         onClick={() => handleClick(item?.id, item?.storyUrl)}

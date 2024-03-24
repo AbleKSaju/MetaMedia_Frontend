@@ -10,7 +10,6 @@ import GroupMessageComponent from "./GroupMessageComponent";
 import { toast } from "sonner";
 const   MessageComponent = () => {
   const [conversations, setConversations] = useState<any>();
-  const [isCreateGrup,setIsCreategroup]=useState(false)
   const [newGroup,setewGroup]=useState(0)
   const [aside,setAside]=useState(0)
   const [isMore,setIsMore]=useState(false)
@@ -20,19 +19,12 @@ const   MessageComponent = () => {
   useEffect(() => {
     const path = window.location.pathname;
     toast.success(path);
-    if (path.startsWith("/message")) {
-      setIsGroupChat(false)
-    } else if (path.startsWith("/group")) {
+   if (path.startsWith("/group")) {
       setIsGroupChat(true)
     } else {
-      toast.error("EROOOR IN path")
-    }
-
-    return ()=>{
       setIsGroupChat(false)
     }
-
-  }, []);
+  }, [aside,isGroupChat]);
   return (
     <>
     {newGroup == 1 && (<CreateNewGroupModal setewGroup={setewGroup}/>)}
@@ -41,7 +33,9 @@ const   MessageComponent = () => {
     <div className=" flex h-full w-full overflow-hidden bg-white">
       {aside==0 && <Aside conversations={conversations} setewGroup={setewGroup} setIsMore={setIsMore} isMore={isMore} setAside={setAside} setIsGroupChat={setIsGroupChat}/>}
       {aside==1 && <GroupChatAside setIsMore={setIsMore} isMore={isMore} setewGroup={setewGroup} setIsGroupChat={setIsGroupChat} setAside={setAside} setClik={setClik} click={click}/>}
-      {isGroupChat && aside==1 ? (<GroupMessageComponent isGroupChat={isGroupChat} aside={aside} setClik={setClik} click={click}/>):  (<MessageListComponent conversations={conversations} setConversations={setConversations} aside={aside} isGroupChat={isGroupChat}/>)}
+      {isGroupChat && aside==1 ? (<GroupMessageComponent isGroupChat={isGroupChat} aside={aside} setClik={setClik} click={click}/>)
+      :  
+      (<MessageListComponent conversations={conversations} setConversations={setConversations} aside={aside} isGroupChat={isGroupChat}/>)}
       
     </div>
     </>

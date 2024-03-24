@@ -1,26 +1,23 @@
 import { useEffect, useState } from "react";
 import {
   Home,
-  Search,
-  Mail,
   Clapperboard,
-  Bell,
-  ListCollapse,
   Users,
+  LogOut,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { LogoutFunction } from "../../utils/api/methods";
-import { clearToken } from "../../utils/ReduxStore/Slice/tokenSlice";
 import { toast } from "sonner";
 import { persistor } from "../../utils/ReduxStore/Store/Store";
+import { clearAdminToken } from "../../utils/ReduxStore/Slice/adminTokenSlice";
+import { clearAdmin } from "../../utils/ReduxStore/Slice/adminSlice";
 const NewSideBar = () => {
   const location = useLocation();
   const Navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
-  const userData = useSelector((state: any) => state.persisted.user.userData);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,11 +34,12 @@ const NewSideBar = () => {
     };
   }, [isOpen]);
 
-  const handleLogout = async (e: any) => {
+  const handleAdminLogout = async (e: any) => {
     e.preventDefault();
     const response: any = await LogoutFunction();
     if (response?.data?.status) {
-      dispatch(clearToken());
+      dispatch(clearAdminToken());
+      dispatch(clearAdmin());
       toast.success(response?.data?.message);
       Navigate("/login");
     } else {
@@ -78,7 +76,6 @@ const NewSideBar = () => {
             </div>
           </Link>
           {/* home  */}
-          {/* search */}
           <Link
             to="/admin/users"
             className="h-full w-full flex justify-center items-center"
@@ -97,7 +94,6 @@ const NewSideBar = () => {
               )}
             </div>
           </Link>
-          {/* search */}
           {/* post  */}
           <Link
             to="/admin/posts"
@@ -123,8 +119,8 @@ const NewSideBar = () => {
           </Link>
           {/* post  */}
           {/* message */}
-          <Link
-            to="/message"
+          <div
+            onClick={handleAdminLogout}
             className=" h-full w-full flex justify-center  items-center"
           >
             <div
@@ -135,83 +131,26 @@ const NewSideBar = () => {
               {location.pathname === "/message" ? (
                 <>
                   <div className="rounded-full w-5/6 h-5/6 flex justify-center items-center bg-[#C1506D]">
-                    <Mail className="text-white size-6 sm:size-6 " />{" "}
+                    <LogOut className="text-white size-6 sm:size-6 " />{" "}
                   </div>
                 </>
               ) : (
                 <>
-                  <Mail className="text-gray-600 size-6 sm:size-7 " />{" "}
+                  <LogOut className="text-gray-600 size-6 sm:size-7 " />{" "}
                 </>
-              )}
-            </div>
-          </Link>
-          {/* message  */}
-
-          {/* notification  */}
-          <Link
-            to="/notification"
-            className="hidden h-full w-full sm:flex justify-center  items-center"
-          >
-            <div
-              className={`bg-[#FADBE1] w-10 h-10 ${
-                location.pathname === "/notification"
-                  ? "w-14 h-14"
-                  : "w-12 h-12"
-              } rounded-full flex justify-center items-center`}
-            >
-              {location.pathname === "/notification" ? (
-                <>
-                  <div className="rounded-full w-5/6 h-5/6 flex justify-center items-center bg-[#C1506D]">
-                    <Bell className="text-white size-6 sm:size-7 " />{" "}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Bell className="text-gray-600 size-6 sm:size-7 " />{" "}
-                </>
-              )}
-            </div>
-          </Link>
-          {/* notifiactoin  */}
-
-        </div>
-        {/* sidebar content main part  */}
-        {/* sidebar content setting part  */}
-        <div className="hidden h-2/6 sm:flex justify-center items-end p-8">
-          {/* more  */}
-          <div className=" h-full w-full flex justify-center  items-end ">
-            <div
-              className={`bg-[#FADBE1] w-10 h-10 ${"w-12 h-12"} rounded-full flex justify-center items-center`}
-            >
-              <>
-                <ListCollapse className="text-gray-600 size-6 sm:size-6 " onClick={()=>setIsOpen(!isOpen)}/>
-              </>
-              {isOpen && (
-                <div className="absolute left-3 bottom-20 w-40 bg-[#fff] rounded-lg shadow-lg z-10 border border-black">
-                  <ul>
-                    <li
-                      className="py-2 px-4 hover:bg-[#C1506D] hover:text-amber-50 border-b rounded-t-lg border-black cursor-pointer"
-                    >
-                       <Link to="/settings" onClick={()=>setIsOpen(false)}>
-                      Settings
-                    </Link>
-                    </li>
-                    <li  className="py-2 px-4 hover:bg-[#C1506D] hover:text-amber-50 border-b border-black cursor-pointer">
-                      forward
-                    </li>
-                    <li
-                      className="py-2 px-4 hover:bg-[#C1506D] hover:text-amber-50 rounded-b-lg cursor-pointer"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </li>
-                  </ul>
-                </div>
               )}
             </div>
           </div>
-          {/* more  */}
+          {/* message  */}
         </div>
+        {/* sidebar content main part  */}
+        {/* sidebar content setting part  */}
+        {/* <div className="hidden h-2/6 sm:flex justify-center items-end p-8">
+          {/* more  */}
+          <div className=" h-full w-full flex justify-center items-end ">
+           
+          {/* more  */}
+        </div> 
 
         {/* sidebar content setting part  */}
       </div>

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getAllUsersDataFunction } from "../../utils/api/methods/UserService/get";
 import { showAllPostFuntion } from "../../utils/api/methods/PostService/get/showAllPost";
+import { ChangePostStatusFunction } from "../../utils/api/methods/AdminService/post";
 
 const PostListComponents = () => {
   const [posts, setPosts] = useState<any>([]);
+  const [blockPost, setBlockPost] = useState<boolean>(false);
   const [currentPosts, setCurrentPosts] = useState<any>();
   const [searchPost, setSearchPost] = useState<string>("");
 
@@ -18,27 +20,40 @@ const PostListComponents = () => {
         toast.error("Users not found");
       }
     })();
-  }, []);
+  }, [blockPost]);
 
   useEffect(() => {
     (async () => {
       if (searchPost.length !== 0 && searchPost.trim() === "") {
         setCurrentPosts(posts);
       } else {
-        const usersData = await posts.filter((data: any) => {
+        const postData = await posts.filter((data: any) => {
           return (
             data.description.toLowerCase().includes(searchPost.toLowerCase()) ||
             data._id.includes(searchPost)
           );
         });
-        if (usersData.length) {
-          setCurrentPosts(usersData);
+        if (postData.length) {
+          setCurrentPosts(postData);
         } else {
           setCurrentPosts([]);
         }
       }
     })();
   }, [searchPost]);
+
+  const ChangePostStatus = async (postId:string)=>{
+    const data={
+      postId
+    }
+    console.log(postId,"postId");
+    const response:any = await ChangePostStatusFunction(data)
+    console.log(response,"ChangeUserStatusFunctionChangeUserStatusFunction");
+    if(response.data.status){
+      toast.success("Status Changed")
+      setBlockPost(!blockPost)
+    }
+  }
 
   return (
     <section className="container mx-auto p-6 pt-0 mt-10 font-mono overflow-auto scrollbar-hide">
@@ -83,11 +98,7 @@ const PostListComponents = () => {
             </thead>
             <tbody className="bg-white">
               {currentPosts?.map((data: any) => {
-                console.log(
-                  data?.blocked,
-                  "data?.blocked data?.blocked data?.blocked "
-                );
-
+                console.log(data,"data?.blocked data?.blocked");
                 return (
                   <tr className="text-black font-roboto" key={data._id}>
                     <>
@@ -136,6 +147,7 @@ const PostListComponents = () => {
                         className={`px-4 py-3 text-md border ${
                           data?.blocked ? "text-green-700" : "text-red-700"
                         }`}
+                        onClick={()=>ChangePostStatus(data?._id)}
                       >
                         {data?.blocked ? "Unblock" : "Block"}
                       </td>

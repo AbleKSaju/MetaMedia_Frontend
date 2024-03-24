@@ -11,22 +11,28 @@ import singlePostSlice from "../Slice/singlePostSlice";
 import messageSlice from "../Slice/messageSlice";
 import liveSlice from "../Slice/liveSlice";
 import newGropSlice from "../Slice/newGropSlice";
+import videoCallSlice from "../Slice/videoCallSlice";
+import adminSlice from "../Slice/adminSlice";
+import adminTokenSlice from "../Slice/adminTokenSlice";
 const persistConfig = {
   key: "root",
-  whitelist: ["user", "token", "story", "highlight", 'post','singlePost','message','live'],
+  whitelist: ["user", "token", "story", "highlight", 'post','singlePost','message','live','videoCall','newGroup','admin','adminToken'],
   storage,
 };
 
 const reducer = combineReducers({
   user: userSlice,
+  admin: adminSlice,
   story: storySlice,
   token: tokenSlice,
   highlight: highlightSlice,
+  adminToken: adminTokenSlice,
   message: messageSlice,
   post:postSlice,
   singlePost:singlePostSlice,
   live:liveSlice,
-  group:newGropSlice
+  group:newGropSlice,
+  videoCall:videoCallSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

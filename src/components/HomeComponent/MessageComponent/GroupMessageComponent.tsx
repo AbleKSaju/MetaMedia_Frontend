@@ -27,6 +27,7 @@ import {
   getUserByIdFuntion,
 } from "../../../utils/api/methods/UserService/post";
 import VoiceRecorder from "./VoiceRecorder";
+import profile from '../../../assets/profile.webp'
 
 const GroupMessageComponent = ({ isGroupChat, aside, setClik, click }: any) => {
   const { group_id } = useParams();
@@ -142,8 +143,6 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click }: any) => {
 
     const response = await SendVoiceNoteFunction(formData);
 
-
-
     if (response.status) {
       setClik(!click);
     } else {
@@ -244,10 +243,18 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click }: any) => {
         content: inputText,
         type: "text",
         metadata: {},
+        lastUpdate: Date.now(),
       };
 
       const response = await SendGroupMessageFunction(data);
       if (response.status) {
+        socket?.emit("sendGroupMessage", {
+          sender_id: userData?.userId,
+          group_id,
+          content: inputText,
+          type: "text",
+          lastUpdate: Date.now(),
+        })
         setClik(!click);
       } else {
         toast.error(response.message);
@@ -334,7 +341,7 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click }: any) => {
                                   <img  
                                   src={`http://localhost:3005/Chat/${item.content}`}
                                   alt="hhhhhh"
-                                  className="w-60 h-60 object-contain border  border-[#C1506D]"
+                                  className="w-60 h-60  border  border-[#C1506D]"
                                   
                                   />
                                   
@@ -383,13 +390,13 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click }: any) => {
                                   </>
                                 )}
                                 {item.type == "image" && <>
-                                  <img  
+                                  <img className="w-60 h-60 border" 
                                   src={`http://localhost:3005/Chat/${item.content}`}
                                   alt="" />
                                   
                                   </>}
                                   {item.type == "video" && <>
-                                  <video controls >
+                                  <video controls className="w-60 h-60 border">
 
                                     <source   src={`http://localhost:3005/Chat/${item.content}`}/>
                                   </video>
@@ -403,14 +410,13 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click }: any) => {
                             </div>
                             <></>
                             <img
-                              src={
-                                userDetails[item.sender_id]
-                                  ? `http://localhost:3000/profile/${
-                                      userDetails[item.sender_id]?.profile
-                                        ?.profileUrl
-                                    }`
-                                  : `http://localhost:3000/profile/${item.sender_id}`
-                              }
+                             src={
+                              userDetails[item.sender_id]?.profile?.profileUrl.startsWith("https://")
+                                ? `${userDetails[item.sender_id]?.profile.profileUrl}`
+                                : userDetails[item.sender_id]?.profile.profileUrl
+                                ? `http://localhost:3000/profile/${userDetails[item.sender_id]?.profile.profileUrl}`
+                                : `${profile}`
+                            }
                               alt="Profile"
                               className="h-6 w-6 sm:w-7 sm:h-7 border border-[#C1506D] rounded-full order-1"
                             />

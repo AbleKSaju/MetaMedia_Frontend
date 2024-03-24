@@ -1,11 +1,15 @@
 import Aside from "./AsideComponent";
-import Contactus from "./ContactusComponent";
 import EditProfile from "./EditProfileComponent";
-import Security from "./SecurityComponent";
+import BlockedUsers from "./BlockedUsers";
+import AllActivity from "./AllActivity";
+import ChangePassword from "./ChangePasswordComponent";
+import AccountInformation from "./AccountInformation";
 
 export {
     Aside,
-    Contactus,
     EditProfile,
-    Security,
+    BlockedUsers,
+    AllActivity,
+    ChangePassword,
+    AccountInformation
 }
