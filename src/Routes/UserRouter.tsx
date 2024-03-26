@@ -16,6 +16,7 @@ import { isSinglePostModalClose } from "../utils/ReduxStore/Slice/singlePostSlic
 import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePostModal";
 import NewSignUp from "../pages/user/SignUp";
 import NewLogin from "../pages/user/Login";
+import { ErrorComponent } from "../components/ErrorComponents/ErrorComponent";
 
 const 
 UserRouter = () => {

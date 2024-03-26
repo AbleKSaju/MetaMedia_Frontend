@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import { AllActivity,ChangePassword,BlockedUsers,Aside,EditProfile,AccountInformation } from "../../components/SettingsComponent";
+import { ErrorComponent } from "../../components/ErrorComponents/ErrorComponent";
 const Settings = (  ) => {
   const [blockedUsers,setBlockedUsers] = useState(false)
   const [allActivity,setAllActivity] = useState(false)
@@ -20,6 +21,7 @@ const Settings = (  ) => {
           <Route path="/allActivity/likes" element={<AllActivity />} />
           <Route path="/allActivity/comments" element={<AllActivity />} />
           <Route path="/allActivity/saved" element={<AllActivity />} />
+          <Route path='*' element={<ErrorComponent data={{path:'/settings/',Message:'Sorry the provided url is not valied'}} />}/>\
         </Routes>
       </div>
     </>

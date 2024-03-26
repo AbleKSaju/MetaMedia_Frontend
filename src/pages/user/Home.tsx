@@ -93,7 +93,7 @@ const Home = ({ render,setRender}:any) => {
                   <Route path="/settings/*" element={<Settings  />} />
                   <Route path="/room/:roomId" element={<Golive  />}/>
                   <Route path="/videoCall/:callId" element={<VideoCallComponent  />}/>
-                  <Route path="/audioCall/:callId" element={<AudioCallComponent  />}/>
+                  <Route path="/audioCall" element={<AudioCallComponent />}/>
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

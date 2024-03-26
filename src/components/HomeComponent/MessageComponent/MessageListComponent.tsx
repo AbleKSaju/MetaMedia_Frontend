@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 import {
   GetConversationsFunction,
   getMessagesFunction,
@@ -13,7 +13,6 @@ import {
   ChevronDown,
   Image,
   MoreVertical,
-  Phone,
   PhoneIcon,
   Video,
 } from "lucide-react";
@@ -101,6 +100,7 @@ const MessageListComponent = ({
   const [recordedAudioBlob, setRecordedAudioBlob]: any = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(-1);
   const [incomingCall, setIncomingCall] = useState<any>(null);
+  const [incomingAudioCall, setIncomingAudioCall] = useState<any>(null);
   const [isSendMessage, setIsSendMessage] = useState<boolean>(false);
   const [messageDeleted, setMessageDeleted] = useState<boolean>(false);
   const [newState, setNewState] = useState(false);
@@ -113,7 +113,7 @@ const MessageListComponent = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [videoCall, setVideoCall] = useState(false);
-  const [incomingAudioCall, setIncomingAudioCall] = useState(null);
+  const [audioCall, setAudioCall] = useState(false);
 
   useEffect(() => {
     setSocket(io("http://localhost:8081"));
@@ -122,23 +122,10 @@ const MessageListComponent = ({
   if (messages) {
     dispatch(addSocketData(socket));
   }
-  const handleAudioCallJoin = useCallback(
-    (receiverId: any) => {
-      console.log("handleAudioCallJoinhandleAudioCallJoin");
-      
-      socket?.emit("audio:join", {
-        senderId: userData.userId,
-        name: userData.name,
-        room: 123,
-        receiverId: receiverId,
-      });
-      navigate('/audioCall/123')
-    },
-    [socket, userData.name]
-  );
 
-  useEffect(() => {
-  }, [incomingCall]);
+  useEffect(() => {}, [incomingCall]);
+  useEffect(() => {}, [incomingAudioCall]);
+
   const handleSubmitForm = useCallback(
     (receiverId: any) => {
       socket?.emit("room:join", {
@@ -150,48 +137,69 @@ const MessageListComponent = ({
     },
     [socket, userData.name]
   );
-  const handleIncomingAudioCall = useCallback((data: any) => {
-    
-    const { senderId, receiverId, room, name } = data;
-    localStorage.setItem("callingUser", name);
-    setIncomingAudioCall({ senderId, receiverId, room, name });
-  }, [navigate]);
 
-  useEffect(() => {
-    socket?.on("audio:call", handleIncomingAudioCall);
-    return () => {
-      socket?.off("audio:call", handleIncomingAudioCall);
-    };
-  }, [socket, handleIncomingAudioCall]);
-
+  const handleSubmitAudioForm = useCallback(
+    (receiverId: any) => {
+      socket?.emit("room:audio:join", {
+        senderId: userData.userId,
+        name: userData.name,
+        room: 123,
+        receiverId: receiverId,
+      });
+    },
+    [socket, userData.name]
+  );
 
   useEffect(() => {
     if (videoCall) {
-      console.log(messages?.data?.name, "messages?.data?.name VVV");
       localStorage.setItem("currentReceiver", messages?.data?.name);
       handleSubmitForm(messages?.data?.receiverId);
     }
   }, [videoCall, handleSubmitForm]);
 
   useEffect(() => {
+    if (audioCall) {
+      console.log("I AM audioCall",messages?.data?.receiverId);
+      localStorage.setItem("currentReceiver", messages?.data?.name);
+      handleSubmitAudioForm(messages?.data?.receiverId);
+    }
+  }, [audioCall, handleSubmitAudioForm]);
+
+  useEffect(() => {
     socket?.on("room:join", (data: any) => {});
   }, [socket, videoCall]);
+
+  useEffect(() => {
+    socket?.on('room:audio:join', (data: any) => {});
+  }, [socket, audioCall]);
 
   const handleJoinRoom = useCallback((data: any) => {
     const { email, room } = data;
     navigate(`/videoCall/${room}`);
   }, []);
+
   const handleJoinAudioRoom = useCallback((data: any) => {
     const { email, room } = data;
-    navigate(`/audioCall/${room}`);
+    navigate(`/videoCall/${room}`);
   }, []);
 
   const handleCallingToRoom = useCallback((data: any) => {
+    console.log(data,"datadata");
+    
     const { senderId, receiverId, room, name } = data;
+    console.log(senderId, receiverId, room, name ,"senderId, receiverId, room, namehandleCallingToRoom ");
     localStorage.setItem("callingUser", name);
     setIncomingCall({ senderId, receiverId, room, name });
   }, []);
-  
+
+  const handleCallingToAudioRoom = useCallback((data: any) => {
+    console.log(data,"datadatadatadatadata");
+    const { senderId, receiverId, room, name } = data;
+    console.log(senderId, receiverId, room, name ,"senderId, receiverId, room, name ");
+    
+    localStorage.setItem("callingUser", name);
+    setIncomingAudioCall({ senderId, receiverId, room, name });
+  }, []);
 
   useEffect(() => {
     socket?.on("callingToRoom", handleCallingToRoom);
@@ -201,6 +209,13 @@ const MessageListComponent = ({
   }, [socket, handleJoinRoom]);
 
   useEffect(() => {
+    socket?.on("callingToAudioRoom", handleCallingToAudioRoom);
+    return () => {
+      socket?.off("callingToAudioRoom", handleCallingToAudioRoom);
+    };
+  }, [socket, handleJoinAudioRoom]);
+
+  useEffect(() => {
     socket?.on("room:join", handleJoinRoom);
     return () => {
       socket?.off("room:join", handleJoinRoom);
@@ -208,9 +223,9 @@ const MessageListComponent = ({
   }, [socket, handleJoinRoom]);
 
   useEffect(() => {
-    socket?.on("audio:join", handleJoinAudioRoom);
+    socket?.on("room:audio:join", handleJoinAudioRoom);
     return () => {
-      socket?.off("audio:join", handleJoinAudioRoom);
+      socket?.off("room:audio:join", handleJoinAudioRoom);
     };
   }, [socket, handleJoinAudioRoom]);
 
@@ -269,7 +284,7 @@ const MessageListComponent = ({
       }
     };
     fetchConversations();
-  }, [isSendMessage, user_id, newState, videoCall, , aside, isGroupChat]);
+  }, [isSendMessage, user_id, newState, videoCall,audioCall, aside, isGroupChat]);
 
   useEffect(() => {
     (async () => {
@@ -294,6 +309,7 @@ const MessageListComponent = ({
     conversations,
     isSendMessage,
     videoCall,
+    audioCall,
     newState,
     aside,
     isGroupChat,
@@ -321,8 +337,10 @@ const MessageListComponent = ({
       lastUpdate: Date.now(),
     };
 
-    setIsSendMessage(!isSendMessage);
     const response = await sendMessageFunction(data);
+    if (response) {
+      setIsSendMessage(!isSendMessage);
+    }
   };
 
   const BlockAndUnblockUser = async (userId: string) => {
@@ -470,12 +488,16 @@ const MessageListComponent = ({
         senderId: userData?.userId,
         receiverId: messages?.data?.receiverId,
         message: response.data,
-        socketType: 'voice_note',
+        socketType: "voice_note",
         conversationId: messages?.data?.conversationId,
         lastUpdate: Date.now(),
       });
     }
   };
+
+  const AudioCallFunction=()=>{
+    navigate('/audioCall')
+  }
 
   return (
     <>
@@ -503,23 +525,21 @@ const MessageListComponent = ({
               <p className="font-light text-sm">5 min ago</p>
             </div>
             <div className=" text-gray-600 ml-auto flex gap-2 sm:gap-5">
-              {incomingAudioCall ? (
+              {/* {incomingAudioCall ? (
                 <p
                   className="rounded-xl px-2 text-black bg-green-700"
-                  onClick={() => handleAudioCallJoin(messages?.data?.receiverId)}
+                  onClick={() => setAudioCall(!audioCall)}
                 >
                   Join 
                 </p>
-              ) : (
-                <PhoneIcon
-                  onClick={() =>
-                    handleAudioCallJoin(messages?.data?.receiverId)
-                  }
-                  className={`${
-                    isBlocked ? "text-gray-400" : ""
-                  } ml-2 size-4 lg:size-6 mt-0.5`}
-                />
-              )}
+              ) : ( */}
+              <PhoneIcon
+                onClick={AudioCallFunction}
+                className={`${
+                  isBlocked ? "text-gray-400" : ""
+                } ml-2 size-4 lg:size-6 mt-0.5`}
+              />
+              {/* )} */}
 
               {incomingCall ? (
                 <p
@@ -637,12 +657,15 @@ const MessageListComponent = ({
                             </p>
                           </span>
                         ) : data?.type == "voice_note" ? (
-                          <span className="px-4 py-2 rounded-lg flex  text-sm md:text-base justify-center items-center  rounded-br-none  text-white gap-2">
+                          <span className="px-4 py-2 relative rounded-lg flex  text-sm md:text-base justify-center items-center  rounded-br-none  text-white gap-2">
                             <AudioPlayer
                               src={`http://localhost:3005/Chat/${data.message}`}
                               customAdditionalControls={[]}
                               className="w-[200px] h-[80px] md:w-[300px]"
                             />
+                              <p className="absolute z-40 bottom-0 right-5 text-black text-[11px]">
+                              {DateToTime(data?.time)}
+                            </p>
                           </span>
                         ) : data?.socketType == "voice_note" ? (
                           <span className="px-4 py-2 rounded-lg flex  text-sm md:text-base justify-center items-center  rounded-br-none  text-white gap-2">
@@ -651,13 +674,19 @@ const MessageListComponent = ({
                               customAdditionalControls={[]}
                               className="w-[200px] h-[80px] md:w-[300px]"
                             />
+                              <p className="absolute -bottom-1 right-1 text-black text-[11px]">
+                              {DateToTime(data?.time)}
+                            </p>
                           </span>
-                          ): (
+                        ) : (
                           <span
                             className="px-4 py-3 relative h-auto rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#FADBE1] text-black"
                             key={index}
                           >
                             {data.message}
+                            <p className="absolute -bottom-1 right-1 text-gray-700 text-[11px]">
+                              {DateToTime(data?.time)}
+                            </p>
                           </span>
                         )}
                         <div ref={messageRef}></div>
@@ -798,6 +827,31 @@ const MessageListComponent = ({
                             </p>
                           </span>
                         ) : data?.type == "voice_note" ? (
+                          <span className="px-4 py-2 relative rounded-lg flex  text-sm md:text-base justify-center items-center  rounded-br-none  text-white gap-2">
+                            <AudioPlayer
+                              src={`http://localhost:3005/Chat/${data.message}`}
+                              customAdditionalControls={[]}
+                              className="w-[200px] h-[80px] md:w-[300px]"
+                            />
+                                  <ChevronDown
+                              className="absolute text-black top-1 right-3 size-5"
+                              onClick={() => setDropdownVisible(index)}
+                            />
+                            {dropdownVisible && (
+                              <DropDownComponent
+                                setMessageDeleted={setMessageDeleted}
+                                messageDeleted={messageDeleted}
+                                setDropdownVisible={setDropdownVisible}
+                                dropdownVisible={dropdownVisible}
+                                index={index}
+                                messageId={data.messageId}
+                              />
+                            )}
+                                 <p className="absolute bottom-0 right-5 text-black text-[11px]">
+                              {DateToTime(data?.time)}
+                            </p>
+                          </span>
+                        ) : data?.socketType == "voice_note" ? (
                           <span className="px-4 py-2 rounded-lg flex  text-sm md:text-base justify-center items-center  rounded-br-none  text-white gap-2">
                             <AudioPlayer
                               src={`http://localhost:3005/Chat/${data.message}`}
@@ -805,15 +859,7 @@ const MessageListComponent = ({
                               className="w-[200px] h-[80px] md:w-[300px]"
                             />
                           </span>
-                        ) :  data?.socketType == "voice_note" ? (
-                          <span className="px-4 py-2 rounded-lg flex  text-sm md:text-base justify-center items-center  rounded-br-none  text-white gap-2">
-                            <AudioPlayer
-                              src={`http://localhost:3005/Chat/${data.message}`}
-                              customAdditionalControls={[]}
-                              className="w-[200px] h-[80px] md:w-[300px]"
-                            />
-                          </span>
-                          ):(
+                        ) : (
                           <span className="px-4 py-3 relative h-auto rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#C1506D] text-white ">
                             {data.message}
                             <ChevronDown
@@ -830,6 +876,9 @@ const MessageListComponent = ({
                                 messageId={data.messageId}
                               />
                             )}
+                              <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
+                              {DateToTime(data?.time)}
+                            </p>
                           </span>
                         )}
 

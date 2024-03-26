@@ -37,6 +37,7 @@ const SearchComponent = ({ setOpenSearch,setRender,render }: any) => {
     if (searchUser.length && searchUser.trim() !== "") {
       setsearchedUsers([]);
       setUserLoading(true);
+      setNoUserFound(false);
       const getData = setTimeout(async () => {
         console.log("MAKING REQUEST with", searchUser);
         const response = await GetSearchUserDataFunction(searchUser);

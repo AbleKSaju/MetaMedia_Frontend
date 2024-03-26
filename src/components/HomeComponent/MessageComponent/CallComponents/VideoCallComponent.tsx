@@ -5,16 +5,15 @@ import {
   Mic,
   MicOff,
   PhoneOff,
-  SendHorizonal,
 } from "lucide-react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import AgoraRTC from "agora-rtc-sdk-ng";
 import ReactPlayer from "react-player";
 import peer from "../../../../utils/WebRTC/peer";
 import { useCallback, useEffect, useState } from "react";
 
 const VideoCallComponent: React.FC = () => {
+  console.log("VideoCallComponent");
+  
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState<any>();
   const [remoteStream, setRemoteStream] = useState();
@@ -55,11 +54,16 @@ const VideoCallComponent: React.FC = () => {
 
   const handleIncommingCall = useCallback(
     async ({ from, offer }: any) => {
+      console.log("handleIncommingCallhandleIncommingCall");
       setRemoteSocketId(from);
       const stream: any = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true,
       });
+      console.log("Getting stream");
+      
+      console.log(stream,"streamstream");
+      
       setMyStream(stream);
       console.log(`Incoming Call`, from, offer);
       const ans = await peer.getAnswer(offer);
@@ -85,11 +89,13 @@ const VideoCallComponent: React.FC = () => {
   );
 
   const handleNegoNeeded = useCallback(async () => {
+    console.log("handleNegoNeededhandleNegoNeeded");
     const offer = await peer.getOffer();
     socket.emit("peer:nego:needed", { offer, to: remoteSocketId });
   }, [remoteSocketId, socket]);
 
   useEffect(() => {
+    console.log("EFFECT");
     peer.peer.addEventListener("negotiationneeded", handleNegoNeeded);
     return () => {
       peer.peer.removeEventListener("negotiationneeded", handleNegoNeeded);

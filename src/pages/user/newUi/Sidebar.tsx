@@ -46,7 +46,7 @@ const NewSideBar = ({setOpenNotification, setOpenSearch}:any) => {
     <div className={` ${location.pathname.startsWith("/message") && location.pathname !== "/message/index" ? "hidden sm:flex" : "" } sm:mr-28 lg:mr-32`}>
 
       {/* sidebar ------------------------ */}
-      <div className="w-full sm:h-full sm:w-[100px] fixed bottom-0 z-20 md:w-[110px] lg:w-[120px] h-14 bg-white flex sm:flex-col justify-between rounded-tr-[30px] rounded-br-[30px] border-black shadow-md shadow-[#FADBE1] ">
+      <div className="w-full sm:h-full sm:w-[100px] fixed bottom-0 md:w-[110px] lg:w-[122px] h-14 bg-white flex sm:flex-col justify-between rounded-tr-[30px] rounded-br-[30px] border-black shadow-md shadow-[#FADBE1] ">
         {/* sidebar empty fist part  */}
         <div className="hidden sm:block h-1/6"></div>
         {/* sidebar content main part  */}
