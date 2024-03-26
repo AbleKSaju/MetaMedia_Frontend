@@ -10,15 +10,16 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import webpush from 'web-push'
 // import { toast } from "sonner";
 import { getAllStoriesFunction } from "../../../utils/api/methods/StoryService/Story/get";
 import { addOtherUserStories } from "../../../utils/ReduxStore/Slice/storySlice";
 import { showAllPostFuntion } from "../../../utils/api/methods/PostService/get/showAllPost";
-import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
+import { SubcribeUserToSNSFunction, getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
 import { toast } from "sonner";
 import { PostScroll, Story } from "../../../components/HomeComponent";
 import CreateMediaComponent from "../../../components/HomeComponent/CreateMediaComponent";
+import { GenarateVapIdKeysFunction } from "../../../utils/api/methods/UserService/post";
 
 interface MainBodyProps {
   setShowStory: (value: string) => void;
@@ -33,8 +34,150 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost,setIsAddLive }: Mai
     const dispatch = useDispatch();
     const [render, setRender] = useState(false);
     const [postData, setPostData] = useState([]);
+    const [vapidPublickey,setVapidPublicKey]=useState("")
 
 
+
+  const userData=useSelector((state:any)=>state.persisted.user.userData)
+
+
+
+
+
+
+  function requestNotificationPermission() {
+    return new Promise((resolve:any, reject) => {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            resolve();
+          } else {
+            reject('Notification permission denied');
+          }
+        }).catch(error => {
+          reject('Error requesting notification permission: ' + error);
+        });
+      } else {
+        // Notification permission already granted
+        resolve();
+      }
+    });
+  }
+  
+  function generateVapidKeys(data:any) {
+    return new Promise((resolve, reject) => {
+      GenarateVapIdKeysFunction(data).then(response => {
+        if (response.status) {
+          resolve(response.data);
+        } else {
+          reject('Failed to generate VAPID keys: ' + response.message);
+        }
+      }).catch(error => {
+        reject('Error generating VAPID keys: ' + error);
+      });
+    });
+  }
+  
+  function subscribeUserToSNS(data:any) {
+    return new Promise((resolve:any, reject) => {
+      SubcribeUserToSNSFunction(data).then(response => {
+        if (response.status) {
+          resolve();
+        } else {
+          reject('Failed to subscribe user to SNS: ' + response.message);
+        }
+      }).catch(error => {
+        reject('Error subscribing user to SNS: ' + error);
+      });
+    });
+  }
+  
+  function urlBase64ToUint8Array(base64String:any) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+  
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+  
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+  
+  function getDeviceInfo(key:any) {
+    return new Promise((resolve, reject) => {
+      try {
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.ready.then(async registration => {
+              let subscription = await registration.pushManager.getSubscription();
+  
+              if (!subscription) {
+                subscription = await registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: key
+                });
+              }
+  
+              const deviceToken = subscription.endpoint.split('/').pop();
+              const userAgent = navigator.userAgent;
+              const deviceType = userAgent.includes('Mac') ? 'Mac' : userAgent.includes('Windows') ? 'Windows' : 'Unknown';
+  
+              resolve({ deviceToken, deviceType });
+            }).catch(error => {
+              reject('Error getting device information: ' + error);
+            });
+          } else {
+            reject('Service worker is not ready');
+          }
+        } else {
+          reject('Push messaging is not supported');
+        }
+      } catch (error) {
+        reject('Error getting device information: ' + error);
+      }
+    });
+  }
+  
+  // Usage in useEffect
+  useEffect(() => {
+    requestNotificationPermission()
+      .then(() => {
+        toast.success("Notification permission granted");
+        const notifiacation = new Notification('New Message', {
+          body: 'You have received a new message.',
+        });
+        const data = { userId: userData.userId };
+        return generateVapidKeys(data);
+      })
+      .then((vapidPublicKey:any) => {
+        setVapidPublicKey(vapidPublicKey);
+        toast.success("VAPID public key successfully retrieved");
+        return getDeviceInfo(urlBase64ToUint8Array(vapidPublicKey));
+      })
+      .then((deviceInfo:any) => {
+        if (deviceInfo) {
+          const data = {
+            deviceInfo,
+            vapidPublicKey: vapidPublickey,
+            userId: userData.userId
+          };
+          // return subscribeUserToSNS(data);
+        } else {
+          toast.error('Failed to get device information');
+        }
+      })
+      .then(() => {
+        toast.success("Subscribed to SNS successfully");
+      })
+      .catch(error => {
+        toast.error(error);
+      });
+  }, [userData.userId]);
+  
     useEffect(() => {
       (async () => {
         const response: any = await getAllStoriesFunction();        
@@ -76,6 +219,7 @@ const MainBody = ({  setShowStory, setAddStory, setIsAddPost,setIsAddLive }: Mai
         }
       })();
     }, [render]);
+
 
 
   return (

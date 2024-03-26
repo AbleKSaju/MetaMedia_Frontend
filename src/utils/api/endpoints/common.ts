@@ -31,7 +31,8 @@ export const GetSearchUserData_Api=`${USER_URL}/getSearchUser`
 export const ChangeUserStatus_Api=`${USER_URL}/changeUserStatus`
 
 export const Suggetion_Api=`${USER_URL}/suggetions`
-
+export const GenarateVapIdKeys_Api=`${USER_URL}/vapidKeys`
+export const SubcribeUserToSNS_Api=`${USER_URL}/subscribe`
 // STORY SERVICE
 
         //Story

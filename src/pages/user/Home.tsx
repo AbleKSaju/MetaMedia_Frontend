@@ -27,6 +27,8 @@ import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 
 import CreateLive from "../../components/HomeComponent/liveComponent/CreateLive";
 import Golive from "../../components/HomeComponent/liveComponent/goLive";
+import JistyVedioCall from "../../components/HomeComponent/MessageComponent/jitsyVideoCall";
+import AudiCall from "../../components/HomeComponent/MessageComponent/jitsiAudioCall";
 
 
 
@@ -44,6 +46,7 @@ const Home = ({ render,setRender}:any) => {
   const [openSearch, setOpenSearch] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
   const [isgoLive,setIsGoLive]=useState(false)
+  const [isVideoCall,setIsVideoCall]=useState(false)
   const dispatch = useDispatch()
   const location = useLocation();
   const userData=useSelector((state:any)=>state.persisted.user.userData)
@@ -81,6 +84,7 @@ const Home = ({ render,setRender}:any) => {
  
   return (
     <>
+    
  {addStories && <StoryModal setAddStory={setAddStories}/>}
  {showStory?.length!=0 && <ShowStoryComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}/>}
 
@@ -95,9 +99,10 @@ const Home = ({ render,setRender}:any) => {
         {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
           {isAddPost && ( <MainModalBorderPost setRender={setRender} render={render} setIsAddPost={setIsAddPost} addPost={addPost} setAddPost={setAddPost} /> )}
           {isgoLive &&  (<Golive />)}
+          {isVideoCall && <JistyVedioCall />}
             <Routes>
-                  <Route path="/message/:user_id" element={<Message />} />
-                  <Route path="/group/:group_id" element={<Message />} />
+                  <Route path="/message/:user_id" element={<Message setIsVideoCall={setIsVideoCall} />} />
+                  <Route path="/group/:group_id" element={<Message setIsVideoCall={setIsVideoCall} />} />
 
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
                   <Route path="/search" element={<Search setSidebarOpen={setSidebarOpen}/>} />
@@ -106,6 +111,9 @@ const Home = ({ render,setRender}:any) => {
                   <Route path="/notification" element={<Notification setSidebarOpen={setSidebarOpen}/>} />
                   <Route path="/settings/*" element={<Settings  />} />
                   <Route path="/room/:roomId" element={<Golive  />}/>
+                  <Route path="/jitsy" element={<JistyVedioCall  />}/>
+                  <Route path="/AudioCall" element={<AudiCall />}/>
+
 
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
