@@ -1,8 +1,10 @@
+
 import React from "react";
 import UsersListComponent from "./UsersListComponent";
 import PostListComponents from "./PostListComponents";
 import { Route, Routes } from "react-router-dom";
 import AsideComponent from "../../pages/admin/AsideComponent";
+import DashBoardComponent from "./DashBoard";
 
 const HomeComponent = () => {
   return (
@@ -11,6 +13,7 @@ const HomeComponent = () => {
         <div className="w-full h-full flex flex-col-reverse sm:flex-row justify-start overflow-y-auto ">
           <AsideComponent />
           <Routes>
+            <Route path="/" element={<DashBoardComponent />} />
             <Route path="/users" element={<UsersListComponent />} />
             <Route path="/posts" element={<PostListComponents />} />
           </Routes>
@@ -20,4 +23,5 @@ const HomeComponent = () => {
   );
 };
 
-export default HomeComponent;
+
+export default HomeComponent

@@ -5,8 +5,10 @@ import {
   ChooseInterest_Api,
   EditProfile_Api,
   FollowUser_Api,
+  GenarateVapIdKeys_Api,
   GetUserData_Api,
   GetUsersData_Api,
+  SubcribeUserToSNS_Api,
   getUsersByName_Api,
   getuserById_Api,
 } from "../../endpoints/common";
@@ -93,5 +95,29 @@ export const followUserFunction = async (data: any) => {
     return axios.create({ withCredentials: true }).post(FollowUser_Api, data);
   } catch (error) {
     console.log(error,"err");
+  }
+};
+
+export const GenarateVapIdKeysFunction = async (data:any) => {
+  try {
+    const response = await axios
+      .create({ withCredentials: true })
+      .post(`${GenarateVapIdKeys_Api}`,data);
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const SubcribeUserToSNSFunction = async (data:any) => {
+  try {
+    const response = await axios
+      .create({ withCredentials: true })
+      .post(`${SubcribeUserToSNS_Api}`,data);
+
+    return response.data;
+  } catch (error) {
+    return error;
   }
 };

@@ -1,6 +1,6 @@
 import { Heart, MessageCircle, Send, Bookmark } from "lucide-react";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
+
+import moment from 'moment';
 import { useDispatch, useSelector } from "react-redux";
 import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 import {
@@ -14,8 +14,8 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { LikePostFuntion } from "../../utils/api/methods/PostService/Post/likePost";
 const PostScroll = ({ data, render, setRender }: any) => {
-  TimeAgo.addDefaultLocale(en);
-  const timeAgo = new TimeAgo("en-US");
+  
+ 
   const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
   const userData = useSelector((state: any) => state.persisted.user.userData);
@@ -154,7 +154,8 @@ const PostScroll = ({ data, render, setRender }: any) => {
             )}
           </div>
           <div className="ml-9 text-[12px] text-gray-500">
-            {timeAgo.format(new Date(data.createdAt))}
+            {moment(data.createdAt).fromNow()}
+            
           </div>
           <div className="sm:text-[14px] text-[10px] mb-2 pl-4 p-2 font-roboto font-normal lg:pl-8 md:pl-8 sm:pl-8 ">
             <input

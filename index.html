@@ -1,15 +1,46 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./src/assets/logo-color.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meta media</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script src="https://meet.jit.si/external_api.js"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="./src/assets/logo-color.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meta media</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          // Check if there's an active service worker
+          if (!navigator.serviceWorker.controller) {
+            console.log('No active service worker, registering...');
+             navigator.serviceWorker.register('./serviceWorker.ts').then(()=>{
+               console.log('Service Worker registered',navigator.serviceWorker);
 
+             })
+          }
+
+          // Wait for the service worker registration to become ready
+          const registration = await waitForServiceWorkerReady();
+          console.log('Service Worker ready:', registration);
+        } catch (error) {
+          console.error('Service Worker registration failed:', error);
+        }
+      });
+    }
+
+    function waitForServiceWorkerReady() {
+      return new Promise((resolve, reject) => {
+        const intervalId = setInterval(() => {
+          if (navigator.serviceWorker.controller) {
+            clearInterval(intervalId);
+            resolve(navigator.serviceWorker.ready);
+          }
+        }, 1000); // Check every second
+      });
+    }
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

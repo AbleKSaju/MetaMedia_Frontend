@@ -9,6 +9,8 @@ import {
   Bookmark,
   Smile,
 } from "lucide-react";
+
+import moment from 'moment';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,8 +20,10 @@ import {
   addPostData,
   isSinglePostModalOpen,
 } from "../../../utils/ReduxStore/Slice/singlePostSlice";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
+
+
+import { color } from "framer-motion";
+
 import { LikePostFuntion } from "../../../utils/api/methods/PostService/Post/likePost";
 import { toast } from "sonner";
 import { AddCommentFunction } from "../../../utils/api/methods/PostService/Post/addComment";
@@ -32,8 +36,7 @@ import { DeleteCommentFuntion } from "../../../utils/api/methods/PostService/Pos
 import { DeleteReplayFunction } from "../../../utils/api/methods/PostService/Post/deleteReplay";
 import { SavePostFunction } from "../../../utils/api/methods/PostService/Post/savePost";
 const SinglePostModal = ({ render, setRender }: any) => {
-  TimeAgo.addDefaultLocale(en);
-  const timeAgo = new TimeAgo("en-US");
+ 
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.persisted.user.userData);
   const singlePost = useSelector(
@@ -96,7 +99,8 @@ const SinglePostModal = ({ render, setRender }: any) => {
   };
 
   function getTimeAgo(createdAt: any) {
-    return timeAgo.format(new Date(createdAt));
+    
+    return moment(createdAt).fromNow()
   }
 
   useEffect(() => {
@@ -518,10 +522,12 @@ const SinglePostModal = ({ render, setRender }: any) => {
                   {/* one comment end */}
                   {singlePost?.comments?.length > 0 ? (
                     <>
-                      {singlePost.comments.map((item: any) => {
-                        {
-                          /* one comment  */
-                        }
+
+                      
+
+                      {singlePost.comments.slice().reverse().map((item: any) => {
+                       
+
                         return (
                           <>
                             <div
@@ -544,7 +550,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
                                 </div>
                                 <div className="flex  w-3/6  h-full justify-between items-center gap-2">
                                   <p className="text-[13px]">
-                                    {timeAgo.format(new Date(item.createdAt))}
+                                  {moment(item.createdAt).fromNow()}
                                   </p>
                                   <div
                                     className="font-medium text-[12px]"
