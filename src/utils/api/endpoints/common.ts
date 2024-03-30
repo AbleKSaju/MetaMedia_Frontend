@@ -16,7 +16,7 @@ export const RefreshToken_Api=`${AUTH_URL}/refresh`
 
 // USER SERVICE
 
-export const GetUserData_Api=`${USER_URL}/getUserData`
+export const    GetUserData_Api=`${USER_URL}/getUserData`
 export const GetUsersData_Api=`${USER_URL}/getUsersDataById`
 export const FollowUser_Api=`${USER_URL}/followUser`
 export const ChooseInterest_Api=`${USER_URL}/chooseInterest`
@@ -90,5 +90,5 @@ export const SendVoiceMessge_Api=`${CHAT_URL}/groupVoiceMessage`
 export const SendVoice_Api=`${CHAT_URL}/SendVoice_Api`
 export const sendFileMessage_Api=`${CHAT_URL}/groupSendFile`
 export const SendFileForMessage_Api=`${CHAT_URL}/singleUserSendFile`
-
+export const GetNotificationOfUser_Api=`${CHAT_URL}/getNoficationOfAUser`
 

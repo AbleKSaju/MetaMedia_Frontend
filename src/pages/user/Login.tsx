@@ -209,8 +209,10 @@ const Login = () => {
   const formsubmit = async (Data: LoginFormData) => {
     const userExist: any = await LoginFuntion({ ...Data });
     if (userExist.data.status == false) {
+     
       toast.error(userExist?.data?.message);
     } else {
+     
       console.log(userExist,"userExistuserExistuserExistuserExistuserExist");
       if(userExist.data.admin){
         const userEmail = { email: userExist?.data?.user?.email };
@@ -227,7 +229,8 @@ const Login = () => {
         toast.success(response?.data?.data?.message);
         Navigate("/admin", { replace: true });
       }else{
-      const userEmail = { email: userExist?.data?.user?.email };
+      const userEmail:any = {email: userExist?.data?.user?.email };
+     
       const response: any = await GetUserDataFunction(userEmail);
       const userData: ResponseData = {
         email: response.data.user.email ?? "",

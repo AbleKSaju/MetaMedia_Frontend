@@ -91,6 +91,10 @@ const AudiCall=()=>{
                 Loading..
             </div>
         );
+        const config = {
+            disableVideo: true, 
+           
+          }
     return (
         <>
         
@@ -102,11 +106,9 @@ const AudiCall=()=>{
                     subject: 'Group video call',
                     startWithVideoMuted: true, 
                     disableVideo: true, 
-                
                     disableAudioLevels: true, 
                     prejoinPageEnabled: false, 
                     startAudioOnly: true, 
-                    
                     enableNoAudioDetection: false, 
                     enableNoisyMicDetection: false,
                     jwt:token,

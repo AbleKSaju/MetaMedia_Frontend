@@ -1,8 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { GetNotificationOfUserFunction } from "../../../utils/api/methods/ChatService/get/get";
+import { toast } from "sonner";
 
+import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
+import { Annoyed } from "lucide-react";
+import moment from 'moment';
 const Notification = ({ setOpenNotification }: any) => {
-  const wrapperRef: any = useRef(null);
 
+  const userData=useSelector((state:any)=>state.persisted.user.userData)
+  const [notifications,setNotifications]:any=useState([])
+
+
+
+
+  const wrapperRef: any = useRef(null);
   const handleClickOutside = (event: any) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       setOpenNotification(false);
@@ -14,6 +26,36 @@ const Notification = ({ setOpenNotification }: any) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchNotificationOfUser = async () => {
+      const response = await GetNotificationOfUserFunction(userData.userId);
+      if (response.status) {
+        const updatedNotifications:any = await Promise.all(response.data.map(async (notificationItem: any) => {
+          try {
+            const senderUserDataResponse = await getUserByIdFuntion(notificationItem.sender_id);
+            if (senderUserDataResponse.status) {
+              return { ...notificationItem, senderUserData: senderUserDataResponse.data };
+            } else {
+              throw new Error(senderUserDataResponse.message);
+            }
+          } catch (error:any) {
+            toast.error(`Error fetching sender data: ${error.message}`);
+            return notificationItem;
+          }
+        }));
+        setNotifications(updatedNotifications);
+      } else {
+        toast.error(response.message);
+      }
+    };
+    fetchNotificationOfUser();
+  }, [userData]);
+ 
+  useEffect(()=>{
+console.log(notifications,'--------5555555555');
+
+  },[notifications])
   return (
     <>
       <div
@@ -22,61 +64,107 @@ const Notification = ({ setOpenNotification }: any) => {
       >
         <p className="text-3xl text-center my-6">Notifications</p>
         <div className="flex flex-col justify-center gap-2 p-1 ">
-          {/* one notification ------------ */}
-          <div className="w-full h-20  flex justify-between  border rounded-md">
-            <div className="h-full w-3/12 flex justify-normal items-center p-2 ">
-              <img
-                src="https://i.pinimg.com/564x/d7/9f/5b/d79f5bd264164c6eb4f41ca6a0e109aa.jpg"
-                className="w-[50px] h-[50px] fixed rounded-full border border-[#C1506D]"
-                alt=""
-              />
-            </div>
-            <div className="h-full w-full  flex flex-col">
-              <div className="w-full h-1/2  flex pl-2 justify-start items-end">
-                <p className="font-semibold">__razik__</p>
-              </div>
-              <div className="w-full h-1/2   items-start flex flex-col pl-3">
-                <p className="text-sm">tagged you in a post</p>
-                <p className="text-[10px]">2d ago</p>
-              </div>
-            </div>
-            <div className="h-full w-3/12  p-2 flex justify-center items-center">
-              <img
-                src="https://i.pinimg.com/564x/8f/cc/f2/8fccf21527cf27d9ac0692f377592e3d.jpg"
-                className="w-full h-5/6 object-cover"
-                alt=""
-              />
-            </div>
-          </div>
-          {/* one notification ------------ */}
+          {notifications && notifications.length > 0 ? (
+            <>
+            {notifications.map((item:any)=>{
+              return (
+                <>
 
-          {/* one notification ------------ */}
-          <div className="w-full h-20  flex justify-between  border rounded-md">
+{item.action_type=='like' && (
+  <>
+{/* one notification ------------ */}
+<div className="w-full h-20  flex justify-between  border rounded-md flex-none" key={item._id}>
             <div className="h-full w-3/12 flex justify-normal items-center p-2 ">
               <img
-                src="https://i.pinimg.com/564x/d7/9f/5b/d79f5bd264164c6eb4f41ca6a0e109aa.jpg"
-                className="w-[50px] h-[50px] fixed rounded-full border border-[#C1506D]"
+               src={`http://localhost:3000/profile/${item?.senderUserData.profile?.profileUrl}`}
+                className="w-[50px] h-[50px]  rounded-full border border-[#C1506D]"
                 alt=""
               />
             </div>
             <div className="h-full w-full  flex flex-col">
               <div className="w-full h-1/2  flex pl-2 justify-start items-end">
-                <p className="font-semibold">__razik__</p>
+                <p className="font-semibold">{item?.senderUserData?.basicInformation?.fullName}</p>
               </div>
               <div className="w-full h-1/2   items-start flex flex-col pl-3">
-                <p className="text-sm">tagged you in a post</p>
-                <p className="text-[10px]">2d ago</p>
+                {item.action_type=='like' && (
+                  <>
+                  <p className="text-sm">Liked your  post</p>
+                  </>
+                )}
+                
+                <p className="text-[10px]"> {moment(item.timestamp).fromNow()}</p>
               </div>
             </div>
             <div className="h-full w-3/12  p-2 flex justify-center items-center">
               <img
-                src="https://i.pinimg.com/564x/8f/cc/f2/8fccf21527cf27d9ac0692f377592e3d.jpg"
+                src={`http://localhost:3002/img/${item.action_details.post_image}`}
                 className="w-full h-5/6 object-cover"
                 alt=""
               />
             </div>
           </div>
-          {/* one notification ------------ */}
+ {/* one notification ------------ */}
+  </>
+)}
+{item.action_type=='comment' && (
+  <>
+  {/* one notification ------------ */}
+<div className="w-full h-20  flex justify-between  border rounded-md flex-none" key={item._id}>
+            <div className="h-full w-3/12 flex justify-normal items-center p-2 ">
+              <img
+               src={`http://localhost:3000/profile/${item?.senderUserData.profile?.profileUrl}`}
+                className="w-[50px] h-[50px]  rounded-full border border-[#C1506D]"
+                alt=""
+              />
+            </div>
+            <div className="h-full w-full  flex flex-col">
+              <div className="w-full h-1/2  flex pl-2 justify-start items-end">
+                <p className="font-semibold">{item?.senderUserData?.basicInformation?.fullName}</p>
+              </div>
+              <div className="w-full h-1/2   items-start flex flex-col pl-3">
+                                <>
+                                
+                  <p className="text-sm flex flex-wrap">Commented your  post :{item.action_details.comment.length > 4 ? `${item.action_details.comment.substring(0, 4)}...` : item.action_details.comment}</p>
+                
+
+                  </>
+            
+                
+                <p className="text-[10px]"> {moment(item.timestamp).fromNow()}</p>
+              </div>
+            </div>
+            <div className="h-full w-3/12  p-2 flex justify-center items-center">
+              <img
+                src={`http://localhost:3002/img/${item.action_details.post_image}`}
+                className="w-full h-5/6 object-cover"
+                alt=""
+              />
+            </div>
+          </div>
+ {/* one notification ------------ */}
+  
+  </>
+)}
+
+         
+
+
+                </>
+              )
+            })}
+            </>
+          ):(
+            <>
+            <div className="w-full h-20  flex justify-between  border rounded-md" >
+            <div className="h-full w-full flex justify-center items-center  ">
+             <p className="flex text-[#C1506D] text-sm font-semibold"> No Notificatins For you</p>
+            </div>
+            </div>
+            </>
+          )}
+          
+
+        
         </div>
       </div>
     </>

@@ -85,7 +85,7 @@ const GroupChatAside=({setIsMore,isMore,setewGroup,setIsGroupChat,setAside,setCl
                       </div>
                     </div>
 
-                    <span className=" text-gray-600">{Date.now()}</span>
+                    <span className=" text-gray-600">{}</span>
         </div>
             {/* one div  */}
 
