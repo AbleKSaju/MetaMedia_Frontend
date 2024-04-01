@@ -100,7 +100,6 @@ const MessageListComponent = ({
   const [recordedAudioBlob, setRecordedAudioBlob]: any = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(-1);
   const [incomingCall, setIncomingCall] = useState<any>(null);
-  const [incomingAudioCall, setIncomingAudioCall] = useState<any>(null);
   const [isSendMessage, setIsSendMessage] = useState<boolean>(false);
   const [messageDeleted, setMessageDeleted] = useState<boolean>(false);
   const [newState, setNewState] = useState(false);
@@ -113,7 +112,6 @@ const MessageListComponent = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [videoCall, setVideoCall] = useState(false);
-  const [audioCall, setAudioCall] = useState(false);
 
   useEffect(() => {
     setSocket(io("http://localhost:8081"));
@@ -124,23 +122,10 @@ const MessageListComponent = ({
   }
 
   useEffect(() => {}, [incomingCall]);
-  useEffect(() => {}, [incomingAudioCall]);
 
   const handleSubmitForm = useCallback(
     (receiverId: any) => {
       socket?.emit("room:join", {
-        senderId: userData.userId,
-        name: userData.name,
-        room: 123,
-        receiverId: receiverId,
-      });
-    },
-    [socket, userData.name]
-  );
-
-  const handleSubmitAudioForm = useCallback(
-    (receiverId: any) => {
-      socket?.emit("room:audio:join", {
         senderId: userData.userId,
         name: userData.name,
         room: 123,
@@ -158,47 +143,20 @@ const MessageListComponent = ({
   }, [videoCall, handleSubmitForm]);
 
   useEffect(() => {
-    if (audioCall) {
-      console.log("I AM audioCall",messages?.data?.receiverId);
-      localStorage.setItem("currentReceiver", messages?.data?.name);
-      handleSubmitAudioForm(messages?.data?.receiverId);
-    }
-  }, [audioCall, handleSubmitAudioForm]);
-
-  useEffect(() => {
     socket?.on("room:join", (data: any) => {});
   }, [socket, videoCall]);
 
-  useEffect(() => {
-    socket?.on('room:audio:join', (data: any) => {});
-  }, [socket, audioCall]);
 
   const handleJoinRoom = useCallback((data: any) => {
     const { email, room } = data;
     navigate(`/videoCall/${room}`);
   }, []);
 
-  const handleJoinAudioRoom = useCallback((data: any) => {
-    const { email, room } = data;
-    navigate(`/videoCall/${room}`);
-  }, []);
-
   const handleCallingToRoom = useCallback((data: any) => {
     console.log(data,"datadata");
-    
     const { senderId, receiverId, room, name } = data;
-    console.log(senderId, receiverId, room, name ,"senderId, receiverId, room, namehandleCallingToRoom ");
     localStorage.setItem("callingUser", name);
     setIncomingCall({ senderId, receiverId, room, name });
-  }, []);
-
-  const handleCallingToAudioRoom = useCallback((data: any) => {
-    console.log(data,"datadatadatadatadata");
-    const { senderId, receiverId, room, name } = data;
-    console.log(senderId, receiverId, room, name ,"senderId, receiverId, room, name ");
-    
-    localStorage.setItem("callingUser", name);
-    setIncomingAudioCall({ senderId, receiverId, room, name });
   }, []);
 
   useEffect(() => {
@@ -209,25 +167,11 @@ const MessageListComponent = ({
   }, [socket, handleJoinRoom]);
 
   useEffect(() => {
-    socket?.on("callingToAudioRoom", handleCallingToAudioRoom);
-    return () => {
-      socket?.off("callingToAudioRoom", handleCallingToAudioRoom);
-    };
-  }, [socket, handleJoinAudioRoom]);
-
-  useEffect(() => {
     socket?.on("room:join", handleJoinRoom);
     return () => {
       socket?.off("room:join", handleJoinRoom);
     };
   }, [socket, handleJoinRoom]);
-
-  useEffect(() => {
-    socket?.on("room:audio:join", handleJoinAudioRoom);
-    return () => {
-      socket?.off("room:audio:join", handleJoinAudioRoom);
-    };
-  }, [socket, handleJoinAudioRoom]);
 
   useEffect(() => {
     socket?.emit("addUser", userData?.userId);
@@ -239,6 +183,8 @@ const MessageListComponent = ({
         ...prev,
         messages: [...prev.messages, data],
       }));
+      console.log("changing New State");
+      setNewState(!newState)
     });
   }, [socket]);
 
@@ -284,7 +230,7 @@ const MessageListComponent = ({
       }
     };
     fetchConversations();
-  }, [isSendMessage, user_id, newState, videoCall,audioCall, aside, isGroupChat]);
+  }, [isSendMessage, user_id, newState, videoCall, aside, isGroupChat,messages]);
 
   useEffect(() => {
     (async () => {
@@ -309,7 +255,6 @@ const MessageListComponent = ({
     conversations,
     isSendMessage,
     videoCall,
-    audioCall,
     newState,
     aside,
     isGroupChat,

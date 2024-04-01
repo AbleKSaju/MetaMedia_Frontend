@@ -112,11 +112,15 @@ const Home = ({ render,setRender}:any) => {
                   <Route path="/room/:roomId" element={<Golive  />}/>
 
                   <Route path="/videoCall/:callId" element={<VideoCallComponent  />}/>
+
                   <Route path="/audioCall" element={<AudioCallComponent />}/>
 
                   <Route path="/jitsy" element={<JistyVedioCall  />}/>
                   <Route path="/AudioCall" element={<AudiCall />}/>
 
+
+
+                  <Route path="/audioCall" element={<AudioCallComponent  />}/>
 
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
