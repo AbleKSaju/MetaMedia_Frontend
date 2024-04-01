@@ -1,6 +1,6 @@
     import axios from "axios";
     import { UserData } from "../../../interface/userInterface";
-    import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,ForgotPassword_Api,ChangePassword_Api,LoginWithFacebook_Api, Logout_APi,RefreshToken_Api, GetUserData_Api, sendOtp_Api} from "../../endpoints/common";
+    import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,ForgotPassword_Api,ChangePassword_Api,LoginWithFacebook_Api, Logout_APi, GetUserData_Api, sendOtp_Api} from "../../endpoints/common";
 import { toast } from "sonner";
 
     export const LoginFuntion = async (data: any) => {

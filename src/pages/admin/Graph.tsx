@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { showAllPostFuntion } from '../../utils/api/methods/PostService/get/showAllPost';
+
 import ReactApexChart from 'react-apexcharts';
-import { getAllUsersDataFunction } from '../../utils/api/methods/UserService/get';
 
 const Chart = ({userData,postData}:any) => {
   

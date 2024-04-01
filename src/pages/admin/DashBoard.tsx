@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import ApexCharts from 'apexcharts'
-import {User,Clapperboard, Users,Aperture,ShieldBanIcon} from 'lucide-react'
+import  { useEffect, useState } from 'react';
+
+import {Clapperboard, Users,Aperture,ShieldBanIcon} from 'lucide-react'
 import Chart from './Graph';
 import { showAllPostFuntion } from '../../utils/api/methods/PostService/get/showAllPost';
 import { getAllUsersDataFunction } from '../../utils/api/methods/UserService/get';
