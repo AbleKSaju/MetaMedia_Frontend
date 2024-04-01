@@ -100,7 +100,7 @@ const UsersListComponent = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {currentUsers?.map((data: any, index: number) => {
+              {currentUsers?.map((data: any) => {
                 console.log(data.blocked,"BBLL");
                 
                 return (

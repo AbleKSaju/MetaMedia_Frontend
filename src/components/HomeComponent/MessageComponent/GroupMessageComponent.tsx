@@ -1,28 +1,26 @@
 import {
   ArrowLeft,
   Image,
-  Mic,
+
   MoreVertical,
   Phone,
   Video,
   Files,
-  Rabbit,
-  RabbitIcon,
+  
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Link, useFetcher, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import ReactAudioPlayer from 'react-audio-player';
+
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-// import { AudioPlayer } from 'react-audio-player-component';
-import ReactPlayer from 'react-player'
+
 import {
   GetGroupDataByIdFunction,
   GetGroupMessagesFunction,
 } from "../../../utils/api/methods/ChatService/get/get";
 import { useSelector } from "react-redux";
-import Item from "antd/es/list/Item";
+
 import { io } from "socket.io-client";
 import {
   SendFileMessageFunction,
@@ -30,14 +28,14 @@ import {
   SendVoiceNoteFunction,
 } from "../../../utils/api/methods/ChatService/post/post";
 import {
-  GetUsersDataByIdFunction,
   getUserByIdFuntion,
 } from "../../../utils/api/methods/UserService/post";
 import VoiceRecorder from "./VoiceRecorder";
 
 import profile from '../../../assets/profile.webp'
+import { set } from "react-hook-form";
 
-import JistyVedioCall from "./jitsyVideoCall";
+
 
 const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCall,setISGroupDetais }: any) => {
   const { group_id } = useParams();
@@ -48,9 +46,11 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
   const [socket, setSocket] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>({});
   const [recordedAudioBlob, setRecordedAudioBlob]: any = useState(null);
-
-
-
+  const [joinVideoCall,setJoinVidioCall]=useState(false)
+  const [videoCallJoinRoomId,setVideoCallJoinRoomId]=useState('')
+  const [joinAudioCall,setJoinAudiocall]=useState(false)
+  const [audioCallRoomId,setAudioCallRoomId]=useState('')
+  const navigate=useNavigate()
 
 
 
@@ -84,15 +84,15 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
       Array.from(files).forEach(async (file: File) => {
         let messageType: string;
         if (file.type.startsWith("image/")) {
-          toast.error("HII");
+        
           messageType = "image";
-          console.log("Image file:", file);
+         
         } else if (file.type.startsWith("video/")) {
           messageType = "video";
-          console.log("Video file:", file);
+          
         } else {
           messageType = "file";
-          console.log("Other file:", file);
+         
         }
 
         const data: any = {
@@ -113,8 +113,8 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
         try {
           const response = await SendFileMessageFunction(formData);
           if (response.status) {
-            // setClik(!click);
-            toast.success("File(s) uploaded successfully!");
+           
+            socket.emit("GroupfileMessage",response.data)
           } else {
             toast.error(response.message);
           }
@@ -129,8 +129,7 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
   };
 
   const addAudioElement = async (blob: any) => {
-    console.log(blob, "BLOOOOO");
-
+   
     const url = URL.createObjectURL(blob);
     const audio = document.createElement("audio");
     audio.src = url;
@@ -141,7 +140,7 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
 
     // voice_note
     const audioFile = new File([blob], "audio.mp3", { type: "audio/mpeg" });
-    console.log(audioFile, "FILLLLE");
+   
 
     const data: any = {
       group_id,
@@ -161,7 +160,7 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
     const response = await SendVoiceNoteFunction(formData);
 
     if (response.status) {
-      setClik(!click);
+      socket.emit("GroupfileMessage",response.data)
     } else {
       toast.error(response.message);
     }
@@ -174,11 +173,14 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
   }, []);
   useEffect(()=>{
     if(socket && group_id !='index'){
-  
-      socket.emit("joinGroup",{group_id})
-      toast.success("Emit New Group")
+  const emitData={
+    group_id:group_id,
+    userId:userData.userId
+  }
+      socket.emit("joinGroup",emitData)
+      
     }else{
-      toast.error("IN")
+      
     }
  },[socket,group_id])
   useEffect(() => {
@@ -247,13 +249,47 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
     console.log(userDetails, "UUUUUUUSERR");
   }, [userDetails]);
 
+
+  useEffect(()=>{
+   if(socket){
+    
+
+    socket.on("responseGroupMessage",(data:any)=>{
+      setMessages((prevMessages:any) => {
+        const setNewMessage=[...prevMessages, data]
+        return setNewMessage
+      });
+      setInputText('')
+      
+    })
+    socket.on("GroupfileResponceMessage",(data:any)=>{
+      setMessages((prevMessages:any) => {
+        const setNewMessage=[...prevMessages, data]
+        return setNewMessage
+      });
+    })
+
+    socket.on("GroupVideoCallResponse",(data:any)=>{
+      setVideoCallJoinRoomId(data.roomId)
+      setJoinVidioCall(true)
+    })
+
+    socket.on('GroupAudioCallResponse',(data:any)=>{
+      setAudioCallRoomId(data.roomId)
+      setJoinAudiocall(true)
+    })
+    
+    
+   }
+  },[socket])
   useEffect(() => {
     if (groupData && groupData._id) {
       try {
         socket.on(`GroupChat`, (message: any) => {
-          toast.error("HI")
+         
           setMessages((prevMessages: any) => [...prevMessages, message]);
         });
+
       } catch (error) {
         toast.error("ERROR IN CATCH");
       }
@@ -272,30 +308,77 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
         lastUpdate: Date.now(),
       };
 
-      const response = await SendGroupMessageFunction(data);
-      if (response.status) {
-        socket?.emit("sendGroupMessage", {
-          sender_id: userData?.userId,
-          group_id,
-          content: inputText,
-          type: "text",
-          lastUpdate: Date.now(),
-        })
-        setClik(!click);
-      } else {
-        toast.error(response.message);
-      }
+      socket.emit("GroupMessage",data)
+
+      // const response = await SendGroupMessageFunction(data);
+      // if (response.status) {
+       
+      // } else {
+      //   toast.error(response.message);
+      // }
     } catch (error) {}
   };
 
-  const handleVedioCall=()=>{
-    setIsVideoCall(true)
+  function randomID(len:number) {
+    let result = '';
+    if (result) return result;
+    var chars = '12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP',
+      maxPos = chars.length,
+      i;
+    len = len || 5;
+    for (i = 0; i < len; i++) {
+      result += chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return result;
+  }
+  const handleGroupVideoCall=()=>{
+
+    const  roomId=randomID(10)
+    const emitData={
+      group_id,
+      roomId:roomId
+    }
+
+    socket.emit('GroupVideoCallRequest',emitData)
+   
+    navigate(`/GroupVideoCall/${roomId}`)
   }
 
+
+  const handleJoinVidoCallRoom=()=>{
+ 
+    navigate(`/GroupVideoCall/${videoCallJoinRoomId}`)
+   
+  }
+
+  const handlegroupAudioCall=()=>{
+    const  roomId=randomID(10)
+
+    const emitData={
+      group_id,
+      roomId:roomId
+    }
+    socket.emit('GroupAudioCallRequest',emitData)
+   
+    navigate(`/GroupAudioCall/${roomId}`)
+  }
+  const handleJoinAudioCallRoom=()=>{
+    
+    navigate(`/GroupAudioCall/${audioCallRoomId}`)
+  }
+  const DateToTime = (lastMessageDate: any) => {
+    const date = new Date(lastMessageDate);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const twelveHourFormat = hours % 12 || 12;
+    return `${twelveHourFormat}:${minutes < 10 ? "0" : ""}${minutes}`;
+  };
+  
   return (
     <>
 
-    {/* {isVideoCall && <JistyVedioCall />} */}
+   
       <div className="flex flex-col w-full ">
         {messages.length > 0 ? (
           <>
@@ -313,13 +396,26 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
               </div>
 
               <div className=" text-gray-600 ml-auto flex gap-2 sm:gap-5">
-                <Link to='/AudioCall' >
+                {/* <Link to='/AudioCall' > */}
+{joinAudioCall  ? (
+                  <button className="w-16 h-7 rounded-md bg-green-400 text-sm " onClick={handleJoinAudioCallRoom}>Join</button>
 
-                  <Phone className="mt-0.5 size-4 lg:size-6" />
-                </Link >
-                <Link to='/jitsy' >
-                  <Video className="ml-2 size-5 lg:size-7" />
-                  </Link> 
+):(
+  <Phone className="mt-0.5 size-4 lg:size-6" onClick={handlegroupAudioCall} />
+
+)}
+                {/* </Link > */}
+                {/* <Link to='/jitsy' > */}
+
+                {joinVideoCall ? (
+                  <>
+                  <button className="w-16 h-7 rounded-md bg-green-400 text-sm " onClick={handleJoinVidoCallRoom}>Join</button>
+                  </>
+                ):(
+                  <Video className="ml-2 size-5 lg:size-7" onClick={handleGroupVideoCall}/>
+                )}
+                 
+                  {/* </Link>  */}
                 <MoreVertical
                   onClick={() => setIsOpen(!isOpen)}
                   className="size-4 lg:size-7"
@@ -359,47 +455,67 @@ const GroupMessageComponent = ({ isGroupChat, aside, setClik, click,setIsVideoCa
                                 <div className="">
                                   {item.type == "text" && (
                                     <>
-                                      <span className="px-4 py-2 rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#C1506D] text-white gap-2 ">
-                                        {item.content}
-                                      </span>
+                                      <span
+                            className="px-4 py-3 relative h-auto rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#FADBE1] text-black"
+                          
+                          >
+                            {item.content}
+                            <p className="absolute -bottom-1 right-1 text-gray-700 text-[11px]">
+                              {DateToTime(item?.timestamp)}
+                            </p>
+                          </span>
                                     </>
                                   )}
                                   {item.type == "voice_note" && (
-                                    <span className="px-4 py-2 rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#C1506D] text-white gap-2 ">
+//                                     <>
+//                                     <audio controls>
 
-
-<AudioPlayer
-
-src={`http://localhost:3005/Chat/${item.content}`}
-customAdditionalControls={[]} 
-style={{width:"300px", height:"80px"}}
-onPlay={e => console.log("onPlay")}
-
-/> 
-                                     
-                                    </span>
+//   <source  src={`http://localhost:3005/Chat/${item.content}`} type="audio/mpeg" />
+ 
+// </audio>
+//                        </>
+                                    <span className="px-4 py-2 relative rounded-lg flex  text-sm md:text-base justify-center bg-[#FADBE1] items-center  rounded-br-none  text-white gap-2">
+                                    <AudioPlayer
+                                      src={`http://localhost:3005/Chat/${item.content}`}
+                                      customAdditionalControls={[]}
+                                      className="w-[200px] h-[80px] md:w-[300px]"
+                                    />
+                                      <p className="absolute z-40 bottom-0 right-5 text-black text-[11px]">
+                                      {DateToTime(item?.timestamp)}
+                                    </p>
+                                  </span>
                                   )}
 
 
                                   {item.type == "image" && (
                                     <>
-                                      <img
-                                        src={`http://localhost:3005/Chat/${item.content}`}
-                                        alt="hhhhhh"
-                                        className="w-60 h-60 object-cover rounded-md border  border-[#C1506D]"
-                                      /> 
+                                      <span className="rounded-lg relative text-sm md:text-base w-48 h-48 md:w-80 md:h-80  border border-[#C1506D] text-white flex items-center justify-center">
+                            <img
+                              src={`http://localhost:3005/chat/${item.content}`}
+                              alt=""
+                              className="relative rounded-lg object-cover w-full h-full"
+                            />
+                            <p className="absolute bottom-0 right-1 text-white text-xs">
+                              {DateToTime(item?.timestamp)}
+                            </p>
+                          </span>
                                     </>
                                   )}
                                   {item.type == "video" && (
                                     <>
-                                      <video
-                                        controls
-                                        className="w-60 h-60 object-cover border rounded-md  border-[#C1506D]"
-                                      >
-                                        <source
-                                          src={`http://localhost:3005/Chat/${item.content}`}
-                                        />
-                                      </video>
+                                      <span className="rounded-lg relative text-sm md:text-base w-48 h-48 md:w-80 md:h-80  border border-[#C1506D] text-white flex items-center justify-center">
+                            <video
+                              controls
+                              className="relative rounded-lg object-cover w-full h-full"
+                            >
+                              <source
+                                src={`http://localhost:3005/Chat/${item.content}`}
+                              />
+                              <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
+                                {DateToTime(item?.timestamp)}
+                              </p>
+                            </video>
+                          </span>
                                     </>
                                   )}
                                   {item.type == "file" && <>filee</>}
@@ -449,15 +565,19 @@ onPlay={e => console.log("onPlay")}
                                 )}
                                 {item.type == "video" && (
                                   <>
-                                    <video controls
-                                    className="w-60 h-60 object-cover border rounded-md  "
-                                    >
-                                      <source
-                                        src={`http://localhost:3005/Chat/${item.content}`}
-                                        
-
-                                      />
-                                    </video>
+                                    <span className="rounded-lg relative text-sm md:text-base w-48 h-48 md:w-80 md:h-80  border border-[#C1506D] text-white flex items-center justify-center">
+                            <video
+                              controls
+                              className="relative rounded-lg object-cover w-full h-full"
+                            >
+                              <source
+                                src={`http://localhost:3005/Chat/${item.content}`}
+                              />
+                              <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
+                                {DateToTime(item?.timestamp)}
+                              </p>
+                            </video>
+                            </span>
                                   </>
                                 )}
                                 {item.type == "file" && <>filee</>}
@@ -553,6 +673,7 @@ onPlay={e => console.log("onPlay")}
                       className="size-5 lg:size-6"
                       onClick={handleFileClick}
                     />
+                   
                   </div>
                 </>
               )}

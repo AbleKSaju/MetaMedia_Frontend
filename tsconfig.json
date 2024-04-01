@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
+   
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -24,8 +24,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./@/*"]
-    }
-
+    },
+    "types": ["@testing-library/jest-dom"],
+    "esModuleInterop": true
 
   },
   "include": ["src", "serviceWorker.ts"],

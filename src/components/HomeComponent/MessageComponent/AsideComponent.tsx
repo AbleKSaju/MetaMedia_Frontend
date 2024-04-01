@@ -2,6 +2,7 @@ import { MoreVertical, Users } from "lucide-react";
 import profile from "../../../assets/profile.webp";
 import { Link, useParams } from "react-router-dom";
 import AsideSelectionComponent from "./AsideSelectionComponent";
+import { useEffect } from "react";
 
 const AsideComponent = ({
   conversations,
@@ -24,6 +25,10 @@ const AsideComponent = ({
   };
   console.log(user_id,"user_id");
   
+  useEffect(()=>{
+    console.log(conversations,'HIHIHIHIHI');
+    
+  },[conversations])
 
   const handleMoreOption = () => {
     setIsMore(!isMore);

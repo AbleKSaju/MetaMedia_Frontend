@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getAllUsersDataFunction } from "../../utils/api/methods/UserService/get";
+
 import { showAllPostFuntion } from "../../utils/api/methods/PostService/get/showAllPost";
 import { ChangePostStatusFunction } from "../../utils/api/methods/AdminService/post";
 

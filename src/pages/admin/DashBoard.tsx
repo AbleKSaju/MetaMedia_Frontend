@@ -1,48 +1,147 @@
-import React, { useState } from 'react';
-import ApexCharts from 'apexcharts'
-import {User,Clapperboard} from 'lucide-react'
+import  { useEffect, useState } from 'react';
+
+import {Clapperboard, Users,Aperture,ShieldBanIcon} from 'lucide-react'
 import Chart from './Graph';
+import { showAllPostFuntion } from '../../utils/api/methods/PostService/get/showAllPost';
+import { getAllUsersDataFunction } from '../../utils/api/methods/UserService/get';
+import PostMapChart from './PostMapChart'
+import UserOnlineChart from './UserOnlineChart'
 const DashBoardComponent = () => {
-  const [data, setData] = useState([]);
+    const [postData, setPostData]:any = useState([]);
+    const [userData, setUserData]:any = useState([]);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await showAllPostFuntion();
+          if (response.status) {
+            setPostData(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching post data:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const response = await getAllUsersDataFunction();
+          if (response.status) {
+            setUserData(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+      fetchUserData();
+    }, []);
+
+
+
+
+
 
   return (
-    <div className='w-full h-full  flex-col overflow-y-auto'>
+    <div className='w-full h-full flex  flex-col sm:flex-row overflow-y-auto '>
+        {/* the side 1 part  */}
+      
+        <div className='w-full h-[350px] sm:w-3/12 justify-center   sm:h-full flex flex-wrap sm:flex-col items-center p-4 gap-3 flex-none'>
+            {/* one small div  */}
+<div className='w-32 sm:w-10/12 bg-white h-[150px] rounded-md shadow-md flex justify-between p-1 gap-1'>
+<div className='w-1/2 h-full flex sm: flex-col p-1 gap-1 '>
+<div className=' h-1/2 w-full flex justify-center items-center'><Users size={30} color='gray'/></div>
+<div className=' h-1/2 w-full flex justify-center  items-start pt-2 '>
+    <p className='font-mono text-lg font-semibold text-gray-500'>Users</p>
+</div>
 
-      <div className='w-full h-[240px]  flex-none'>
-        <div className='w-full h-full  gap-2 sm:gap-0 flex justify-center sm:justify-around items-center'>
-          <div className='sm:block hidden'></div>
-          <div className='w-5/12 sm:w-3/12 h-36 border bg-white  rounded-md shadow-lg flex flex-col  justify-center  '>
-            <div className='w-full h-1/2 flex items-center justify-center gap-2'>
-<div><User color='#C1506D'/></div>
-<div><p className='text-[#C1506D] text-center font-semibold'>Users</p></div>
-            </div>
-            <div className='w-full h-1/2 flex items-start justify-center'>
-<p className='text-[#C1506D] font-semibold'>50.8k</p>
-            </div>
+</div>
+<div className='w-1/2 h-full  flex justify-center items-center'>
+    <p className='font-mono font-semibold text-xl text-gray-500'>{userData.length}</p>
+</div>
 
+</div>
+            {/* one small div  */}
 
-          </div>
-          <div className='w-5/12 h-36 sm:w-3/12 border border-1  bg-white shadow-lg rounded-md'>
-          <div className='w-full h-1/2 flex items-center justify-center gap-2'>
-<div><Clapperboard color='#C1506D'/></div>
-<div><p className='text-[#C1506D] text-center font-semibold'>Posts</p></div>
-            </div>
-            <div className='w-full h-1/2 flex items-start justify-center'>
-<p className='text-[#C1506D] font-semibold'>50.8k</p>
-            </div>
+   {/* one small div  */}
+   <div className='w-32 sm:w-10/12 bg-white h-[150px] rounded-md shadow-md flex justify-between p-1 gap-1'>
+<div className='w-1/2 h-full flex sm: flex-col p-1 gap-1 '>
+<div className=' h-1/2 w-full flex justify-center items-center'><Clapperboard size={30} color='gray'/></div>
+<div className=' h-1/2 w-full flex justify-center  items-start pt-2 '>
+    <p className='font-mono text-lg font-semibold text-gray-500'>Posts</p>
+</div>
 
-          </div>
-          <div className='sm:block hidden'></div>
+</div>
+<div className='w-1/2 h-full  flex justify-center items-center'>
+    <p className='font-mono font-semibold text-xl text-gray-500'>{postData.length}</p>
+</div>
+
+</div>
+            {/* one small div  */}
+   {/* one small div  */}
+   <div className='w-32 sm:w-10/12 bg-white h-[150px] rounded-md shadow-md flex justify-between p-1 gap-1'>
+<div className='w-1/2 h-full flex sm: flex-col p-1 gap-1 '>
+<div className=' h-1/2 w-full flex justify-center items-center'><Aperture size={30} color='gray' /></div>
+<div className=' h-1/2 w-full flex justify-center  items-start pt-2 '>
+    <p className='font-mono text-lg font-semibold text-gray-500'>Stories</p>
+</div>
+
+</div>
+<div className='w-1/2 h-full  flex justify-center items-center'>
+    <p className='font-mono font-semibold text-xl text-gray-500'>100</p>
+</div>
+
+</div>
+            {/* one small div  */}
+{/* one small div  */}
+<div className='w-32 sm:w-10/12 bg-white h-[150px] rounded-md shadow-md flex justify-between p-1 gap-1'>
+<div className='w-1/2 h-full flex sm: flex-col p-1 gap-1 '>
+<div className=' h-1/2 w-full flex justify-center items-center'><ShieldBanIcon size={30} color='gray'/></div>
+<div className=' h-1/2 w-full flex justify-center  items-start pt-2 '>
+    <p className='font-mono text-lg font-semibold text-gray-500'>Reports</p>
+</div>
+
+</div>
+<div className='w-1/2 h-full  flex justify-center items-center'>
+    <p className='font-mono font-semibold text-xl text-gray-500'>100</p>
+</div>
+
+</div>
+            {/* one small div  */}
+
         </div>
-      </div>
-      <div className='w-full h-[300px] sm:h-[540px] flex-none '>
-        <div className='w-full h-full  flex justify-center items-center'>
-          <div className='w-10/12 h-full '>
-          <Chart/>
-          </div>
-        </div>
-      </div>
-     <div className='w-full h-[400px] flex-none bg-red-400'>3</div>
+
+        {/* the side 1 part  */}
+
+
+        {/* the side 2 part  */}
+
+
+<div className='w-full h-[400px] sm:w-9/12 sm:h-full  flex flex-col justify-center items-center gap-4 p-4 flex-none rounded-md'>
+    {/* for the users and post chart  */}
+<div className='w-11/12 bg-white rounded-md h-1/2 shadow-md'>
+    <Chart userData={userData} postData={postData}/>
+</div>
+    {/* for the users and post chart  */}
+
+<div className='w-11/12  rounded-md h-1/2 flex justify-between items-center  gap-3 '>
+<div className='w-1/2 h-full rounded-md bg-white shadow-md'>
+    <PostMapChart/>
+</div>
+<div className='w-1/2 h-full  rounded-md bg-white shadow-md'>
+    <UserOnlineChart/>
+</div>
+</div>
+
+
+
+</div>
+        {/* the side 2 part  */}
+
+
+     
     </div>
   );
 };

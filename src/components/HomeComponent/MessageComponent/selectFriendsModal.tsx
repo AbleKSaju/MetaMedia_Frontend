@@ -63,13 +63,13 @@ formData.append('adminName', data.adminName);
 formData.append('image', data.image);
 
 
-   const response=await CreateNewGroupFuntion(data)
+   const response=await CreateNewGroupFuntion(formData)
    if(response.status){
     console.log(response.data);
     
        toast.success("Sucess")
    }else{
-    toast.error("FAIL")
+    toast.error(response.message)
    }
 
    setewGroup(0)

@@ -6,7 +6,6 @@ import {
   EditProfile_Api,
   FollowUser_Api,
   GenarateVapIdKeys_Api,
-  GetUserData_Api,
   GetUsersData_Api,
   SubcribeUserToSNS_Api,
   getUsersByName_Api,

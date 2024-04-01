@@ -383,7 +383,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
 
         <div className="w-full h-full flex justify-between ">
           <div className="h-full w-10 flex items-center ">
-            <button className="w-9 h-9 p-1.5 opacity-100 bg-white rounded-full">
+            <button className="w-9 h-9 p-1.5 opacity-100 bg-white rounded-full hidden">
               <ChevronLeft />
             </button>
           </div>
@@ -392,9 +392,14 @@ const SinglePostModal = ({ render, setRender }: any) => {
               <div className="h-full w-1/2 flex justify-center items-center bg-white">
                 <div className="relative w-full h-full flex object-cover items-center ">
                   <div className="flex justify-start" onClick={imageLeftClick}>
+
+                     {images.length > 1 && (
                     <button className="absolute  text-black w-6 rounded-full h-6 bg-white bg-opacity-50 p-0.5">
-                      <ChevronLeft size={20} />
+                      <>
+                       <ChevronLeft size={20} />
+                      </>
                     </button>
+                     )}
                   </div>
                   {singlePost.postType == "image" && (
                     <>
@@ -420,9 +425,12 @@ const SinglePostModal = ({ render, setRender }: any) => {
                   )}
 
                   <div className="flex justify-end " onClick={imageRightClick}>
+                  {images.length > 1 && (<>
+                  
                     <button className="absolute text-black w-6 rounded-full h-6 bg-white p-0.5 bg-opacity-50">
                       <ChevronRight size={20} />
                     </button>
+                  </>)}
                   </div>
                 </div>
               </div>
@@ -754,7 +762,7 @@ const SinglePostModal = ({ render, setRender }: any) => {
             </div>
           </div>
           <div className="h-full w-10 flex items-center ">
-            <button className="w-9 h-9 p-1.5 opacity-100 bg-white rounded-full">
+            <button className="w-9 h-9 p-1.5 opacity-100 bg-white rounded-full hidden">
               <ChevronRight />
             </button>
           </div>

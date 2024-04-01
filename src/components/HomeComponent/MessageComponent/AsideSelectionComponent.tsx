@@ -6,6 +6,7 @@ const AsideSelectionComponent=({setAside,setIsGroupChat}:any)=>{
 const userData=useSelector((state:any)=>state.persisted.user.userData)
     const naviagte=useNavigate()
     const handelFriends=()=>{
+       
      setAside(0)
      setIsGroupChat(false)
      naviagte(`/message/index`)

@@ -26,7 +26,8 @@ import AudioCallComponent from "../../components/HomeComponent/MessageComponent/
 import JistyVedioCall from "../../components/HomeComponent/MessageComponent/jitsyVideoCall";
 import AudiCall from "../../components/HomeComponent/MessageComponent/jitsiAudioCall";
 
-
+import GroupVedioCall from '../../components/HomeComponent/MessageComponent/CallComponents/ZegoVideocall'
+import GroupAudioCallRoom from "../../components/HomeComponent/MessageComponent/CallComponents/ZegoAudioMeet";
 
 
 export interface SetSidebarOpenFunction {
@@ -115,7 +116,8 @@ const Home = ({ render,setRender}:any) => {
 
                   <Route path="/audioCall" element={<AudioCallComponent />}/>
 
-                  <Route path="/jitsy" element={<JistyVedioCall  />}/>
+                  <Route path="/GroupVideoCall/:roomId" element={<GroupVedioCall  />}/>
+                  <Route path="/GroupAudioCall/:roomId" element={<GroupAudioCallRoom/>}/>
                   <Route path="/AudioCall" element={<AudiCall />}/>
 
 

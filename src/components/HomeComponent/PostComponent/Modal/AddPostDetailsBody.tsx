@@ -204,6 +204,8 @@ try {
       name: data.name,
       lat: responce,
     };
+    console.log(savedPlace,'--------------444-4-44444--4-4-4-44444');
+    
     setSelectedLocationlatAndLog({});
     setSelectedLocationlatAndLog(savedPlace);
     setIslocation(false);
@@ -235,6 +237,14 @@ try {
         return;
     }
 
+console.log(selectedLocationlatAndLog,'00000000000------------');
+const latData={
+  name:selectedLocationlatAndLog.name,
+  latitude:selectedLocationlatAndLog.lat.latitude,
+  longitude:selectedLocationlatAndLog.lat.longitude
+}
+console.log(latData,'-----------------------5555555-5-5-5-5--5-');
+
     const data: any = {
         userId: user.userData.userId,
         description: text,
@@ -243,14 +253,14 @@ try {
         media: media,
         shareCount: 0,
         tags: tagedUserIds,
-        location: selectedLocationlatAndLog,
+        location:JSON.stringify({latData}),
         reports: [],
         postCropSize: post.aspectRatio,
         postType:postType,
         showComment: hideComment,
         showLikes: hideLike,
     };
-console.log(data,"DATTA");
+console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
 
     try {
         const res: any = await AddPostFuntion({ data });

@@ -113,6 +113,8 @@ const MessageListComponent = ({
   const navigate = useNavigate();
   const [videoCall, setVideoCall] = useState(false);
 
+
+
   useEffect(() => {
     setSocket(io("http://localhost:8081"));
   }, []);
@@ -194,7 +196,10 @@ const MessageListComponent = ({
 
   useEffect(() => {
     const fetchConversations = async () => {
+     
       const response: any = await GetConversationsFunction();
+     
+      
       let userExist;
       if (response.data.status) {
         userExist = response?.data?.data?.find(
@@ -203,6 +208,7 @@ const MessageListComponent = ({
       }
 
       if ((!userExist && user_id !== "index") || !response.data.status) {
+
         const data = {
           senderId: user_id,
           receiverId: userData.userId,
@@ -225,10 +231,13 @@ const MessageListComponent = ({
             };
             users.push(userDetails);
           });
+         
+          
           setConversations(users);
         }
       }
     };
+ 
     fetchConversations();
   }, [isSendMessage, user_id, newState, videoCall, aside, isGroupChat,messages]);
 

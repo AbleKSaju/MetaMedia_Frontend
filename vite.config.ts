@@ -20,7 +20,11 @@ export default defineConfig({
       "Access-Control-Allow-Origin": "*", 
       "Content-Security-Policy": "frame-ancestors 'self' meet.jit.si",
     },
+    host: true, 
+    strictPort: true,
+    port: 5173, 
   },
+  
 })
 // import path from "path"
 // import react from "@vitejs/plugin-react"
