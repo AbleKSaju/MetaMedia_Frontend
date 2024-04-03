@@ -1,115 +1,77 @@
-import { useDispatch } from "react-redux";
-import {Refresh} from '../api/methods/AuthService/get'
+import axios from "axios";
 import { addToken } from "../ReduxStore/Slice/tokenSlice";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import {axiosPrivet} from '../api/baseUrl/axios.baseUrl'
-import { getUserByIdFuntion } from "../api/methods/UserService/post";
-import { editUser } from "../ReduxStore/Slice/userSlice";
+import { useDispatch } from "react-redux";
+export const addNewToken=(newAccessToken:any)=>{
+  const dispatch=useDispatch()
+  dispatch(addToken(newAccessToken));
 
-
-export const useAccessToken=()=>{
-    const dispach=useDispatch()
-    const Access=async()=>{
-        const responce:any=await Access()
-        console.log(responce,'RESSS');
-        dispach(addToken(responce.data))
-        return responce.data
+}
+// const accessToken = useSelector((state: any) => state.persisted.user.userData);
+const axiosInstance = axios.create({
+  withCredentials: true, // Enables the sending of cookies with cross-origin requests
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+axiosInstance.interceptors.request.use(
+  config => {
+    // const accessToken = useSelector((state: any) => state.persisted.token.token);
+    const accessToken = localStorage.getItem('accesstoken')
+    console.log(accessToken,"accessTokenaccessToken");
+  if (accessToken) {
+    console.log("EMMMMMTTTT");
+    
+    config.headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+  return config;
+},
+error => {
+  return Promise.reject(error);
+}
+);
+axiosInstance.interceptors.response.use(
+  (response) => {
+    console.log("In interceptor response" , response);
+    return response;
+  },
+  async (error) => {
+    console.log("In interceptor error " , error);
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      console.log("inside iff")
+      try {
+        const route:any = 'http://localhost:3001/api/auth/refresh'
+        console.log("ROute ==>" ,route);
+        const refreshResponse = await axiosInstance.post(route);
+        console.log(refreshResponse,"refreshResponserefreshResponse");
+        
+        const newAccessToken = refreshResponse.data.accessToken;
+        console.log("New Accesstoken set to localstorage ==>" , newAccessToken);
+        localStorage.setItem('accesstoken', newAccessToken); // Update in storage
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        addNewToken(newAccessToken)
+        return axiosInstance(originalRequest);
+      } catch (err) {
+        console.log(err);
+        alert("Login again")
+        // Handle refresh token failure (e.g., prompt user to re-authenticate)
+        console.error('Refresh token failed:', err);
+        // Consider redirecting to login page or displaying an error message
+      }
     }
-    return Access
-}
+    return Promise.reject(error);
+  }
+);
 
-export const useAxiosPrivete=()=>{
-    const access= useAccessToken()
-    const accesToken = useSelector((store: any) => store.token.token);
+export default axiosInstance;
 
-    useEffect(()=>{
-        const requestInterceptor= axiosPrivet.interceptors.request.use(
-        
-            (config:any)=>{
-                if (!config.headers["Authorization"]) {
-                    config.headers["Authorization"] = `Bearer ${accesToken}`;
-                  }
+// const shouldAttachMultipartHeader = (config: any) => {
+//   const isPostMethod = config.method === "post";
+//   const isPatchMethod = config.method === "patch";
+//   const isPutMethod = config.method === "put";
 
-                  if(shouldAttachMultipartHeader(config)){
-                    config.headers["Content-Type"] = "multipart/form-data";
-                    config.isMultipartHeaderAdded = true;
-                  }
+//   const shouldAttach = isPostMethod || isPatchMethod || isPutMethod;
 
-                  return config
-            },
-            (error)=>{
-                Promise.reject(error)
-            }
-        )
-        
-
-
-    const responseInterceptor=axiosPrivet.interceptors.response.use(
-        (response)=>response,
-
-        async (error)=>{
-            const prevRequest = error?.config;
-
-            if(error.responce.status==403 && !prevRequest?.sent){
-                prevRequest.sent = true;
-
-                const newAccesstoken=await access();
-                console.log('new Acces token in responce',newAccesstoken);
-                prevRequest.headers["Authorization"] = `Bearer ${newAccesstoken}`;
-
-                if (prevRequest.isMultipartHeaderAdded) {
-                    prevRequest.headers["Content-Type"] = "multipart/form-data";
-                  }
-
-            }
-
-            return Promise.reject(error);
-        }
-    )
-
-    return () => {
-        axiosPrivet.interceptors.request.eject(requestInterceptor);
-        axiosPrivet.interceptors.response.eject(responseInterceptor);
-      };
-    },[accesToken,access])
-
-    return axiosPrivet
-}
-
-const shouldAttachMultipartHeader = (config:any) => {
-    const isPostMethod = config.method === 'post';
-    const isPatchMethod = config.method === 'patch';
-    const isPutMethod = config.method === 'put';
-
-    const shouldAttach =
-      (isPostMethod || isPatchMethod || isPutMethod)
-     
-    return shouldAttach;
-  };
-
-
-  export const StoreUserData = () => {
-    const dispatch = useDispatch();
-    const userData = useSelector((state: any) => state.persisted.user.userData);
-  
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await getUserByIdFuntion(userData.userId);
-          if (response?.status) {
-            dispatch(editUser(response.data.socialConections));
-          } else {
-            throw new Error("Failed to fetch user data");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      };
-  
-      fetchData();
-  
-    }, [dispatch, userData.userId]);
-  
-    return null; 
-  };
+//   return shouldAttach;
+// };

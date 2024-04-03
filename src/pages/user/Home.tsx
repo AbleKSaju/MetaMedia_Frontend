@@ -95,35 +95,20 @@ const Home = ({ render,setRender}:any) => {
           {isgoLive &&  (<Golive />)}
           {isVideoCall && <JistyVedioCall />}
             <Routes>
-
                   <Route path="/" element={<Main setShowStory={setShowStory} setAddStory={setAddStories} setIsAddPost={setIsAddPost} setIsAddLive={setIsAddLive}/>} />
-                
-                  
-
                   <Route path="/message/:user_id" element={<Message setIsVideoCall={setIsVideoCall} />} />
                   <Route path="/group/:group_id" element={<Message setIsVideoCall={setIsVideoCall} />} />
-
-                 
-                 
                   <Route path="/post" element={<Post/>} />
-
                   <Route path="/profile/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/profile/tagged/:user_id" element={<Profile setRender={setRender} render={render}/>} />
                   <Route path="/settings/*" element={<Settings  />} />
                   <Route path="/room/:roomId" element={<Golive  />}/>
-
                   <Route path="/videoCall/:callId" element={<VideoCallComponent  />}/>
-
                   <Route path="/audioCall" element={<AudioCallComponent />}/>
-
                   <Route path="/GroupVideoCall/:roomId" element={<GroupVedioCall  />}/>
                   <Route path="/GroupAudioCall/:roomId" element={<GroupAudioCallRoom/>}/>
                   <Route path="/AudioCall" element={<AudiCall />}/>
-
-
-
                   <Route path="/audioCall" element={<AudioCallComponent  />}/>
-
             </Routes>
           {allowedPaths.includes(location.pathname) && <Suggetions />}
     </div>

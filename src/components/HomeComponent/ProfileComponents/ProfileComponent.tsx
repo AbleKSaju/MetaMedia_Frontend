@@ -47,7 +47,6 @@ const Profile = ({ render, setRender }: any) => {
 
   const currentPath:any=pathname.split('/')
   const path = currentPath.splice(currentPath.length-2,1).toString()
-  
 
 const checkUser = useMemo(
     () => async () => {

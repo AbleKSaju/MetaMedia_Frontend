@@ -79,6 +79,7 @@ const Login = () => {
           dispatch(clearUser());
           dispatch(addUser(data));
           dispatch(addToken(response.data.accesstoken));
+          localStorage.setItem('accesstoken',response.data.accesstoken)
 
           if (response?.data?.newUser) {
             toast.success(response?.data?.message);
@@ -108,6 +109,7 @@ const Login = () => {
             dispatch(clearUser());
             dispatch(addUser(data));
             dispatch(addToken(response.data.accesstoken));
+            localStorage.setItem('accesstoken',response.data.accesstoken)
 
             // await SaveUserDataInRedux(userData)
             toast.success(response?.data?.message);
@@ -159,7 +161,7 @@ const Login = () => {
           dispatch(clearUser());
           dispatch(addUser(data));
           dispatch(addToken(response.data.accesstoken));
-
+          localStorage.setItem('accesstoken',response.data.accesstoken)
           if (response?.data?.newUser) {
             toast.success(response?.data?.message);
             Navigate("/chooseinterest", { replace: true });
@@ -188,7 +190,7 @@ const Login = () => {
             dispatch(clearUser());
             dispatch(addUser(data));
             dispatch(addToken(response.data.accesstoken));
-
+            localStorage.setItem('accesstoken',response.data.accesstoken)
             // await SaveUserDataInRedux(userData)
             toast.success(response?.data?.message);
             Navigate("/", { replace: true });
@@ -228,6 +230,7 @@ const Login = () => {
         dispatch(addAdminToken(userExist.data.accesstoken));
         toast.success(response?.data?.data?.message);
         Navigate("/admin", { replace: true });
+        localStorage.setItem('accesstoken',userExist.data.accesstoken)
       }else{
       const userEmail:any = {email: userExist?.data?.user?.email };
      
@@ -250,6 +253,7 @@ const Login = () => {
       dispatch(clearUser());
       dispatch(addUser(userData));
       dispatch(addToken(userExist.data.accesstoken));
+      localStorage.setItem('accesstoken',userExist.data.accesstoken)
       toast.success(response?.data?.data?.message);
       Navigate("/", { replace: true });
     }

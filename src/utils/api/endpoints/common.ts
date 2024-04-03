@@ -16,7 +16,7 @@ export const RefreshToken_Api=`${AUTH_URL}/refresh`
 
 // USER SERVICE
 
-export const    GetUserData_Api=`${USER_URL}/getUserData`
+export const GetUserData_Api=`${USER_URL}/getUserData`
 export const GetUsersData_Api=`${USER_URL}/getUsersDataById`
 export const FollowUser_Api=`${USER_URL}/followUser`
 export const ChooseInterest_Api=`${USER_URL}/chooseInterest`

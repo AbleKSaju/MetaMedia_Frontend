@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { GetAllUsers_Api, GetAllUsersData_Api, GetSearchUserData_Api ,Suggetion_Api} from "../../endpoints/common";
+import axiosInstance from "../../../../utils/costumHook/constumHook";
 
 
 
@@ -30,8 +31,7 @@ export const getAllUsersDataFunction = async () => {
 
   export const GetSearchUserDataFunction = async (user:string) => {
     try {
-      const response = await axios
-        .create({ withCredentials: true })
+      const response = await axiosInstance
         .get(`${GetSearchUserData_Api}/${user}`);
       return response.data;
     } catch (error) {

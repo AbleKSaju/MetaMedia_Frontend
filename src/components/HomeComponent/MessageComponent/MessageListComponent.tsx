@@ -113,8 +113,6 @@ const MessageListComponent = ({
   const navigate = useNavigate();
   const [videoCall, setVideoCall] = useState(false);
 
-
-
   useEffect(() => {
     setSocket(io("http://localhost:8081"));
   }, []);
@@ -150,7 +148,7 @@ const MessageListComponent = ({
 
 
   const handleJoinRoom = useCallback((data: any) => {
-    const { email, room } = data;
+    const { room } = data;
     navigate(`/videoCall/${room}`);
   }, []);
 
@@ -185,7 +183,6 @@ const MessageListComponent = ({
         ...prev,
         messages: [...prev.messages, data],
       }));
-      console.log("changing New State");
       setNewState(!newState)
     });
   }, [socket]);
@@ -195,11 +192,8 @@ const MessageListComponent = ({
   }, [messages]);
 
   useEffect(() => {
-    const fetchConversations = async () => {
-     
+    const fetchConversations = async () => {      
       const response: any = await GetConversationsFunction();
-     
-      
       let userExist;
       if (response.data.status) {
         userExist = response?.data?.data?.find(
@@ -208,13 +202,12 @@ const MessageListComponent = ({
       }
 
       if ((!userExist && user_id !== "index") || !response.data.status) {
-
         const data = {
           senderId: user_id,
           receiverId: userData.userId,
         };
         await CreateConversationFunction(data);
-        setNewState(true);
+     
       } else {
         if (response.data.data) {
           const userId = { ids: response.data.data };
@@ -231,15 +224,12 @@ const MessageListComponent = ({
             };
             users.push(userDetails);
           });
-         
-          
           setConversations(users);
         }
       }
     };
- 
     fetchConversations();
-  }, [isSendMessage, user_id, newState, videoCall, aside, isGroupChat,messages]);
+  }, [isSendMessage, user_id, videoCall,newState, aside, isGroupChat]);
 
   useEffect(() => {
     (async () => {
@@ -264,7 +254,6 @@ const MessageListComponent = ({
     conversations,
     isSendMessage,
     videoCall,
-    newState,
     aside,
     isGroupChat,
     messageDeleted,
@@ -294,6 +283,7 @@ const MessageListComponent = ({
     const response = await sendMessageFunction(data);
     if (response) {
       setIsSendMessage(!isSendMessage);
+      setNewState(!newState)
     }
   };
 
@@ -387,11 +377,24 @@ const MessageListComponent = ({
   };
 
   const DateToTime = (lastMessageDate: any) => {
+    console.log(lastMessageDate,"lastMessageDate");
+    
     const date = new Date(lastMessageDate);
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
     const twelveHourFormat = hours % 12 || 12;
+    console.log(minutes,"minutes");
+    console.log(twelveHourFormat,"twelveHourFormat");
+    
+    if(isNaN(minutes)) {
+      const date = new Date(lastMessageDate);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? "PM" : "AM";
+      const twelveHourFormat = hours % 12 || 12;
+      return 
+  }
     return `${twelveHourFormat}:${minutes < 10 ? "0" : ""}${minutes}`;
   };
 
@@ -446,6 +449,7 @@ const MessageListComponent = ({
         conversationId: messages?.data?.conversationId,
         lastUpdate: Date.now(),
       });
+      setNewState(!newState)
     }
   };
 
@@ -552,6 +556,7 @@ const MessageListComponent = ({
         >
           {messages?.messages?.length > 0 ? (
             messages.messages.map((data: any, index: number) => {
+              
               return data.senderId !== userData.userId ? (
                 <div className="chat-message" key={data.id}>
                   <div className="flex items-end">
@@ -639,7 +644,7 @@ const MessageListComponent = ({
                           >
                             {data.message}
                             <p className="absolute -bottom-1 right-1 text-gray-700 text-[11px]">
-                              {DateToTime(data?.time)}
+                              {DateToTime(data?.time) ?? Date.now()}
                             </p>
                           </span>
                         )}
@@ -744,7 +749,7 @@ const MessageListComponent = ({
                               )}
                             </video>
                             <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
-                              {DateToTime(data?.time)}
+                              {DateToTime(data?.time) ?? Date.now()}
                             </p>
                           </span>
                         ) : data?.socketType == "video" ? (
@@ -831,7 +836,7 @@ const MessageListComponent = ({
                               />
                             )}
                               <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
-                              {DateToTime(data?.time)}
+                              {DateToTime(data?.time) ?? Date.now()}
                             </p>
                           </span>
                         )}
