@@ -67,7 +67,6 @@ const checkUser = useMemo(
       followedUserId: id,
     };
     const response: any = await followUserFunction(data);
-    toast.success(response.data.message);
 
     if (response.data.status) {
       try {

@@ -13,7 +13,7 @@ import {
   import { toast } from "sonner";
   import { Slider, Spin } from "antd";
   import { Button } from "antd";
-  import { X } from "lucide-react";
+
 import { addVideo, clearVideos } from "../../../utils/ReduxStore/Slice/postSlice";
 
   function sliderValueToVideoTime(duration: any, sliderValue: any) {
@@ -21,11 +21,8 @@ import { addVideo, clearVideos } from "../../../utils/ReduxStore/Slice/postSlice
   }
 
 const TrimVideoComponent=({croppedImage}:any)=>{
-
-    const dispatch = useDispatch();
     const ffmpegRef = useRef(new FFmpeg());
     const ffmpeg = ffmpegRef.current;
-  
     const [ffmpegLoaded, setFFmpegLoaded] = useState(false);
     const [videoFile, setVideoFile] = useState(croppedImage);
     const [videoPlayerState, setVideoPlayerState]: any = useState();
@@ -33,6 +30,8 @@ const TrimVideoComponent=({croppedImage}:any)=>{
     const [gifUrl, setGifUrl] = useState();
     const [sliderValues, setSliderValues] = useState([0, 100]);
     const [processing, setProcessing] = useState(false);
+    console.log(setVideoFile,gifUrl);
+    
 useEffect(() => {
     // loading ffmpeg on startup
     const load = async () => {
@@ -52,7 +51,6 @@ useEffect(() => {
           "text/javascript"
         ),
       });
-      toast.success("sucess");
       setFFmpegLoaded(true);
     };
     load();
@@ -60,8 +58,6 @@ useEffect(() => {
 
   useEffect(() => {
     const min = sliderValues[0];
-    // when the slider values are updated, updating the
-    // video time
     if (min !== undefined && videoPlayerState && videoPlayer) {
       videoPlayer.seek(sliderValueToVideoTime(videoPlayerState.duration, min));
     }
@@ -69,10 +65,7 @@ useEffect(() => {
 
   useEffect(() => {
     if (videoPlayer && videoPlayerState) {
-      // allowing users to watch only the portion of
-      // the video selected by the slider
       const [min, max] = sliderValues;
-
       const minTime = sliderValueToVideoTime(videoPlayerState.duration, min);
       const maxTime = sliderValueToVideoTime(videoPlayerState.duration, max);
 
@@ -87,8 +80,6 @@ useEffect(() => {
   }, [videoPlayerState]);
 
   useEffect(() => {
-    // when the current videoFile is removed,
-    // restoring the default state
     if (!videoFile) {
       setVideoPlayerState(undefined);
       setSliderValues([0, 100]);
@@ -240,9 +231,7 @@ function VideoPlayer({
   }: any) {
     const dispatch = useDispatch();
     const trimAndSaveVideo = async () => {
-      try {
-        toast.success("1");
-  
+      try {  
         // Starting the conversion process
         onConversionStart(true);
   
@@ -252,12 +241,10 @@ function VideoPlayer({
   
         // Writing the video file to memory
         await ffmpeg.writeFile(inputFileName, await fetchFile(videoFile));
-        toast.success("4");
   
         const [min, max] = sliderValues;
         const minTime = sliderValueToVideoTime(videoPlayerState.duration, min);
         const maxTime = sliderValueToVideoTime(videoPlayerState.duration, max);
-        toast.success("5");
   
         // Trimming the video with FFmpeg command
         const res = await ffmpeg.exec([
@@ -271,42 +258,27 @@ function VideoPlayer({
           "mp4",
           outputFileName,
         ]);
-        toast.success("6");
-        console.log(res, "KKKKKKKKK");
-        // await ffmpeg.exec(['-i', 'recorded.webm', '-i', 'audio.mp3', '-c:v', 'libx264', '-c:a', 'aac', 'output.mp4']);
-        // const data = await ffmpeg.readFile('output.mp4');
-        // Reading the resulting trimmed video file
         const trimmedVideoData = await ffmpeg.readFile("output.mp4");
-        toast.success("7");
         const data: any = new Uint8Array(trimmedVideoData as ArrayBuffer);
   
         const blob = new Blob([trimmedVideoData], { type: "video/mp4" });
         const file: any = new File([blob], "trimmed_video.mp4", {
           type: "video/mp4",
-        });
-  
-        console.log(blob, "THISIS S DTAFILE");
-  
+        });  
         // Creating a blob URL for the trimmed video
         const trimmedVideoUrl = URL.createObjectURL(
           new Blob([data.buffer], { type: "video/mp4" })
         );
-        console.log(file, "URL URlLLLL-----");
-        toast.success("8");
   
         // Pass the trimmed video URL to the parent component
         onVideoTrimmed(trimmedVideoUrl);
         
       dispatch(clearVideos());
       dispatch(addVideo(file));
-  
-       console.log(file,"filefilefilefile TRRRIMM");
-       
-        toast.success("hello byby");
-        // Ending the conversion process
+                 // Ending the conversion process
         onConversionEnd(false);
       } catch (error) {
-        console.log(error, "TTTTTTTTTTT");
+        console.log(error);
       }
     };
   

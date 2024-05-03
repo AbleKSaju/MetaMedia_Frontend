@@ -17,7 +17,7 @@ const ShowStoryComponent = ({
             onClick={() => setShowStory("")}
           />
         </div>
-      <div className="w-full h-full flex flex-col justify-center">
+      <div className="w-full h-10 flex flex-col justify-center">
         <div className="flex justify-center w-full h-full ">
           <div className="h-[800px] w-[800px]">
             <StorySliderComponent showStory={showStory} setShowStory={setShowStory} deleteStory={deleteStory} setDeleteStory={setDeleteStory}  />

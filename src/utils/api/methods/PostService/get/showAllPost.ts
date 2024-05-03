@@ -1,16 +1,11 @@
 
-
-import axios from 'axios';
-
 import { showAllPost_Api } from '../../../endpoints/common';
+import { axiosInstance } from '../../../../../utils/costumHook/constumHook';
 export const showAllPostFuntion=async()=>{
 
 try {
-   const responce = await  axios.create({
-      baseURL:'http://localhost:3002',
-      withCredentials : true,
-  }).get(showAllPost_Api)
-   return responce.data
+   const response = await axiosInstance.get(`${showAllPost_Api}`)
+   return response.data
 } catch (error) {
     console.log('Error fro the sow all post get file',error);
 }

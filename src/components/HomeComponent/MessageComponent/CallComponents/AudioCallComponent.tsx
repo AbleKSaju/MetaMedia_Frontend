@@ -1,122 +1,57 @@
-import {JitsiMeeting} from '@jitsi/react-sdk'
-import { useRef, useState } from 'react';
+import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { useSelector } from 'react-redux';
-import { toast } from 'sonner';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useRef, useEffect } from 'react';
 
 const AudiCall=()=>{
-    const userData=useSelector((state:any)=>state.persisted.user.userData)
-    console.log(userData,'HHHHHDDDAA');
-    const token=useSelector((state:any)=>state.persisted.token.token)
-    console.log(token,"LLLOO");
     
-        const apiRef :any= useRef();
-        const [ logItems, updateLog ]:any = useState([]);
-        const [ showNew, toggleShowNew ]:any = useState(false);
-        const [ knockingParticipants, updateKnockingParticipants ]:any = useState([]);
+    let { callId }: any = useParams();
+    const containerRef = useRef(null);
+    const userData = useSelector((state: any) => state.persisted.user.userData)
+    const userID = userData.userId;
+    const userName = userData.userName;
+    const navigate = useNavigate();
     
-        const printEventOutput = (payload:any) => {
-            updateLog((items:any) => [ ...items, JSON.stringify(payload) ]);
-        };
-    
-        const handleAudioStatusChange = (payload:any, feature:any) => {
-            if (payload.muted) {
-                updateLog((items:any) => [ ...items, `${feature} off` ])
-            } else {
-                updateLog((items:any) => [ ...items, `${feature} on` ])
-            }
-        };
-    
-        const handleChatUpdates = (payload:any) => {
-            if (payload.isOpen || !payload.unreadCount) {
-                return;
-            }
-            apiRef.current.executeCommand('toggleChat');
-            updateLog((items:any) => [ ...items,` you have ${payload.unreadCount} unread messages `])
-        };
-    
-        const handleKnockingParticipant = (payload:any) => {
-            updateLog((items:any) => [ ...items, JSON.stringify(payload) ]);
-            updateKnockingParticipants((participants:any) => [ ...participants, payload?.participant ])
-        };
-    
-        
-        const handleJitsiIFrameRef1 = (iframeRef:any) => {
-            iframeRef.style.border = '1px solid #C1506D';
-            iframeRef.style.position='fixed'
-            iframeRef.style.background = '#3d3d3d';
-            iframeRef.style.height = '99vh';
-            iframeRef.style.width='92vw'
-        };
-    
-    
-        const handleApiReady = (apiObj:any) => {
-            apiRef.current = apiObj;
-            apiRef.current.on('knockingParticipant', handleKnockingParticipant);
-            apiRef.current.on('audioMuteStatusChanged', (payload:any) => handleAudioStatusChange(payload, 'audio'));
-            apiRef.current.on('videoMuteStatusChanged', (payload:any) => handleAudioStatusChange(payload, 'video'));
-            apiRef.current.on('raiseHandUpdated', printEventOutput);
-            apiRef.current.on('titleViewChanged', printEventOutput);
-            apiRef.current.on('chatUpdated', handleChatUpdates);
-            apiRef.current.on('knockingParticipant', handleKnockingParticipant);
-        };
-    
-        const handleReadyToClose = () => {
-            toast.error("SUUUU")
-           
-            alert('Ready to close...');
-        };
-    
-        const generateRoomName = () => `JitsiMeetRoomNo${Math.random() * 100}-${Date.now()}`;
-    
-        // Multiple instances demo
-        
-    const user={
-        displayName:userData.userName,
-        email:userData.email,
-        audioOnly:true
+    const handleLeaveRoom = () => {
+        navigate(`/message/index`);
     }
-    
-    
-    
-    
-        const renderSpinner = () => (
-            <div style = {{
-                fontFamily: 'sans-serif',
-                textAlign: 'center'
-            }}>
-                Loading..
-            </div>
-        );
+  
+
+    useEffect(() => {
+        if (!containerRef.current) return; 
+        const MyAudioCallMeet = async () => { 
+            try {
+                const appID = 162876950;
+                const serverSecret = "0db746a382bd06442f99610401bea5b1";
+                const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest( 
+                    appID,
+                    serverSecret,
+                    callId,
+                    Date.now().toString(),
+                    userName
+                );
+                const zp = ZegoUIKitPrebuilt.create(kitToken);                
+                zp.joinRoom({
+                    container: containerRef.current,
+                    scenario: {
+                        mode: ZegoUIKitPrebuilt.GroupCall
+                    },
+                    turnOnCameraWhenJoining: false, 
+                    showMyCameraToggleButton: false,
+                    showPreJoinView: false,
+                    turnOnMicrophoneWhenJoining: true,
+                    onLeaveRoom: handleLeaveRoom,
+                    
+                });
+            } catch (error) {
+                console.error('Error generating kit token:', error);
+            }
+        }
+        MyAudioCallMeet();
+    }, [callId, userID, userName, navigate]);
     return (
         <>
-        
-        <div className='z-50 w-full h-full '>
-           <JitsiMeeting
-                roomName = { generateRoomName() }
-                spinner = { renderSpinner }
-                configOverwrite = {{
-                    subject: 'Group video call',
-                    startWithVideoMuted: true, 
-                    disableVideo: true, 
-                
-                    disableAudioLevels: true, 
-                    prejoinPageEnabled: false, 
-                    startAudioOnly: true, 
-                    
-                    enableNoAudioDetection: false, 
-                    enableNoisyMicDetection: false,
-                    jwt:token,
-                }}
-                lang = 'eng'
-                onApiReady = { externalApi => handleApiReady(externalApi) }
-                onReadyToClose = { handleReadyToClose }
-                getIFrameRef = { handleJitsiIFrameRef1 }
-                userInfo={user}
-              
-                
-                />
-           </div>
-
+       <div className="w-full h-full bg-red-500" ref={containerRef} />
         </>
     )
 }

@@ -4,11 +4,13 @@ import { suggetionFuntion } from "../../../utils/api/methods/UserService/get";
 import { toast } from "sonner";
 import { followUserFunction, getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
 import { editUser } from "../../../utils/ReduxStore/Slice/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Suggetions = () => {
   const [followUser,setFollowUser] = useState(false)
   const [suggetions, setSuggetions]: any = useState([]);
   const dispatch = useDispatch()
+  const Navigate = useNavigate()
   const userData = useSelector((state: any) => state.persisted.user.userData);
   useEffect(() => {
     (async () => {
@@ -16,8 +18,6 @@ const Suggetions = () => {
 
       if (responce.status) {
         setSuggetions(responce.data);
-      } else {
-        toast.error(responce.message);
       }
     })();
   }, [followUser]);
@@ -29,7 +29,6 @@ const Suggetions = () => {
     };
     const response: any = await followUserFunction(data);    
     if (response.data.status) {
-      toast.success(response.data.message);
       try {
         const response = await getUserByIdFuntion(userData.userId);
         if (response?.status) {
@@ -46,6 +45,10 @@ const Suggetions = () => {
     }
   };
 
+  const NavigateToUserProfile=(userId:string)=>{
+    Navigate(`/profile/${userId}`)
+  }
+
   return (
     <>
       {/* suggetions  */}
@@ -60,6 +63,8 @@ const Suggetions = () => {
           {suggetions.length > 0 ? (
             <>
               {suggetions.map((item: any) => {
+                console.log(item,"itemitem");
+                
                 return (
                   <>
                     {/* suggetion one div  */}
@@ -68,6 +73,7 @@ const Suggetions = () => {
                         {item.profile.profileUrl ? (
                           <>
                             <img
+                            onClick={()=>NavigateToUserProfile(item.basicInformation.userId)}
                               className="lg:w-10 lg:h-10 rounded-full   "
                               src={`http://localhost:3000/profile/${item?.profile?.profileUrl}`}
                               alt=""

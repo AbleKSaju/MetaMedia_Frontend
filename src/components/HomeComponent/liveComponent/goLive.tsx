@@ -17,9 +17,6 @@ const navigate=useNavigate()
 
 console.log(live,'THIS IS LIVEEEEE');
 
-const hanldeUser=(user:any)=>{
- toast.success(user +" "+ "Joined")
-}
 useEffect(() => {
   const initializeHost = async () => {
     const appID = 1878520769;

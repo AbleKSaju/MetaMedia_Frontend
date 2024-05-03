@@ -18,7 +18,16 @@ export type AddProfileFormData = {
 //   " image/png",
 //   "image/webp",
 // ];
-
+const isDateOfBirthValid = (value:any) => {
+  // Parse the date of birth string into a Date object
+  const dob = new Date(value);
+  
+  // Calculate the age by subtracting the year of birth from the current year
+  const age = new Date().getFullYear() - dob.getFullYear();
+  
+  // Check if the calculated age is greater than or equal to 16
+  return age >= 16;
+};
 export const schema: ZodType<AddProfileFormData> = z.object({
   username: z
     .string()
@@ -35,8 +44,9 @@ export const schema: ZodType<AddProfileFormData> = z.object({
   bio: z.string()  .min(1, {
     message: "bio is empty",
   }).max(50, { message: " name cannot exceed 30 characters" }),
-  dob: z.string().refine((value) => !!value, {
-    message: "Date of birth is required",
+  dob: z.string()
+    .refine(isDateOfBirthValid, {
+      message: "At least 16 years old",
   }),
   location: z.string().min(2, {
     message: "location not match",
@@ -44,21 +54,6 @@ export const schema: ZodType<AddProfileFormData> = z.object({
   gender: z.string().refine((value) => ["male", "female"].includes(value), {
     message: "Please select a valid gender",
   }),
-  // gender: z.enum(["male", "female"]),
-//   profile: z
-//     .any()
-//     .refine((file) => {
-//       console.log(file, "fileeeeeeeeeeee");
-//       if (file.length === 0) {
-//         console.log("if log");
-//         return true;
-//       }
-//       console.log("if out log");
-
-//       return ACCEPTED_IMAGE_TYPES.includes(file[0]?.type);
-//     }, `Only .jpg, .jpeg, .png and .webp formats are supported.`)
-//     .optional()
-//     .nullable(),
 });
 
 export const useAddProfleValidate = () => {

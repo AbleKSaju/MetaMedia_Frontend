@@ -10,7 +10,6 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL, fetchFile } from "@ffmpeg/util";
-import { toast } from "sonner";
 import { Slider, Spin } from "antd";
 import { Button } from "antd";
 import { X } from "lucide-react";
@@ -19,13 +18,11 @@ import {
   clearVideos,
 } from "../../../../utils/ReduxStore/Slice/postSlice";
 
-// const ffmpeg = createFFmpeg({ log: true })
 function sliderValueToVideoTime(duration: any, sliderValue: any) {
   return Math.round((duration * sliderValue) / 100);
 }
 const TrimVedio = ({ setPostState }: any) => {
   const post = useSelector((state: any) => state.persisted.post);
-  const dispatch = useDispatch();
   const ffmpegRef = useRef(new FFmpeg());
   const ffmpeg = ffmpegRef.current;
 
@@ -56,7 +53,6 @@ const TrimVedio = ({ setPostState }: any) => {
           "text/javascript"
         ),
       });
-      toast.success("sucess");
       setFFmpegLoaded(true);
     };
     load();
@@ -247,23 +243,19 @@ function VideoConversionButton({
   const dispatch = useDispatch();
   const trimAndSaveVideo = async () => {
     try {
-      toast.success("1");
 
       // Starting the conversion process
       onConversionStart(true);
 
       const inputFileName = "input.mp4";
       const outputFileName = "output.mp4";
-      toast.success(outputFileName);
 
       // Writing the video file to memory
       await ffmpeg.writeFile(inputFileName, await fetchFile(videoFile));
-      toast.success("4");
 
       const [min, max] = sliderValues;
       const minTime = sliderValueToVideoTime(videoPlayerState.duration, min);
       const maxTime = sliderValueToVideoTime(videoPlayerState.duration, max);
-      toast.success("5");
 
       // Trimming the video with FFmpeg command
       const res = await ffmpeg.exec([
@@ -277,13 +269,8 @@ function VideoConversionButton({
         "mp4",
         outputFileName,
       ]);
-      toast.success("6");
-      console.log(res, "KKKKKKKKK");
-      // await ffmpeg.exec(['-i', 'recorded.webm', '-i', 'audio.mp3', '-c:v', 'libx264', '-c:a', 'aac', 'output.mp4']);
-      // const data = await ffmpeg.readFile('output.mp4');
-      // Reading the resulting trimmed video file
+
       const trimmedVideoData = await ffmpeg.readFile("output.mp4");
-      toast.success("7");
       const data: any = new Uint8Array(trimmedVideoData as ArrayBuffer);
 
       const blob = new Blob([trimmedVideoData], { type: "video/mp4" });
@@ -291,26 +278,21 @@ function VideoConversionButton({
         type: "video/mp4",
       });
 
-      console.log(blob, "THISIS S DTAFILE");
 
       // Creating a blob URL for the trimmed video
       const trimmedVideoUrl = URL.createObjectURL(
         new Blob([data.buffer], { type: "video/mp4" })
       );
-      console.log(file, "URL URlLLLL-----");
-      toast.success("8");
 
       // Pass the trimmed video URL to the parent component
       onVideoTrimmed(trimmedVideoUrl);
-
       dispatch(clearVideos());
       dispatch(addVideo(file));
       setPostState(3);
-      toast.success("hello byby");
       // Ending the conversion process
       onConversionEnd(false);
     } catch (error) {
-      console.log(error, "TTTTTTTTTTT");
+      console.log(error);
     }
   };
 

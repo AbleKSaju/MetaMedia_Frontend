@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import { editUser } from "../../../utils/ReduxStore/Slice/userSlice";
 import { addSocketData } from "../../../utils/ReduxStore/Slice/videoCallSlice";
 import VoiceRecorder from "./VoiceRecorder";
+
 const DropDownComponent = ({
   setMessageDeleted,
   messageDeleted,
@@ -54,11 +55,6 @@ const DropDownComponent = ({
 
   const deleteMessage = async (messageId: string) => {
     const response: any = await DeleteMessageFunction(messageId);
-    if (response.status) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
     setMessageDeleted(!messageDeleted);
     setDropdownVisible(!false);
   };
@@ -112,16 +108,78 @@ const MessageListComponent = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [videoCall, setVideoCall] = useState(false);
+  const [joinAudioCall, setJoinAudiocall] = useState(false);
+  const [joinVideoCall, setJoinVideocall] = useState(false);
+  const [audioCallRoomId, setAudioCallRoomId] = useState("");
+  const [videoCallRoomId, setVideoCallRoomId] = useState("");
+  const [onlineUser, setOnlineUser] = useState(false);
+  const [rerender, setRerender] = useState(false);
+  const [lastOnline, setLastOnline] = useState(null);
+  const [currentUsers, setCurentUsers] = useState<any>(null);
 
   useEffect(() => {
     setSocket(io("http://localhost:8081"));
+    if (messages) {
+      dispatch(addSocketData(socket));
+    }
   }, []);
 
-  if (messages) {
-    dispatch(addSocketData(socket));
-  }
+  useEffect(() => {
+    const fetchConversations = async () => {
+      const response: any = await GetConversationsFunction();
+      let userExist;
+      if (response.data.status) {
+        userExist = response?.data?.data?.find(
+          (data: any) => data?.id === user_id
+        );
+      }
+      if ((!userExist && user_id !== "index") || !response.data.status) {
+        const data = {
+          senderId: user_id,
+          receiverId: userData.userId,
+        };
+        await CreateConversationFunction(data);
+      } else {
+        if (response.data.data) {
+          const userId = { ids: response.data.data };
+          const userData: any = await GetUsersDataByIdFunction(userId);
+          const users: any = [];
+          userData.data.data.map((data: any, index: number) => {
+            const userDetails: any = {
+              conversationId: data.conversationId,
+              name: data.user.fullName,
+              email: data.user.email,
+              profile: data.user.profile,
+              receiverId: data.user.receiverId,
+              lastUpdate: response.data.data[index].lastUpdate,
+            };
+            users.push(userDetails);
+          });          
+          users.sort((a: any, b: any) => b.lastUpdate - a.lastUpdate);
+          setConversations(users);
+        }
+      }
+      setOnlineUser(false);
+    };    
+    fetchConversations();
+  }, [
+    isSendMessage,
+    user_id,
+    !user_id,
+    videoCall,
+    newState,
+    rerender,
+    aside,
+    isGroupChat,
+  ]);
 
   useEffect(() => {}, [incomingCall]);
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      setRerender(!rerender)
+    },500)
+  },[newState]);
 
   const handleSubmitForm = useCallback(
     (receiverId: any) => {
@@ -146,14 +204,11 @@ const MessageListComponent = ({
     socket?.on("room:join", (data: any) => {});
   }, [socket, videoCall]);
 
-
   const handleJoinRoom = useCallback((data: any) => {
-    const { room } = data;
-    navigate(`/videoCall/${room}`);
+    navigate(`/videoCall`);
   }, []);
 
   const handleCallingToRoom = useCallback((data: any) => {
-    console.log(data,"datadata");
     const { senderId, receiverId, room, name } = data;
     localStorage.setItem("callingUser", name);
     setIncomingCall({ senderId, receiverId, room, name });
@@ -174,70 +229,42 @@ const MessageListComponent = ({
   }, [socket, handleJoinRoom]);
 
   useEffect(() => {
-    socket?.emit("addUser", userData?.userId);
-    socket?.on("getUsers", (users: any) => {
-      console.log("activeUsers :>> ", users);
-    });
-    socket?.on("getMessage", (data: any) => {
-      setMessages((prev: any) => ({
-        ...prev,
-        messages: [...prev.messages, data],
-      }));
-      setNewState(!newState)
-    });
-  }, [socket]);
+    if (socket) {
+      socket?.emit("addUser", userData?.userId);
+      socket?.on("getUsers", (users: any) => {
+        console.log("activeUsers :>> ", users);
+        setCurentUsers(users);
+      });
+      
+      socket?.on("getMessage", (data: any) => {
+        setMessages((prev: any) => ({
+          ...prev,
+          messages: [...prev.messages, data],
+        }));  
+          setNewState(!newState);        
+      });
+      socket.on("AudioCallResponse", (data: any) => {
+        setAudioCallRoomId(data.roomId);
+        setJoinAudiocall(true);
+      });
+      socket.on("VideoCallResponse", (data: any) => {
+        setVideoCallRoomId(data.roomId);
+        setJoinVideocall(true);
+      });
+    }
+  }, [socket,newState]);
 
   useEffect(() => {
     messageRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    const fetchConversations = async () => {      
-      const response: any = await GetConversationsFunction();
-      let userExist;
-      if (response.data.status) {
-        userExist = response?.data?.data?.find(
-          (data: any) => data?.id === user_id
-        );
-      }
-
-      if ((!userExist && user_id !== "index") || !response.data.status) {
-        const data = {
-          senderId: user_id,
-          receiverId: userData.userId,
-        };
-        await CreateConversationFunction(data);
-     
-      } else {
-        if (response.data.data) {
-          const userId = { ids: response.data.data };
-          const userData: any = await GetUsersDataByIdFunction(userId);
-          const users: any = [];
-          userData.data.data.map((data: any, index: number) => {
-            const userDetails: any = {
-              conversationId: data.conversationId,
-              name: data.user.fullName,
-              email: data.user.email,
-              profile: data.user.profile,
-              receiverId: data.user.receiverId,
-              lastUpdate: response.data.data[index].lastUpdate,
-            };
-            users.push(userDetails);
-          });
-          setConversations(users);
-        }
-      }
-    };
-    fetchConversations();
-  }, [isSendMessage, user_id, videoCall,newState, aside, isGroupChat]);
-
+  
   useEffect(() => {
     (async () => {
       if (user_id) {
         const response = await conversations?.filter(
           (data: any) => data.receiverId === user_id
         );
-
         if (response) {
           const message: any = await getMessagesFunction(response[0]);
           if (message.data.status) {
@@ -248,6 +275,7 @@ const MessageListComponent = ({
           }
         }
       }
+      setLastOnline(messages?.messages[messages?.messages?.length - 1]?.time || 0);
     })();
   }, [
     user_id,
@@ -258,19 +286,10 @@ const MessageListComponent = ({
     isGroupChat,
     messageDeleted,
     socket,
+    onlineUser,
   ]);
 
   const sendMessage = async () => {
-    setMessage("");
-    socket?.emit("sendMessage", {
-      senderId: userData?.userId,
-      socketType: null,
-      receiverId: messages?.data?.receiverId,
-      message,
-      conversationId: messages?.data?.conversationId,
-      lastUpdate: Date.now(),
-    });
-
     const data = {
       conversationId: messages?.data?.conversationId || "new",
       senderId: userData?.userId,
@@ -279,12 +298,20 @@ const MessageListComponent = ({
       receiverId: messages?.data?.receiverId,
       lastUpdate: Date.now(),
     };
-
-    const response = await sendMessageFunction(data);
+    const response = await sendMessageFunction(data);    
     if (response) {
+      setMessage("");
+      socket?.emit("sendMessage", {
+        senderId: userData?.userId,
+        socketType: null,
+        receiverId: messages?.data?.receiverId,
+        message,
+        conversationId: messages?.data?.conversationId,
+        lastUpdate: Date.now(),
+      });
       setIsSendMessage(!isSendMessage);
-      setNewState(!newState)
     }
+
   };
 
   const BlockAndUnblockUser = async (userId: string) => {
@@ -294,7 +321,6 @@ const MessageListComponent = ({
     const response: any = await BlockAndUnblockUserFunction(data);
     if (response.data.status) {
       dispatch(editUser(response.data.data));
-      toast.success(response.data.message);
     } else {
       toast.error(response.data.message);
     }
@@ -321,8 +347,6 @@ const MessageListComponent = ({
     const files: FileList | null = e.target.files;
     if (files && files.length > 0) {
       Array.from(files).forEach(async (file: File) => {
-        console.log(file.type, "file.type");
-
         let messageType: string;
         if (file.type.startsWith("image/")) {
           messageType = "image";
@@ -333,8 +357,6 @@ const MessageListComponent = ({
         }
         // const imageUrl = URL.createObjectURL(file);
         setMessage("");
-        console.log(messageType, "messageType");
-
         const data: any = {
           conversationId: messages?.data?.conversationId || "new",
           senderId: userData?.userId,
@@ -343,7 +365,6 @@ const MessageListComponent = ({
           receiverId: messages?.data?.receiverId,
           lastUpdate: Date.now(),
         };
-        console.log(data, "DDDDD");
 
         const formData = new FormData();
         formData.append("file", data.content);
@@ -362,6 +383,7 @@ const MessageListComponent = ({
               conversationId: messages?.data?.conversationId,
               lastUpdate: Date.now(),
             });
+
             setIsSendMessage(!isSendMessage);
             toast.success("File(s) uploaded successfully!");
           } else {
@@ -377,24 +399,20 @@ const MessageListComponent = ({
   };
 
   const DateToTime = (lastMessageDate: any) => {
-    console.log(lastMessageDate,"lastMessageDate");
-    
     const date = new Date(lastMessageDate);
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
     const twelveHourFormat = hours % 12 || 12;
-    console.log(minutes,"minutes");
-    console.log(twelveHourFormat,"twelveHourFormat");
-    
-    if(isNaN(minutes)) {
+
+    if (isNaN(minutes)) {
       const date = new Date(lastMessageDate);
       const hours = date.getHours();
       const minutes = date.getMinutes();
       const ampm = hours >= 12 ? "PM" : "AM";
       const twelveHourFormat = hours % 12 || 12;
-      return 
-  }
+      return;
+    }
     return `${twelveHourFormat}:${minutes < 10 ? "0" : ""}${minutes}`;
   };
 
@@ -407,19 +425,14 @@ const MessageListComponent = ({
   };
 
   const addAudioElement = async (blob: any) => {
-    console.log(blob, "BLOOOOO");
-
     const url = URL.createObjectURL(blob);
     const audio = document.createElement("audio");
     audio.src = url;
     audio.controls = true;
     document.body.appendChild(audio);
 
-    //save the file in here
-
     // voice_note
     const audioFile = new File([blob], "audio.mp3", { type: "audio/mpeg" });
-    console.log(audioFile, "FILLLLE");
 
     const data: any = {
       conversationId: messages?.data?.conversationId || "new",
@@ -439,7 +452,6 @@ const MessageListComponent = ({
     formData.append("lastUpdate", data.lastUpdate);
 
     const response = await SendVoiceFunction(formData);
-    console.log(response, "RRRRR");
     if (response.status) {
       socket?.emit("sendMessage", {
         senderId: userData?.userId,
@@ -449,13 +461,63 @@ const MessageListComponent = ({
         conversationId: messages?.data?.conversationId,
         lastUpdate: Date.now(),
       });
-      setNewState(!newState)
     }
   };
-
-  const AudioCallFunction=()=>{
-    navigate('/audioCall')
+  function randomID(len: number) {
+    let result = "";
+    if (result) return result;
+    var chars =
+        "12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP",
+      maxPos = chars.length,
+      i;
+    len = len || 5;
+    for (i = 0; i < len; i++) {
+      result += chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return result;
   }
+  const handleAudioCall = () => {
+    const callId = randomID(10);
+    const emitData = {
+      receiverId: messages?.data?.receiverId,
+      roomId: callId,
+    };
+    socket.emit("AudioCallRequest", emitData);
+    navigate(`/audioCall/${callId}`);
+  };
+  const handleJoinAudioCallRoom = () => {
+    navigate(`/audioCall/${audioCallRoomId}`);
+  };
+  const handleVideoCall = () => {
+    const callId = randomID(10);
+    const emitData = {
+      receiverId: messages?.data?.receiverId,
+      roomId: callId,
+    };
+    socket.emit("VideoCallRequest", emitData);
+    navigate(`/videoCall/${callId}`);
+  };
+  const handleJoinVideoCallRoom = () => {
+    navigate(`/videoCall/${videoCallRoomId}`);
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (messages.data && currentUsers && currentUsers.length > 1) {
+        let trued = false;
+        await currentUsers?.filter((user: any) => {
+          if (user_id === user?.userId) {
+            setOnlineUser(true);
+            trued = true;
+          } else {
+            if (!onlineUser && !trued) {
+              setOnlineUser(false);
+            }
+          }
+        });
+      }
+    })();
+  }, [currentUsers, messages, lastOnline, socket, onlineUser]);
 
   return (
     <>
@@ -480,35 +542,45 @@ const MessageListComponent = ({
             />
             <div className="flex flex-col">
               <p className="font-medium md:font-bold">{messages?.data?.name}</p>
-              <p className="font-light text-sm">5 min ago</p>
+              <p
+                className={`font-light text-sm ${
+                  onlineUser ? "text-green-800 " : ""
+                }`}
+              >
+                {onlineUser
+                  ? "Online"
+                  : `last online : ${
+                      DateToTime(lastOnline) ?? DateToTime(Date.now())
+                    }`}
+              </p>
             </div>
             <div className=" text-gray-600 ml-auto flex gap-2 sm:gap-5">
-              {/* {incomingAudioCall ? (
+              {joinAudioCall ? (
                 <p
                   className="rounded-xl px-2 text-black bg-green-700"
-                  onClick={() => setAudioCall(!audioCall)}
+                  onClick={handleJoinAudioCallRoom}
                 >
-                  Join 
+                  Join
                 </p>
-              ) : ( */}
-              <PhoneIcon
-                onClick={AudioCallFunction}
-                className={`${
-                  isBlocked ? "text-gray-400" : ""
-                } ml-2 size-4 lg:size-6 mt-0.5`}
-              />
-              {/* )} */}
+              ) : (
+                <PhoneIcon
+                  onClick={handleAudioCall}
+                  className={`${
+                    isBlocked ? "text-gray-400" : ""
+                  } ml-2 size-4 lg:size-6 mt-0.5`}
+                />
+              )}
 
-              {incomingCall ? (
+              {joinVideoCall ? (
                 <p
                   className="rounded-xl px-2 text-black bg-green-700"
-                  onClick={() => setVideoCall(!videoCall)}
+                  onClick={handleJoinVideoCallRoom}
                 >
                   Join
                 </p>
               ) : (
                 <Video
-                  onClick={() => setVideoCall(!videoCall)}
+                  onClick={handleVideoCall}
                   className={`${
                     isBlocked ? "text-gray-400" : ""
                   } ml-2 size-5 lg:size-7`}
@@ -556,7 +628,6 @@ const MessageListComponent = ({
         >
           {messages?.messages?.length > 0 ? (
             messages.messages.map((data: any, index: number) => {
-              
               return data.senderId !== userData.userId ? (
                 <div className="chat-message" key={data.id}>
                   <div className="flex items-end">
@@ -622,7 +693,7 @@ const MessageListComponent = ({
                               customAdditionalControls={[]}
                               className="w-[200px] h-[80px] md:w-[300px]"
                             />
-                              <p className="absolute z-40 bottom-0 right-5 text-black text-[11px]">
+                            <p className="absolute z-40 bottom-0 right-5 text-black text-[11px]">
                               {DateToTime(data?.time)}
                             </p>
                           </span>
@@ -633,20 +704,22 @@ const MessageListComponent = ({
                               customAdditionalControls={[]}
                               className="w-[200px] h-[80px] md:w-[300px]"
                             />
-                              <p className="absolute -bottom-1 right-1 text-black text-[11px]">
+                            <p className="absolute -bottom-1 right-1 text-black text-[11px]">
                               {DateToTime(data?.time)}
                             </p>
                           </span>
-                        ) : (
+                        ) : !data?.type ? (
                           <span
                             className="px-4 py-3 relative h-auto rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#FADBE1] text-black"
                             key={index}
                           >
                             {data.message}
                             <p className="absolute -bottom-1 right-1 text-gray-700 text-[11px]">
-                              {DateToTime(data?.time) ?? Date.now()}
+                              {DateToTime(data?.time) ?? DateToTime(Date.now())}
                             </p>
                           </span>
+                        ) : (
+                          ""
                         )}
                         <div ref={messageRef}></div>
                       </div>
@@ -749,7 +822,7 @@ const MessageListComponent = ({
                               )}
                             </video>
                             <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
-                              {DateToTime(data?.time) ?? Date.now()}
+                              {DateToTime(data?.time) ?? DateToTime(Date.now())}
                             </p>
                           </span>
                         ) : data?.socketType == "video" ? (
@@ -792,7 +865,7 @@ const MessageListComponent = ({
                               customAdditionalControls={[]}
                               className="w-[200px] h-[80px] md:w-[300px]"
                             />
-                                  <ChevronDown
+                            <ChevronDown
                               className="absolute text-black top-1 right-3 size-5"
                               onClick={() => setDropdownVisible(index)}
                             />
@@ -806,7 +879,7 @@ const MessageListComponent = ({
                                 messageId={data.messageId}
                               />
                             )}
-                                 <p className="absolute bottom-0 right-5 text-black text-[11px]">
+                            <p className="absolute bottom-0 right-5 text-black text-[11px]">
                               {DateToTime(data?.time)}
                             </p>
                           </span>
@@ -818,7 +891,7 @@ const MessageListComponent = ({
                               className="w-[200px] h-[80px] md:w-[300px]"
                             />
                           </span>
-                        ) : (
+                        ) : !data.type ? (
                           <span className="px-4 py-3 relative h-auto rounded-lg text-sm md:text-base inline-block rounded-br-none bg-[#C1506D] text-white ">
                             {data.message}
                             <ChevronDown
@@ -835,10 +908,12 @@ const MessageListComponent = ({
                                 messageId={data.messageId}
                               />
                             )}
-                              <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
-                              {DateToTime(data?.time) ?? Date.now()}
+                            <p className="absolute bottom-0 right-1 text-gray-200 text-xs">
+                              {DateToTime(data?.time) ?? DateToTime(Date.now())}
                             </p>
                           </span>
+                        ) : (
+                          ""
                         )}
 
                         <div ref={messageRef}></div>
@@ -876,7 +951,7 @@ const MessageListComponent = ({
                 />
               </div>
             </footer>
-            <div className="absolute right-0 sm:right-5 bottom-3 flex z-50">
+            <div className="absolute right-0 sm:right-5 bottom-1 flex items-center justify-center self-center">
               {!message?.length ? (
                 <>
                   <input
@@ -897,23 +972,24 @@ const MessageListComponent = ({
                   />
 
                   <VoiceRecorder
+                  backgroundColor="white"
                     onRecordingComplete={addAudioElement}
                     setRecordedAudioBlob={setRecordedAudioBlob}
                     //  sendFiles={sendFiles}
                   />
                   <Image
-                    className="size-5 lg:size-6 mr-3 md:mt-2 mt-4 ml-2  "
+                    className="size-5 lg:size-6 mr-3 mb-3 md:mb-1 md:mt-2 mt-4 ml-2  "
                     onClick={handleImageClick}
                   />
                   <Video
-                    className="size-5 lg:size-6 mr-3 md:mt-2 mt-4"
+                    className="size-5 lg:size-6 mr-3 mb-3 md:mb-1 md:mt-2 mt-4"
                     onClick={handleVidoClick}
                   />
                   {/* <Image className="size-5 lg:size-6" /> */}
                 </>
               ) : (
                 <button
-                  className="hover:text-teal-800 font-bold cursor-pointer"
+                  className="hover:text-[#C1506D] mb-2 font-bold cursor-pointer"
                   onClick={() => sendMessage()}
                 >
                   Send

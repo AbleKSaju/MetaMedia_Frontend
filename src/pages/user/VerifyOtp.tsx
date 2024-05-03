@@ -21,7 +21,7 @@ const VerifyOtp: React.FC = () => {
 const dispatch=useDispatch()
 
   const [otpNumber, setOtp] = useState(["", "", "", ""]);
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(60);
   const [showResendMessage, setShowResendMessage] = useState(false);
   // const [focusedInput, setFocusedInput] = useState<number>(0);
   const Navigate = useNavigate();
@@ -108,6 +108,7 @@ const dispatch=useDispatch()
         dispatch(clearUser());
         dispatch(addUser(data));
         dispatch(addToken(response.data.accesstoken));
+        localStorage.setItem('accesstoken',response.data.accesstoken)
         console.log(response?.data,"response?.data?.status");
         if (response?.data?.status) {
           toast.success(response?.data?.message);
@@ -136,9 +137,9 @@ const dispatch=useDispatch()
             We have sent the verification code to your email address
           </div>
           <div className="col-start-1 row-start-7">
-            <div id="otp" className="w-6 h-6 flex flex-row">
+            <div id="otp" className="w-6 h-6 flex flex-row justify-between">
               {otpNumber.map((digit, index) => (
-                <div key={index} className="ml-7 md:ml-10 lg:ml-12">
+                <div key={index} className="ml-6 sm:ml-7 md:ml-10 lg:ml-12">
                   <input
                     ref={inputRefs[index]}
                     className="border border-[#C1506D] remove-arrow h-10 w-10 text-center form-control rounded"

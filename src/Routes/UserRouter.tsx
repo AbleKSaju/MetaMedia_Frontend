@@ -14,12 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { isSinglePostModalClose } from "../utils/ReduxStore/Slice/singlePostSlice";
 import SinglePostModal from "../components/HomeComponent/PostComponent/SinglePostModal";
-import NewSignUp from "../pages/user/SignUp";
-import NewLogin from "../pages/user/Login";
-import { ErrorComponent } from "../components/ErrorComponents/ErrorComponent";
 
-const 
-UserRouter = () => {
+const UserRouter = () => {
   const isSinglePostModal = useSelector((state: any) => state.persisted.singlePost.isSinglePostModal);
   const dispach=useDispatch()
   const [render,setRender]:any=useState(false)
@@ -42,8 +38,6 @@ UserRouter = () => {
       <Route path="/addprofile" element={<AddProfile />} />
       <Route path="/selectMod" element={<Mods />} />
       <Route path="/selectPost" element={<SinglePostModal/>} />
-      <Route path="/newSignUp" element={<NewSignUp />}/>
-      <Route path="/newLogin" element={<NewLogin />}/>
     </Routes>
     </>
   );

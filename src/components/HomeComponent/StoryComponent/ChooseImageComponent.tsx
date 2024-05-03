@@ -68,13 +68,13 @@ const ChooseImageComponent = ({selectedFile,setSelectedFile,setImageUrl}:any) =>
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="rounded-lg shadow-lg w-[500px] h-[450px] flex border border-teal-900 flex-col justify-between relative p-8">
-       {selectedFile && <X size={26} className="absolute right-2 top-2 text-teal-900" onClick={()=>setSelectedFile(null)}/>}
-        {!selectedFile && <p className="text-center text-teal-900">Drag photos and videos here</p> }
-        {!selectedFile && <ImagePlus width={80} height={200} className="self-center text-teal-900"/>}
+      <div className="rounded-lg shadow-lg w-[500px] h-[450px] flex border border-black flex-col justify-between relative p-8">
+       {selectedFile && <X size={26} className="absolute right-2 top-2 text-black" onClick={()=>setSelectedFile(null)}/>}
+        {!selectedFile && <p className="text-center text-black">Drag photos and videos here</p> }
+        {!selectedFile && <ImagePlus width={80} height={200} className="self-center text-black"/>}
         {selectedFile ? (
           <>
-            <p className="mb-4 text-teal-900">File: {selectedFile.name}</p>
+            <p className="mb-4 text-black">File: {selectedFile.name}</p>
             {selectedFile.type?.startsWith("image") ? (
               <div className="flex justify-center">
 
@@ -99,7 +99,7 @@ const ChooseImageComponent = ({selectedFile,setSelectedFile,setImageUrl}:any) =>
 
           <label
             htmlFor="fileInput"
-            className="cursor-pointer hover:bg-teal-600 focus:ring-teal-900 focus:ring-offset-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 text-center bg-teal-800 bottom-0 text-white font-semibold px-1 w-40 py-2 rounded-lg"
+            className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 text-center bg-[#C1506D] bottom-0 text-white font-semibold px-1 w-40 py-2 rounded-lg"
           >
             Choose File
           </label>

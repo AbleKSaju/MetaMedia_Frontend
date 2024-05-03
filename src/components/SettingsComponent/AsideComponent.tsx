@@ -24,12 +24,15 @@ const Aside = ({
   const handleLogout = async (e: any) => {
     e.preventDefault();
     const response: any = await LogoutFunction();
+    console.log(response?.data,"response?.data");
+    
     if (response?.data?.status) {
       dispatch(clearToken());
       dispatch(clearUser())
-      toast.success(response?.data?.message);
+      localStorage.removeItem('accesstoken');
       Navigate("/login");
     } else {
+      toast.error("Logout");
       toast.error("Logout error");
     }
     persistor.purge();
@@ -60,7 +63,6 @@ const Aside = ({
           profile: response?.data?.profile?.profileUrl,
         };
         dispatch(addProfileImage(data));
-        toast.success(response?.message);
         Navigate(`/profile/${userData?.userId}`);
       } else {
         toast.error(response?.message);

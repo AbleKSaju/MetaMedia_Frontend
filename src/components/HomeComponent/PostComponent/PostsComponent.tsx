@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { UseSelector, useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { getAllPostOfUserFunction } from "../../../utils/api/methods/PostService/get/getAllPostOfUser";
 import { getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
 import { toast } from "sonner";
-import { Play } from "lucide-react";
 import {
   addPostData,
   clearPostData,
@@ -48,9 +47,7 @@ const PostsComponent = ({ postLength, render, setRender }: any) => {
         if (user?.userData === undefined) {
           toast.error("user not find");
         } else {          
-          const response:any = await getAllPostOfUserFunction(user_id);    
-          console.log(response.data,"DDDD");
-                
+          const response:any = await getAllPostOfUserFunction(user_id);                    
           if (response && response.data.status && response.data.tagged) {
             const data = response.data.tagged;
             setTagged(data);

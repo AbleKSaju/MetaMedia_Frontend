@@ -8,13 +8,8 @@ const AccountInformation = () => {
   const userData = useSelector((state: any) => state.persisted.user.userData);
   
   useEffect(() => {
-    console.log("useEffectuseEffectuseEffectuseEffect");
-
     (async () => {
-      console.log("responseresponseresponse");
-
       const response:any = await getUserByIdFuntion(userData.userId);
-      console.log(response, "response.dataresponse.data");
       if (response.status) {
         setUser(response.data);
       } else {

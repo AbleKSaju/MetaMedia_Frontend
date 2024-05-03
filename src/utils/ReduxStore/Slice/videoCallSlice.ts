@@ -12,7 +12,7 @@ const socketSlice = createSlice({
     reducers: {
         addSocketData: (state, action: PayloadAction<any>) => {
             state.socketData=[]
-            state.socketData=action.payload;
+            state.socketData=action?.payload;
         },
         deleteSocketData: (state)=>{
             state.socketData = []

@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import profile from "../../assets/profile.webp";
 import { BlockAndUnblockUserFunction } from "../../utils/api/methods/ChatService/post/post";
@@ -29,7 +29,6 @@ const BlockedUsers = ({ setBlockedUsers }: any) => {
 
   useEffect(()=>{
       (async()=>{
-        console.log("NTTT");
         const users = await userData.blockedUsers.filter((user:any)=>user.fullName.startsWith(searchUser))
         setBlockedSearchUsers(users)
     })()
@@ -40,7 +39,6 @@ const BlockedUsers = ({ setBlockedUsers }: any) => {
     const response: any = await BlockAndUnblockUserFunction(data);
     if (response.data.status) {
       dispatch(editUser(response.data.data));
-      toast.success(response.data.message);
     } else {
       toast.error(response.data.message);
     }
@@ -52,7 +50,7 @@ const BlockedUsers = ({ setBlockedUsers }: any) => {
       className="fixed inset-0 z-20 flex items-center justify-center backdrop-blur bg-opacity-50 bg-black"
       ref={wrapperRef}
     >
-      <div className="relative w-72 sm:w-[450px] h-[400px] sm:h-[500px] bg-white border border-teal-900 rounded-lg">
+      <div className="relative w-72 sm:w-[450px] h-[400px] sm:h-[500px] bg-white border border-black rounded-lg">
         <div className="flex h-[370px] sm:h-[500px] flex-col p-1">
           <button
             onClick={() => {
@@ -72,7 +70,7 @@ const BlockedUsers = ({ setBlockedUsers }: any) => {
               type="text"
               onChange={(e) => setSearchUser(e.target.value)}
               value={searchUser}
-              className="border p-1 border-teal-900 font-light rounded-md w-60 md:w-72 outline-none"
+              className="border p-1 border-black font-light rounded-md w-60 md:w-72 outline-none"
             />
           </div>
           <div className=" h-64 sm:h-96 w-auto mx-4 sm:mx-16 sm:pt-5 scrollbar-hide overflow-y-auto ">

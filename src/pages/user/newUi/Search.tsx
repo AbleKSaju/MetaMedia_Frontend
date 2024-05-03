@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Search, XCircle } from "lucide-react";
+import { ArrowBigLeft, ArrowLeft, Search, XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { GetSearchUserDataFunction } from "../../../utils/api/methods/UserService/get";
 import SearchUserShimmer from "../../../pages/shimmer/SearchUserShimmer";
@@ -39,10 +39,7 @@ const SearchComponent = ({ setOpenSearch,setRender,render }: any) => {
       setUserLoading(true);
       setNoUserFound(false);
       const getData = setTimeout(async () => {
-        console.log("MAKING REQUEST with", searchUser);
-        const response = await GetSearchUserDataFunction(searchUser);
-        console.log(response,"responseresponse");
-        
+        const response = await GetSearchUserDataFunction(searchUser);        
         if (response.status) {
           setsearchedUsers(response?.data);
         } else {
@@ -82,10 +79,11 @@ const SearchComponent = ({ setOpenSearch,setRender,render }: any) => {
     <>
       <div
         ref={wrapperRef}
-        className="hidden sm:block sm:w-5/12 md:w-5/12 lg:w-3/12 h-full bg-white rounded-md  ml-32 fixed z-20 border m-2 overflow-y-auto scrollbar-hide"
+        className=" w-full sm:w-5/12 md:w-5/12 lg:w-3/12 h-full bg-white rounded-md  sm:ml-32 fixed z-20 border sm:m-2 overflow-y-auto scrollbar-hide"
       >
         <div className="flex flex-col justify-center  ">
           <div className="w-full h-16  flex justify-center items-center  ">
+              <ArrowLeft onClick={()=>setOpenSearch(false)} className="z-20 mt-1 ml-2 sm:hidden text-black"/>
             <div className="relative flex w-full justify-center">
               <input
                 type="text"
@@ -100,7 +98,7 @@ const SearchComponent = ({ setOpenSearch,setRender,render }: any) => {
                 <div className="z-20">
                   <Search size={18} className="text-gray-500 " />
                 </div>
-                <div className="w-full pl-4 z-20">
+                <div className=" absolute right-0 mr-5 z-20">
                   <XCircle
                     size={16}
                     onClick={() => setSearchUser("")}

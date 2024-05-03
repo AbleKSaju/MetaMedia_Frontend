@@ -1,15 +1,14 @@
 import axios from "axios";
 
 import { GetAllUsers_Api, GetAllUsersData_Api, GetSearchUserData_Api ,Suggetion_Api} from "../../endpoints/common";
-import axiosInstance from "../../../../utils/costumHook/constumHook";
+import {axiosInstance} from "../../../../utils/costumHook/constumHook";
 
 
 
 
 export const getAllUsersFunction = async () => {
     try {
-      const response = await axios
-        .create({ withCredentials: true })
+      const response = await axiosInstance
         .get(GetAllUsers_Api);
       return response.data;
     } catch (error) {
@@ -20,8 +19,7 @@ export const getAllUsersFunction = async () => {
 
 export const getAllUsersDataFunction = async () => {
     try {
-      const response = await axios
-        .create({ withCredentials: true })
+      const response = await axiosInstance
         .get(GetAllUsersData_Api);
       return response.data;
     } catch (error) {
@@ -41,8 +39,7 @@ export const getAllUsersDataFunction = async () => {
 
   export const suggetionFuntion = async (userId:any) => {
     try {
-      const response = await axios
-        .create({ withCredentials: true })
+      const response = await axiosInstance
         .get(`${Suggetion_Api}?userId=${userId}`);
 
       return response.data;

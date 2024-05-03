@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { editUser } from "../../../utils/ReduxStore/Slice/userSlice";
 import { followUserFunction, getUserByIdFuntion } from "../../../utils/api/methods/UserService/post";
 import profile from '../../../assets/profile.webp'
+import { Link, useNavigate } from "react-router-dom";
 
 const FollowComponent = ({
   users,
@@ -13,16 +14,13 @@ const FollowComponent = ({
   setOpenFollowers,
   setOpenFollowings,
 }: any) => {
-  console.log("I am FollowComponent");
-  console.log(users,"usersusersusers");
-  
-  
   const [searchUser, setSearchUser] = useState("");
   const [followers, setfollowers] = useState<any>([]);
   const [following, setfollowing] = useState([]);
   const [followUser,setFollowUser] = useState(false)
 
   const wrapperRef: any = useRef(null);
+  const Navigate=useNavigate()
   const dispatch = useDispatch()
   const userData = useSelector((state: any) => state.persisted.user.userData);
 
@@ -50,9 +48,7 @@ const FollowComponent = ({
     }
   }
   
-  useEffect(()=>{
-    console.log("I AM USE EFFECT");
-    
+  useEffect(()=>{    
     (async()=>{
     if(searchUser.length && searchUser.trim()!==""){
         const searchedUsers = users.filter((item:any) => item.fullName.toLowerCase().startsWith(searchUser));
@@ -86,7 +82,6 @@ const FollowComponent = ({
     };
     const response: any = await followUserFunction(data);    
     if (response.data.status) {
-      toast.success(response.data.message);
       try {
         const response = await getUserByIdFuntion(userData.userId);
         if (response?.status) {
@@ -102,9 +97,14 @@ const FollowComponent = ({
       toast.error(response.data.message);
     }
   };
+  const NavigateToUserProfile=(userId:string)=>{
+    Navigate(`/profile/${userId}`)
+    setOpenFollowers(false);
+    setOpenFollowings(false);
+  }
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center backdrop-blur bg-opacity-50 bg-black" ref={wrapperRef}>
-      <div className="relative w-72 sm:w-[450px] h-[400px] sm:h-[500px] bg-white border border-teal-900 rounded-lg">
+      <div className="relative w-72 sm:w-[450px] h-[400px] sm:h-[500px] bg-white border border-[#C1506D] rounded-lg">
         <div className="flex h-[370px] sm:h-[500px] flex-col p-1">
           <button
             onClick={() => {
@@ -128,7 +128,7 @@ const FollowComponent = ({
               type="text"
               onChange={(e) => setSearchUser(e.target.value)}
               value={searchUser}
-              className="border p-1 border-teal-900 font-light rounded-md w-60 md:w-72 outline-none"
+              className="border p-1 border-[#C1506D] font-light rounded-md w-60 md:w-72 outline-none"
             />
           </div>
           <div className=" h-64 sm:h-96 w-auto mx-4 sm:mx-16 sm:pt-5 scrollbar-hide overflow-y-auto ">
@@ -139,6 +139,7 @@ const FollowComponent = ({
                 <div key={index} className="h-11 mb-2">
                   <div className="flex ">
                     <img
+                    onClick={()=>NavigateToUserProfile(val.userId)}
                       className="w-10 h-10 border border-black rounded-full"
                       src={
                         val.profile?.startsWith(
@@ -155,13 +156,13 @@ const FollowComponent = ({
                     <div className=" flex items-center w-full justify-end">
                       {userData.userId !== val.userId &&   
                       <button onClick={()=>FollowUser(val?.userId)}
-                      className="w-16 h-6 border border-[#C1506D] rounded-lg sm:flex justify-center items-center font-semibold text-[12px] text-[#C1506D] hidden " >
+                      className="w-16 h-6 border border-[#C1506D] rounded-lg sm:flex justify-center items-center font-semibold text-[12px] text-[#C1506D] " >
                       {userData.following.some((follow:any) => follow.userId === val.userId) ? "unfollow" : (userData.userId === val.userId ? "" : "follow")}
                       </button>
                       }
-                      <button className="border border-black hover:bg-black rounded-full sm:hidden">
+                      {/* <button className="border border-black hover:bg-black rounded-full sm:hidden">
                           <X size={17} />
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>
@@ -172,7 +173,8 @@ const FollowComponent = ({
                 <div key={index} className="h-11 mb-2">
                   <div className="flex ">
                     <img
-                      className="w-10 h-10 border border-black rounded-full"
+                    onClick={()=>NavigateToUserProfile(val.userId)}
+                      className="w-10 h-10 border border-black rounded-full object-cover"
                       src={
                         val.profile?.startsWith(
                           "https://graph.facebook.com/"
@@ -184,17 +186,17 @@ const FollowComponent = ({
                       }
                       alt=""
                     />
-                    <p className="ml-2 w-96 flex items-center">{val.fullName}</p>
+                    <p className="ml-2 w-32 sm:w-full flex items-center">{val.fullName}</p>
                     <div className=" flex items-center justify-end">
                     {userData.userId !== val.userId &&   
                       <button onClick={()=>RemoveFollowingUser(val.userId)}
-                       className="w-16 h-6 border border-[#C1506D] rounded-lg sm:flex justify-center items-center font-semibold text-[12px] text-[#C1506D] hidden " >
+                       className="w-16 h-6 border border-[#C1506D] rounded-lg sm:flex justify-center items-center font-semibold text-[12px] text-[#C1506D] " >
                         <p className="text-center w-full"> {userData.following.some((follow:any) => follow.userId === val.userId) ? "unfollow" : (userData.userId === val.userId ? "" : "follow")}</p>
                       </button>
               }
-                      <button className="border border-black hover:bg-black rounded-full sm:hidden">
+                      {/* <button className="border border-black hover:bg-black rounded-full sm:hidden">
                         <X size={17} />
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>

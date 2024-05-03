@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { showAllPostFuntion } from "../../utils/api/methods/PostService/get/showAllPost";
 import { getUserByIdFuntion } from "../../utils/api/methods/UserService/post";
 import { useDispatch } from "react-redux";
@@ -17,14 +16,9 @@ const Post = () => {
   useEffect(() => {
     const showPosts = async () => {
       const response = await showAllPostFuntion();
-
       if (response.status) {
-        console.log("THIS IS I POSTS", response.data);
-
         setPosts(response.data);
-      } else {
-        toast.error("Eroor happence");
-      }
+      } 
     };
     showPosts();
   }, []);
@@ -42,9 +36,9 @@ const Post = () => {
   }, [posts]);
   return (
     <>
-      <div className=" scrollbar-hide w-full h-full justify-center sm:p-5 pt-10  overflow-y-auto gap-2">
+      <div className=" scrollbar-hide w-full h-full flex justify- sm:p-5 pt-10  overflow-y-auto gap-2">
         <div className="flex flex-wrap gap-2 ">
-          <div className="w-full flex flex-wrap h-1/6 sm:h-2/6 justify-items-start lg:h-80 gap-1 sm:gap-2 sm:p-2 p-1 ">
+          <div className="w-full flex flex-wrap h-1/6 sm:h-2/6 justify-center md:justify-around lg:h-80 gap-1 sm:gap-3 sm:p-2 p-1 ">
             {posts &&
               posts.length > 0 &&
               posts?.map((item: any) => {

@@ -66,7 +66,7 @@ const Sidebar = ({ open,setAddStory,setIsAddPost,isAddPost }: any) => {
           open ? "w-60" : "w-20 "
         } bg-[#07312E] h-screen p-5 z-30  rounded-tr-lg rounded-br-lg pt-8 relative duration-300 `}
       >
-        {/* <Menu/> */}
+        {/* <Menu/> */}\
         <svg
           id="bar"
           xmlns="http://www.w3.org/2000/svg"

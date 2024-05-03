@@ -52,7 +52,6 @@ const UsersListComponent = () => {
     const response:any = await ChangeUserStatusFunction(data)
     console.log(response,"ChangeUserStatusFunctionChangeUserStatusFunction");
     if(response.data.status){
-      toast.success("Status Changed")
       setBlockUser(!blockUser)
     }
   }

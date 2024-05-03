@@ -8,9 +8,7 @@ interface JistyVedioCallProps {}
 
 const JistyVedioCall: React.FC<JistyVedioCallProps> = () => {
 const userData=useSelector((state:any)=>state.persisted.user.userData)
-console.log(userData,'HHHHHDDDAA');
-const token=useSelector((state:any)=>state.persisted.token.token)
-console.log(token,"LLLOO");
+const token = localStorage.getItem('accesstoken')
 
     const apiRef :any= useRef();
     const [ logItems, updateLog ]:any = useState([]);
@@ -66,9 +64,7 @@ console.log(token,"LLLOO");
         apiRef.current.on('knockingParticipant', handleKnockingParticipant);
     };
 
-    const handleReadyToClose = () => {
-        toast.error("SUUUU")
-       
+    const handleReadyToClose = () => {       
         alert('Ready to close...');
     };
 

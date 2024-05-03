@@ -1,8 +1,7 @@
-import React from "react";
 
 const Mods = () => {
   return (
-    <div className="flex justify-around ml-20 mt-24 flex-wrap text-teal-800 cursor-pointer">
+    <div className="flex justify-around ml-20 mt-24 flex-wrap text-black cursor-pointer">
       <div className="bg-amber-50 border-amber-100 border w-80 text-center xl:w-[420px] xl:h-[600px] h-[70vh] xl:text-2xl p-5 rounded-xl">
         <div className="bg-white border-amber-100 border py-16 rounded-xl flex justify-center text-4xl">
           META

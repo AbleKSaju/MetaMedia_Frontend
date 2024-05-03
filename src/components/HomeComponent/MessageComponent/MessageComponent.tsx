@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import Aside from "./AsideComponent";
-// import Chat from "./ChatComponent";
-import { Route, Routes } from "react-router-dom";
 import MessageListComponent from "./MessageListComponent";
 import CreateNewGroupModal from "./CreateNewGropModal";
 import SelectFriendsModal from "./selectFriendsModal";
 import GroupChatAside from "./groupChatAside";
 import GroupMessageComponent from "./GroupMessageComponent";
-import { toast } from "sonner";
 import GroupDetails from "./GroupDetails";
 const   MessageComponent = ({setIsVideoCall}:any) => {
   const [conversations, setConversations] = useState<any>();
@@ -20,18 +17,16 @@ const   MessageComponent = ({setIsVideoCall}:any) => {
 
   useEffect(() => {
     const path = window.location.pathname;
-    toast.success(path);
    if (path.startsWith("/group")) {
       setIsGroupChat(true)
     } else {
       setIsGroupChat(false)
     }
 
-  }, [aside,isGroupChat,newGroup]);
+  }, [aside,isGroupChat,newGroup,conversations]);
 
   return (
     <>
-
     {isGroupDetails && <GroupDetails setISGroupDetais={setISGroupDetais}/>}
 
     {newGroup == 1 && (<CreateNewGroupModal setewGroup={setewGroup}/>)}

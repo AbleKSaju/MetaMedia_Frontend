@@ -6,7 +6,6 @@ const GroupVedioCall = () => {
     let { roomId }: any = useParams();
     const containerRef = useRef(null);
     const userData = useSelector((state: any) => state.persisted.user.userData)
-    const token = useSelector((state: any) => state.persisted.token.token);
     const userID = userData.userId;
     const userName = userData.userName;
     const navigate = useNavigate();

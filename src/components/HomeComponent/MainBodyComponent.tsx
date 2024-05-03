@@ -67,7 +67,7 @@ const MainBody = ({
 
         setPostData(filteredPosts);
       } else {
-        toast.error("Responce error");
+        toast.error("Response error");
       }
     })();
   }, [render]);

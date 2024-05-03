@@ -51,7 +51,5 @@ export const addToRedux = async (data: any) => {
     //     toast.success(response?.data?.message);
     //     Navigate('/')
     //   }
-    } else {
-      toast.error(response?.data?.message)
     }
 };

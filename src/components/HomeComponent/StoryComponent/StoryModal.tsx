@@ -11,6 +11,7 @@ import axios from "axios";
 import { AddVideoToStoryFunction } from "../../../utils/api/methods/StoryService/Story/post";
 import TrimVideoComponent from "./TrimVideoComponent";
 import { clearVideos } from "../../../utils/ReduxStore/Slice/postSlice";
+import { axiosInstance } from "../../../utils/costumHook/constumHook";
 
 const StoryModal = ({ setAddStory }: any) => {
   const [caption, setCaption] = useState("");
@@ -38,8 +39,6 @@ const StoryModal = ({ setAddStory }: any) => {
 const video = croppedImage
 
 useEffect(()=>{
-  console.log(post[0],"PPPPPPPPP");
-  console.log(post[0]?.name,"post[0].name");
   if(post[0]?.name){
     setTrimVideo(true)
     setCroppedImage(post[0])
@@ -63,7 +62,7 @@ useEffect(()=>{
 
 const getSignatureForUpload = async (folder:string) => {
   try {
-    const res = await axios.post("http://localhost:3003/api/story/getSignature", { folder });
+    const res = await axiosInstance.post("http://localhost:3003/api/story/getSignature", { folder });
     return res.data;
   } catch (error) {
     console.error(error);
@@ -82,7 +81,7 @@ const uploadFile = async ( timestamp:any, signature:any) => {
     const cloudName="dton3lr3o"
     let resourceType='video'
     let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`
-    const res = await axios.post(api, data)
+    const res = await axiosInstance.post(api, data)
     const { secure_url } = res.data;
     console.log("File upload success ...");
     return secure_url;
@@ -111,9 +110,7 @@ const uploadFile = async ( timestamp:any, signature:any) => {
           setSelectedFile(null)
           setAddStory(false)
           Navigate('/')
-          toast.success(response?.message)
         }else{
-          toast.error(response?.message)
         }
       }else{
         const fileName = "image.jpg";
@@ -127,9 +124,7 @@ const uploadFile = async ( timestamp:any, signature:any) => {
           setSelectedFile(null)
           setAddStory(false)
           Navigate('/')
-          toast.success(response.message)
         }else{
-          toast.error(response.message)
         }
       }
     }else{
@@ -140,12 +135,12 @@ const uploadFile = async ( timestamp:any, signature:any) => {
   return (
 <div className="fixed top-0 left-0 w-full h-full backdrop-blur bg-opacity-50 bg-black z-20">
   <div className="flex justify-center w-full h-full bg-transparent ">
-    <div className="fixed top-24 h-[500px] md:h-[700px] w-full sm:w-[500px] md:w-[600px] md:top-10 z-30 flex justify-center border text-white rounded-lg border-teal-900  bg-white">        
+    <div className="fixed top-24 h-[500px] md:h-[700px] w-full sm:w-[500px] md:w-[600px] md:top-10 z-30 flex justify-center border text-white rounded-lg border-black  bg-white">        
     <div className="flex-col w-full  ">
-          <div className="w-full  p-4 flex justify-center sm:border-b sm:border-b-teal-900">
+          <div className="w-full  p-4 flex justify-center sm:border-b sm:border-b-black">
             <div className="w-full h-full">
-              {cropImage && <ArrowLeft size={30} onClick={()=>{setCropImage(false);setCroppedImage(null);setBack(true)}} className="absolute text-teal-900"/>}
-              <p onClick={submitHandler} className="text-teal-900 absolute right-5 font-bold"> {caption.trim() && croppedImage && <p>Post</p>}</p>{!selectedFile ? <X onClick={() => setAddStory(false)} className="text-teal-900 absolute right-5"/>: <p onClick={()=>{setCropImage(true);setBack(false);}} className={`${cropImage?"hidden":" text-teal-900 absolute right-5 font-bold"}`}>Next</p> }
+              {cropImage && <ArrowLeft size={30} onClick={()=>{setCropImage(false);setCroppedImage(null);setBack(true)}} className="absolute text-black"/>}
+              <p onClick={submitHandler} className="text-black absolute right-5 font-bold"> {caption.trim() && croppedImage && <p>Post</p>}</p>{!selectedFile ? <X onClick={() => setAddStory(false)} className="text-black absolute right-5"/>: <p onClick={()=>{setCropImage(true);setBack(false);}} className={`${cropImage?"hidden":" text-black absolute right-5 font-bold"}`}>Next</p> }
                 <p className="text-center mb-5 sm:mb-20 md:mb-0 font-sans font-bold sm:font-semibold text-[#042F2C] text-md sm:text-lg">
                   Create new story
                 </p>

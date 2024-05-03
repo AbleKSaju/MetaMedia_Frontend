@@ -1,9 +1,10 @@
 import axios from "axios";
 import { GetAllStories_Api, GetStories_Api } from "../../../endpoints/common";
+import {axiosInstance} from "../../../../../utils/costumHook/constumHook";
 
 export const getStoriesFunction = () => {
   try {
-    return axios.create({ withCredentials: true }).get(GetStories_Api);
+    return axiosInstance.get(GetStories_Api);
   } catch (error) {
     return error;
   }
@@ -11,7 +12,7 @@ export const getStoriesFunction = () => {
 
 export const getAllStoriesFunction = () => {
   try {
-    return axios.create({ withCredentials: true }).get(GetAllStories_Api);
+    return axiosInstance.get(GetAllStories_Api);
   } catch (error) {
     return error;
   }

@@ -23,10 +23,12 @@ const VideoCallComponent: React.FC = () => {
   const [streaming, setStreaming] = useState(false);
 
   const userData = useSelector((state: any) => state.persisted.user.userData);
-
-  const socket = useSelector(
-    (state: any) => state.persisted.videoCall.socketData
-  );
+  let socket:any
+  useEffect(()=>{
+    socket = useSelector(
+      (state: any) => state?.persisted?.videoCall?.socketData || null
+    );
+  },[])
 
   const handleUserJoined = useCallback(({ name, id }: any) => {
     console.log(`Email ${name} joined room`);

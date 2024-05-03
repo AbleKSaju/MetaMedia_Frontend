@@ -2,23 +2,19 @@ import {
   ArrowBigLeft,
   ArrowBigRight,
   ArrowLeft,
-  Divide,
-  LogIn,
   MapPin,
-  Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearImages } from "../../../../utils/ReduxStore/Slice/postSlice";
 import { toast } from "sonner";
-import { PostData } from "../../../../utils/interface/postInterface";
 import { AddPostFuntion } from "../../../../utils/api/methods/PostService/Post/addPost";
 import { Base64 } from "js-base64";
 import { searchLocationFuntion } from "../../../../utils/api/methods/PostService/Post/searchLocaation";
 import { getLatAndLogFuntion } from "../../../../utils/api/methods/PostService/Post/getLatAndLog";
 import { useNavigate } from "react-router-dom";
 import { getUsersByNameFunction } from "../../../../utils/api/methods/UserService/post";
-import profile from '../../../../assets/profile.webp'
+import profile from "../../../../assets/profile.webp";
 const AddPostDetailsBody = ({
   setIsAddPost,
   setPostState,
@@ -29,66 +25,53 @@ const AddPostDetailsBody = ({
 }: any) => {
   const post = useSelector((state: any) => state.persisted.post);
   const user = useSelector((state: any) => state.persisted.user);
-  console.log("LLL", post);
-  console.log("htis si user formthe this page", user.userData);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [isLocation, setIslocation] = useState(false);
-  const [selectedImageSrc, setSelectedImageSrc]:any = useState(null);
+  const [selectedImageSrc, setSelectedImageSrc]: any = useState(null);
   const [text, setText] = useState("");
   const [imglength, setImageLength] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [hideLike, setHideLike] = useState(false);
-  const [isImage,setIsImage]=useState(false)
-  const [isVideo,setIsvideo]=useState(false)
-  const [vedioFile,setVideoFile]:any=useState([])
-  const [vedioUrl,setVedioUrl]:any=useState(null)
+  const [isImage, setIsImage] = useState(false);
+  const [isVideo, setIsvideo] = useState(false);
+  const [vedioFile, setVideoFile]: any = useState([]);
+  const [vedioUrl, setVedioUrl]: any = useState(null);
   const [hideComment, setHideComment] = useState(false);
   const [location, setLocation] = useState("");
   const [responceLocation, setResponceLocatoin] = useState([]);
   const [tageUser, setTagUsers] = useState("");
   const [resTagUser, setResTagUsers] = useState([]);
-  const [selectedLocationlatAndLog, setSelectedLocationlatAndLog]: any = useState("");
+  const [selectedLocationlatAndLog, setSelectedLocationlatAndLog]: any =
+    useState("");
   const [isSelected, setIsSelcted] = useState(false);
   const [tagedUserData, setTagedUserData]: any = useState([]);
   const maxLength = 500;
 
   useEffect(() => {
- 
-try {
-  if(post?.images && post?.images[0]?.length > 0 ){
-    setImageLength(post.images[0].length);
-    setSelectedImageSrc(post.images[0][0])
-    setSelectedImageIndex(0);
+    try {
+      if (post?.images && post?.images[0]?.length > 0) {
+        setImageLength(post.images[0].length);
+        setSelectedImageSrc(post.images[0][0]);
+        setSelectedImageIndex(0);
+        setIsImage(true);
 
-    console.log(selectedImageSrc, "PPPPP");
-    setIsImage(true)
-
-    setSelectedImageSrc(post.images[0][selectedImageIndex]);
-   }else if(post.videos.length > 0){
-  console.log('JJJJJJJJJJJJJJJJJJJJJJJJJ',post.videos.length);
-  
-    toast.error('in the vedio ')
-    setVideoFile(post.videos[0])
-    const videoURL = URL.createObjectURL(post.videos[0]);
-    console.log('THIS IS TRIMED URL FROM LAST',vedioUrl);
-    
-    if(videoURL){
-      setVedioUrl(videoURL)
-    setIsvideo(true)
-    }else{
-      console.log('trimed url not foud');
-      
+        setSelectedImageSrc(post.images[0][selectedImageIndex]);
+      } else if (post.videos.length > 0) {
+        setVideoFile(post.videos[0]);
+        const videoURL = URL.createObjectURL(post.videos[0]);
+        if (videoURL) {
+          setVedioUrl(videoURL);
+          setIsvideo(true);
+        } else {
+        }
+      }
+    } catch (error) {
+      console.log("ERROR FROM CATCH ", error);
     }
-   }
-} catch (error) {
-  console.log('ERROR FROM CATCH ',error);
-  
-}
-    
   }, [post]);
 
   const handleChange = (event: any) => {
@@ -98,8 +81,7 @@ try {
     }
   };
 
-  useEffect(() => {
-  }, [tagedUserData]);
+  useEffect(() => {}, [tagedUserData]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -178,8 +160,6 @@ try {
   useEffect(() => {
     const getData = setTimeout(async () => {
       const res = await searchLocationFuntion(location);
-      console.log("this is respoce form the bakend", res);
-
       setResponceLocatoin(res);
     }, 1000);
 
@@ -189,7 +169,6 @@ try {
   useEffect(() => {
     const getUser = setTimeout(async () => {
       const res = await getUsersByNameFunction(tageUser);
-      console.log("this si responce of userssKKKK", res);
       if (res.status) {
         setResTagUsers(res.data);
       }
@@ -204,8 +183,7 @@ try {
       name: data.name,
       lat: responce,
     };
-    console.log(savedPlace,'--------------444-4-44444--4-4-4-44444');
-    
+
     setSelectedLocationlatAndLog({});
     setSelectedLocationlatAndLog(savedPlace);
     setIslocation(false);
@@ -213,70 +191,67 @@ try {
   };
 
   const AddPost = async () => {
-    const tagedUserIds = await tagedUserData.map((userData:any) => userData.userId);
-    
-        let media, postType:string;
+    const tagedUserIds = await tagedUserData.map(
+      (userData: any) => userData.userId
+    );
+
+    let media, postType: string;
 
     if (isImage) {
-        const files = base64toFile(post.images[0]);
-        media = files;
-        postType = 'image';
+      const files = base64toFile(post.images[0]);
+      media = files;
+      postType = "image";
     } else {
-        media = vedioFile;
-        postType= 'video';
+      media = vedioFile;
+      postType = "video";
     }
 
     if (!user.userData) {
-        toast.error("Please login to make this post");
-        navigate("login");
-        return;
+      toast.error("Please login to make this post");
+      navigate("login");
+      return;
     }
 
     if (text.trim() === "") {
-        toast.error("Add a caption for your post");
-        return;
+      toast.error("Add a caption for your post");
+      return;
     }
 
-console.log(selectedLocationlatAndLog,'00000000000------------');
-const latData={
-  name:selectedLocationlatAndLog.name,
-  latitude:selectedLocationlatAndLog.lat.latitude,
-  longitude:selectedLocationlatAndLog.lat.longitude
-}
-console.log(latData,'-----------------------5555555-5-5-5-5--5-');
+    const latData = {
+      name: selectedLocationlatAndLog?.name,
+      latitude: selectedLocationlatAndLog?.lat?.latitude,
+      longitude: selectedLocationlatAndLog?.lat?.longitude,
+    };
 
     const data: any = {
-        userId: user.userData.userId,
-        description: text,
-        likes: [],
-        comments: [],
-        media: media,
-        shareCount: 0,
-        tags: tagedUserIds,
-        location:JSON.stringify({latData}),
-        reports: [],
-        postCropSize: post.aspectRatio,
-        postType:postType,
-        showComment: hideComment,
-        showLikes: hideLike,
+      userId: user.userData.userId,
+      description: text,
+      likes: [],
+      comments: [],
+      media: media,
+      shareCount: 0,
+      tags: tagedUserIds,
+      location: JSON.stringify({ latData }),
+      reports: [],
+      postCropSize: post.aspectRatio,
+      postType: postType,
+      showComment: hideComment,
+      showLikes: hideLike,
     };
-console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
 
     try {
-        const res: any = await AddPostFuntion({ data });
-        if (res.status) {
-            setRender(!render);
-            setAddPost(!addPost);
-            setPostState(false);
-            navigate(`/profile/${user?.userData?.userId}`);
-            setIsAddPost(false)
-        }
+      const res: any = await AddPostFuntion({ data });
+      if (res.status) {
+        setRender(!render);
+        setAddPost(!addPost);
+        setPostState(false);
+        navigate(`/profile/${user?.userData?.userId}`);
+        setIsAddPost(false);
+      }
     } catch (error) {
-        console.error("Error:", error);
-
+      console.error("Error:", error);
     }
-};
-
+  };
 
   const serchLocation = async (data: string) => {
     setLocation(data);
@@ -302,9 +277,10 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
     );
     setTagedUserData(updatedTagedUserData);
   };
+
   return (
     <>
-      <div className="fixed top-32 md:h-5/6 w-full md:top-16 z-10 sm:ml-4  sm:w-4/6   flex justify-center border text-white rounded-lg border-gray-500  bg-white">
+      <div className="fixed top-3 bottom-3 md:h-5/6 w-full md:top-16 z-10 sm:ml-4 sm:w-4/6 flex justify-center border text-white rounded-lg border-gray-500  bg-white">
         <div className="flex-col w-full  h-full ">
           <div className="w-full p-5 flex justify-center sm:border-b sm:border-b-gray-200">
             <div className="flex justify-between w-full">
@@ -317,7 +293,7 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
               <p
                 className={
                   text
-                    ? "text-teal-800 font-bold text-md cursor-pointer"
+                    ? "text-black font-bold text-md cursor-pointer"
                     : "text-white font-normal text-md"
                 }
                 onClick={text ? AddPost : undefined}
@@ -327,139 +303,151 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
             </div>
           </div>
 
-          <div className="w-full h-5/6  flex  ">
-            <div className="w-full h-full flex flex-row">
-              <div className="w-4/6">
+          <div className="w-full h-5/6 flex">
+            <div className="w-full h-full flex flex-col md:flex-row">
+              <div className="md:w-4/6">
                 <div className="w-full h-full">
-                  {isImage && (<>
-                    <img
-                    className="w-full h-full object-cover"
-                    src={selectedImageSrc}
-                    alt=""
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                  </>)}
-                  {isVideo && (<>
-                  <video src={vedioUrl} className="w-full h-full object-contain" controls/>
-                  </>)}
+                  {isImage && (
+                    <>
+                      <img
+                        className="w-full h-full object-cover"
+                        src={selectedImageSrc}
+                        alt=""
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </>
+                  )}
+                  {isVideo && (
+                    <>
+                      <video
+                        src={vedioUrl}
+                        className="w-full h-full object-contain"
+                        controls
+                      />
+                    </>
+                  )}
                 </div>
               </div>
-              <div className="w-2/6  p-2 ">
+              <div className=" w-full md:w-2/6 p-2 ">
                 <div className="w-full h-full flex flex-col">
-                  <div className="flex text-black p-5">
+                  <div className="hidden md:flex text-black p-5">
                     <div className="">
                       <img
                         className="w-10 h-10 rounded-full "
-                        src="https://i.pinimg.com/564x/ba/3f/5e/ba3f5ea1343c1a7b37eb7c8b7159eeec.jpg"
+                        src={
+                          user.userData.profile?.startsWith(
+                            "https://graph.facebook.com/"
+                          )
+                            ? `${user.userData.profile}`
+                            : user.userData.profile
+                            ? `http://localhost:3000/profile/${user.userData.profile}`
+                            : "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"
+                        }
                         alt=""
                       />
                     </div>
-                    <div className="pl-3 pt-3 text-md font-semibold text-teal-800 ">
-                      _razik__
+                    <div className="pl-3 pt-3 text-md font-semibold text-black ">
+                      {user.userData.userName}
                     </div>
                   </div>
-                  <div className="text-black  mt-4  w-full h-2/6 border  shadow-lg rounded-md  p-1 overflow-x-hidden flex-col">
+                  <div className="text-black md:mt-4 w-full md:h-full border shadow-lg rounded-md md:p-1 overflow-x-hidden flex-col">
                     <textarea
-                      className="w-full h-5/6 pl-2 outline-none resize-none"
+                      className="w-full h-16 md:h-5/6 pl-2 outline-none resize-none"
                       value={text}
                       onChange={handleChange}
                       placeholder="Write a  caption .."
                     />
-                    <div className="text-sm text-gray-300 mt-1 text-end">
+                    <div className="text-sm text-black md:mt-1 text-end">
                       {text.length}/{maxLength}
                     </div>
                   </div>
-                  <div className="w-full rounded-md shadow-lg h-1/6 border border-b-gray-100  mt-2 overflow-visible">
-                    <div className="text-teal-900 pt-8 text- flex justify-between items-center">
+                  <div className="w-full rounded-md shadow-lg h-1/6 border border-b-gray-100 mt-2 overflow-visible">
+                    <div className="relative text-black pt-3 pb-3 flex items-center">
                       {/* Dropdown */}
-                      <div className="relative">
-                        <div
-                          className="flex justify-evenly"
-                          onClick={searchLocationToggle}
-                        >
-                          <div className="flex">
-                            <button
-                              id="dropdownToggleButton"
-                              className="text-black   focus:outline-none  font-medium rounded-lg text-sm  pl-2 text-center inline-flex items-center"
-                              type="button"
-                            >
-                              {isSelected ? (
-                                <>{selectedLocationlatAndLog?.name}</>
-                              ) : (
-                                <>Location</>
-                              )}
-                            </button>
-                          </div>
-                          <div className="flex ml-48 ">
-                            <MapPin />
-                          </div>
+                      <div
+                        className="flex relative justify-center items-center "
+                        onClick={searchLocationToggle}
+                      >
+                        <div className="flex">
+                          <button
+                            id="dropdownToggleButton"
+                            className="text-black   focus:outline-none  font-medium rounded-lg text-sm  pl-2 text-center inline-flex items-center"
+                            type="button"
+                          >
+                            {isSelected ? (
+                              <>{selectedLocationlatAndLog?.name}</>
+                            ) : (
+                              <>Location</>
+                            )}
+                          </button>
                         </div>
+                        <div className="absolute left-64">
+                          <MapPin size={16} />
+                        </div>
+                      </div>
 
-                        {/* Dropdown menu */}
-                        <div
-                          id="dropdownToggle"
-                          className={`absolute z-10 ${
-                            isLocation ? "" : "hidden"
-                          } bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border top-full left-0 mt-1`}
-                        >
-                          {!isSelected ? (
-                            <>
-                              <ul
-                                className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800 overflow-y-auto h-52"
-                                aria-labelledby="dropdownToggleButton"
-                              >
-                                <li>
-                                  <>
-                                    {responceLocation.length > 0 ? (
-                                      <ul>
-                                        {responceLocation.map(
-                                          (item: any, index: number) => (
-                                            <li
-                                              key={index}
-                                              onClick={() =>
-                                                selectLocation(item)
-                                              }
-                                            >
-                                              <div className="flex items-center px-4 py-2 border-b cursor-pointer">
-                                                {item.name}
-                                              </div>
-                                            </li>
-                                          )
-                                        )}
-                                      </ul>
-                                    ) : (
-                                      <p>search your location</p>
-                                    )}
-                                  </>
-                                </li>
-                              </ul>
-                            </>
-                          ) : (
-                            <>
-                              <ul
-                                className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800 overflow-y-auto h-52"
-                                aria-labelledby="dropdownToggleButton"
-                              >
-                                <li>
-                                  <ul>{selectedLocationlatAndLog?.name}</ul>
-                                </li>
-                              </ul>
-                            </>
-                          )}
-                          <input
-                            type="text"
-                            className="flex items-center p-3 text-sm border   font-medium  w-full  outline-none border-t  rounded-b-lg bg-gray-50   hover:underline hover:w-full "
-                            placeholder="Search location .."
-                            onChange={(e) => serchLocation(e.target.value)}
-                          />
-                        </div>
+                      {/* Dropdown menu */}
+                      <div
+                        id="dropdownToggle"
+                        className={`absolute z-10 bg-red-900 ${
+                          isLocation ? "" : "hidden"
+                        } divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border top-full left-0 mt-1`}
+                      >
+                        {!isSelected ? (
+                          <>
+                            <ul
+                              className=" p-3 space-y-1 text-sm text-black dark:text-black overflow-y-auto h-20 md:h-40"
+                              aria-labelledby="dropdownToggleButton"
+                            >
+                              <li>
+                                <>
+                                  {responceLocation.length > 0 ? (
+                                    <ul>
+                                      {responceLocation.map(
+                                        (item: any, index: number) => (
+                                          <li
+                                            key={index}
+                                            onClick={() => selectLocation(item)}
+                                          >
+                                            <div className="flex items-center px-4 py-2 border-b cursor-pointer">
+                                              {item.name}
+                                            </div>
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  ) : (
+                                    <p>search your location</p>
+                                  )}
+                                </>
+                              </li>
+                            </ul>
+                          </>
+                        ) : (
+                          <>
+                            <ul
+                              className="p-3 space-y-1 text-sm text-black dark:text-black overflow-y-auto h-52"
+                              aria-labelledby="dropdownToggleButton"
+                            >
+                              <li>
+                                <ul>{selectedLocationlatAndLog?.name}</ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+                        <input
+                          type="text"
+                          className="flex items-center p-3 text-sm border   font-medium  w-full  outline-none border-t  rounded-b-lg bg-gray-50   hover:underline hover:w-full "
+                          placeholder="Search location .."
+                          onChange={(e) => serchLocation(e.target.value)}
+                        />
                       </div>
                     </div>
                   </div>
                   <div className="w-full rounded-md shadow-lg h-1/6 border border-b-gray-100  mt-2 overflow-visible">
-                    <div className="text-teal-900 pt-8 text- flex justify-between items-center">
+                    <div className="text-black pt-3 pb-3 flex justify-between items-center">
                       {/* Dropdown */}
-                      <div className="relative">
+                      <div className="relative h-full">
                         <div className="flex justify-between">
                           <button
                             id="dropdownToggleButton"
@@ -484,8 +472,8 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
                               />
                             </svg>
                           </button>
-                          <div className="pl-36">
-                            <p className=" border rounded-full w-5 h-5 flex items-center text-center p-1 bg-teal-600 text-white   ">
+                          <div className="absolute left-64">
+                            <p className=" border rounded-full w-5 h-5 flex items-center text-center p-1 text-black">
                               {tagedUserData.length}
                             </p>
                           </div>
@@ -494,49 +482,54 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
                         {/* Dropdown menu */}
                         <div
                           id="dropdownToggle"
-                          className={`absolute z-10 ${
+                          className={`fixed z-10 ${
                             isTagOpen ? "" : "hidden"
-                          } bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border top-full left-0 mt-1`}
+                          } divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border md:right-60 mt-1`}
                         >
                           <ul
-                            className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800 overflow-y-auto h-32"
+                            className="text-sm text-black dark:text-black overflow-y-auto h-16 md:h-32"
                             aria-labelledby="dropdownToggleButton"
                           >
                             {/* Render selected tagged users */}
-                            <p>Tagged</p>
-                            <li className="border-gray-100 border  rounded">
+                            <p className="hidden sm:flex justify-center">
+                              Tagged
+                            </p>
+                            <li className="border-gray-100 border rounded">
                               {tagedUserData.length > 0 && (
                                 <>
                                   {tagedUserData.map(
                                     (user: any, index: any) => {
-                                      console.log(user,"USSS");
-                                      
                                       return (
-                                      <li
-                                        key={index}
-                                        className="border-b overflow-auto shadow-md rounded"
-                                      >
-                                        <div className="flex items-center justify-between px-4 py-2">
-                                          <img
-                                            className="w-6 h-6  rounded-full"
-                                            src={user?.profile?.startsWith('https://graph')
-                                            ? `${user?.profile}`
-                                            : `http://localhost:3000/profile/${user?.profile}`}
-                                            alt={`image`}
-                                          />
-                                          {user.name}
-                                          {/* Add a button or icon to deselect the user */}
-                                          <button
-                                            className=" text-black font-bold p-1"
-                                            onClick={() =>
-                                              deselectTagPeople(user.userId)
-                                            }
-                                          >
-                                            X
-                                          </button>
-                                        </div>
-                                      </li>
-                                    )}
+                                        <li
+                                          key={index}
+                                          className="border-b overflow-auto shadow-md rounded"
+                                        >
+                                          <div className="flex items-center justify-between px-2 py-0.5 md:py-2">
+                                            <img
+                                              className="w-5 h-5 rounded-full"
+                                              src={
+                                                user?.profile?.startsWith(
+                                                  "https://graph"
+                                                )
+                                                  ? `${user?.profile}`
+                                                  : `http://localhost:3000/profile/${user?.profile}`
+                                              }
+                                              alt={`image`}
+                                            />
+                                            {user.name}
+                                            {/* Add a button or icon to deselect the user */}
+                                            <button
+                                              className=" text-black font-bold p-1"
+                                              onClick={() =>
+                                                deselectTagPeople(user.userId)
+                                              }
+                                            >
+                                              X
+                                            </button>
+                                          </div>
+                                        </li>
+                                      );
+                                    }
                                   )}
                                 </>
                               )}
@@ -544,7 +537,6 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
 
                             {/* Render remaining users */}
                             <li>
-                              <p>Select user</p>
                               {resTagUser && resTagUser.length > 0 && (
                                 <>
                                   {resTagUser.map((user: any, index) => (
@@ -555,10 +547,10 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
                                     >
                                       <a
                                         href="#"
-                                        className="flex items-center px-4 py-2"
+                                        className="flex items-center px-4 py-0.5 md:py-2"
                                       >
                                         <img
-                                          className="w-6 h-6 me-2 rounded-full"
+                                          className="w-4 h-4 me-2 rounded-full"
                                           src={profile}
                                           alt={`image`}
                                         />
@@ -572,7 +564,7 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
                           </ul>
                           <a
                             href="#"
-                            className="flex items-center p-3 text-sm font-medium  border-t  rounded-b-lg bg-gray-50   hover:underline"
+                            className="flex items-center p-0.5 md:p-2 text-sm font-medium  border-t  rounded-b-lg bg-gray-50   hover:underline"
                           >
                             <input
                               type="text"
@@ -587,7 +579,7 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
                   </div>
 
                   <div className="w-full rounded-md shadow-lg h-1/6 border border-b-gray-100  mt-2 overflow-visible">
-                    <div className="text-teal-900 pt-8 text- flex justify-between items-center">
+                    <div className="text-black pt-3 pb-3 text- flex justify-between items-center">
                       {/* Dropdown */}
                       <div className="relative">
                         <button
@@ -618,50 +610,45 @@ console.log(data,"DATTA,,,,,,,,<<<<<<<<<<<<<<<<<");
                           id="dropdownToggle"
                           className={`absolute z-10 ${
                             isOpen ? "" : "hidden"
-                          } bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border top-full left-0 mt-1`}
+                          } bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-white border top-full left-0`}
                         >
                           <ul
-                            className="p-3 space-y-1 text-sm text-teal-700 dark:text-teal-800"
+                            className="p-1 md:p-3 text-sm  text-black dark:text-black"
                             aria-labelledby="dropdownToggleButton"
                           >
-                            <li>
-                              <>
-                                <div className="flex p-2 rounded  ">
-                                  <label
-                                    className="relative inline-flex items-center w-full cursor-pointer"
-                                    onClick={hancleHideLike}
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      defaultValue=""
-                                      className="sr-only peer"
-                                    />
-                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-white-600" />
-                                    <span className="ms-3 text-sm font-medium text-gray-900 ">
-                                      Hide like
-                                    </span>
-                                  </label>
-                                </div>
-                                <li>
-                                  <div className="flex p-2 rounded ">
-                                    <label
-                                      className="relative inline-flex items-center w-full cursor-pointer"
-                                      onClick={handleCommenthide}
-                                    >
-                                      <input
-                                        type="checkbox"
-                                        defaultValue=""
-                                        className="sr-only peer"
-                                      />
-                                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-white-600" />
-                                      <span className="ms-3 text-sm font-medium text-gray-900 ">
-                                        Hide Comment
-                                      </span>
-                                    </label>
-                                  </div>
-                                </li>
-                                <li></li>
-                              </>
+                            <li className="flex md:flex-col justify-between items-">
+                              <div className="flex p-1 rounded ">
+                                <label
+                                  className="relative inline-flex items-center w-full cursor-pointer"
+                                  onClick={hancleHideLike}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    defaultValue=""
+                                    className="sr-only peer"
+                                  />
+                                  <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-white-600" />
+                                  <span className="md:ms-3 text-sm md:font-medium text-gray-900 ">
+                                    Hide Like
+                                  </span>
+                                </label>
+                              </div>
+                              <div className="flex p-1 rounded">
+                                <label
+                                  className="relative inline-flex items-center w-full cursor-pointer"
+                                  onClick={handleCommenthide}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    defaultValue=""
+                                    className="sr-only peer"
+                                  />
+                                  <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-white-600" />
+                                  <span className="md:ms-3 text-sm md:font-medium text-gray-900 ">
+                                    Hide Comment
+                                  </span>
+                                </label>
+                              </div>
                             </li>
                           </ul>
                         </div>

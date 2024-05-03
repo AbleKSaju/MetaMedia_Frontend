@@ -1,9 +1,10 @@
 import axios from "axios";
 import { AddHighlight_Api, AddStory_Api, AddVideos_Api, DeleteStory_Api, getMyAllStoriesForHighLightList_Api } from "../../../endpoints/common";
+import {axiosFormDataInstance, axiosInstance} from "../../../../../utils/costumHook/constumHook";
 
 export const addHighlightFunction = (data: any) => {
   try {
-    return axios.create({ withCredentials: true }).post(AddHighlight_Api, data);
+    return axiosInstance.post(AddHighlight_Api, data);
   } catch (error) {
     return error;
   }
@@ -15,12 +16,7 @@ export const AddStoryFunction = async (data: { image: FormData, caption: string 
     data.image.append('caption', data.caption);
     data.image.append('profile', data.profile);
 
-    const response = await axios.post(AddStory_Api, data.image, {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+    const response = await axiosFormDataInstance.post(AddStory_Api, data.image)
     return response.data;
   } catch (error) {
     console.error("Error adding profile image:", error);
@@ -30,7 +26,7 @@ export const AddStoryFunction = async (data: { image: FormData, caption: string 
 
 export const deleteStoryFunction = async (data:{})=>{
   try {
-    return axios.create({ withCredentials: true }).post(DeleteStory_Api, data);
+    return axiosInstance.post(DeleteStory_Api, data);
   } catch (error) {
     return error;
   }
@@ -38,14 +34,14 @@ export const deleteStoryFunction = async (data:{})=>{
 
 export const getMyAllStoriesForHighLightListFunction = async ()=>{
   try {
-    return axios.create({ withCredentials: true }).get(getMyAllStoriesForHighLightList_Api);
+    return axiosInstance.get(getMyAllStoriesForHighLightList_Api);
   } catch (error) {
     return error;
   }
 }
 export const AddVideoToStoryFunction = async (data:any)=>{
   try {
-    return axios.create({ withCredentials: true }).post(AddVideos_Api,data);
+    return axiosInstance.post(AddVideos_Api,data);
   } catch (error) {
     return error;
   }

@@ -40,7 +40,7 @@ const NewSideBar = () => {
     if (response?.data?.status) {
       dispatch(clearAdminToken());
       dispatch(clearAdmin());
-      toast.success(response?.data?.message);
+      localStorage.removeItem('accesstoken');
       Navigate("/login");
     } else {
       toast.error("Logout error");

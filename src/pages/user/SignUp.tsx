@@ -1,13 +1,11 @@
 
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import {RegisterFormData,useRegisterValidate,} from "../../utils/formValidation/SignUpValidation";
 import { FacebookAuth ,GoogleAuth} from "../../utils/firebase/firebase";
 import { addUser, clearUser } from "../../utils/ReduxStore/Slice/userSlice";
 import { addToken } from "../../utils/ReduxStore/Slice/tokenSlice";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   GetUserDataFunction,
   LoginWithFacebook,
@@ -275,7 +273,7 @@ const SignUp = () => {
                     className="w-6 h-6 rounded-full object-fill"
                     alt=""
                   />
-                  <p onClick={handleGoogle} className="text-sm pl-2">Sign in with google</p>
+                  <p onClick={handleGoogle} className="text-sm pl-2">Google</p>
                 </div>
                 <div className="w-5/12 border h-10 rounded-md border-[#C1506D] items-center flex pl-2 justify-center">
                   <img
@@ -283,7 +281,7 @@ const SignUp = () => {
                     className="w-6 h-6 rounded-full object-fill"
                     alt=""
                   />
-                  <p onClick={SignInWithFacebook} className="text-sm pl-2">Sign in with Facebook</p>
+                  <p onClick={SignInWithFacebook} className="text-sm pl-2">Facebook</p>
                 </div>
               </div>
             </form>

@@ -1,6 +1,5 @@
 import { Plus } from 'lucide-react';
-import React from 'react'
-import { useSelector } from 'react-redux';
+
 
 const Highlight = ({setOpenHighlight, index, highlight, extra, setAddHighlight }:any) => {
   

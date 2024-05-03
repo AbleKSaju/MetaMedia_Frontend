@@ -12,7 +12,6 @@ const AsideComponent = ({
   setAside,
   setIsGroupChat,
 }: any) => {
-  // const dispach=useDispatch()
   const { user_id } = useParams();
   const DateToTime = (lastMessageDate: any) => {
     const date = new Date(lastMessageDate);
@@ -23,11 +22,8 @@ const AsideComponent = ({
       hour12: true,
     });
   };
-  console.log(user_id,"user_id");
   
-  useEffect(()=>{
-    console.log(conversations,'HIHIHIHIHI');
-    
+  useEffect(()=>{    
   },[conversations])
 
   const handleMoreOption = () => {
@@ -53,7 +49,7 @@ const AsideComponent = ({
           </div>
           {isMore && (
             <>
-              <div className="fixed bg-white w-32 h-10 ml-[9.5%] border border-[#C1506D]  mt-28 rounded-md flex flex-col justify-between">
+              <div className="fixed bg-white w-32 h-10 ml-[50%] md:ml-[10%] border border-[#C1506D]  mt-8 rounded-md flex flex-col justify-between">
                 <div
                   className="w-full h-full justify-center items-center flex border-[#C1506D] border-b gap-2"
                   onClick={handleNewgroup}
@@ -114,48 +110,8 @@ const AsideComponent = ({
                 }
               })
             : ""}
-          {/* 
-          {users?.length
-            ? users
-                ?.filter((user: any) => user.id !== userData.userId)
-                .map((data: any, index: number) => {
-                  return (
-                    <div
-                      className="list flex cursor-pointer border-b border-gray-300 hover:bg-gray-100 transition-all p-2 items-center h-[70px]"
-                      key={index}
-                    >
-                         <Link to={`/profile/${data?.receiverId}`}>
-                      <img
-                        src={
-                          data?.profile?.startsWith("https://")
-                            ? `${data?.profile}`
-                            : data?.profile
-                            ? `http://localhost:3000/profile/${data?.profile}`
-                            : `${profile}`
-                        }
-                        alt="P"
-                        className="rounded-full mr-2 w-[50px] h-[50px]"
-                      />
-                      </Link>
-                      <div
-                        className="info flex-1"
-                        onClick={() => fetchMessages(data)}
-                      >
-                        <div className="flex flex-col">
-                          <span className=" font-bold">{data?.name}</span>
-                          <span className="font-light text-sm">
-                            {data?.email.slice(0, 25)}...
-                          </span>
-                        </div>
-                      </div>
-                      <span className=" text-gray-600">now</span>
-                    </div>
-                  );
-                })
-            : "" } */}
         </div>
       </div>
-      {/* {!isMobile && <ChatComponent />} */}
     </>
   );
 };

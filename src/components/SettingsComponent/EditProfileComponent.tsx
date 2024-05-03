@@ -26,9 +26,7 @@ const EditProfile = () => {
 
   const formSubmit = async (Data: EditProfileFormData) => {
     const response: any = await EditProfileFunction({ ...Data });
-    console.log(response, "ressseeee");
     if (response?.data?.status) {
-      console.log(response.data.user, "usssss");
 
       const data: ResponseData = {
         gender: response?.data?.user?.gender,
@@ -37,10 +35,7 @@ const EditProfile = () => {
         userName: response?.data?.user?.userName,
         bio: response?.data?.user?.bio,
       };
-      console.log(data, "NEWDATA");
-
       dispatch(editUser(data));
-      toast.success(response.data.message);
       Navigate(`/profile/${userData?.userId}`);  
     } else {
       toast.error(response.data.message);
@@ -61,7 +56,7 @@ const EditProfile = () => {
               </label>
               <input
                 id="full_name"
-                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-teal-900 rounded-lg focus:border-2 px-2"
+                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-black rounded-lg focus:border-2 px-2"
                 type="text"
                 {...register("fullname")}
               />
@@ -75,7 +70,7 @@ const EditProfile = () => {
               </label>
               <input
                 id="user_name"
-                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-teal-900 rounded-lg focus:border-2 px-2"
+                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-black rounded-lg focus:border-2 px-2"
                 type="text"
                 {...register("username")}
               />
@@ -91,7 +86,7 @@ const EditProfile = () => {
               </label>
               <input
                 id="phoneNumber"
-                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-teal-900 rounded-lg focus:border-2 px-2"
+                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-black rounded-lg focus:border-2 px-2"
                 type="text"
                 {...register("phoneNumber")}
               />
@@ -105,7 +100,7 @@ const EditProfile = () => {
               </label>
               <input
                 id="gender"
-                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-teal-900 rounded-lg focus:border-2 px-2"
+                className="h-10 w-72 lg:w-64 outline-none xl:w-72  border border-black rounded-lg focus:border-2 px-2"
                 type="text"
                 {...register("gender")}
               />
@@ -120,7 +115,7 @@ const EditProfile = () => {
             </label>
             <textarea
               id="description"
-              className="h-24 w-full border outline-none border-teal-900 rounded-lg mt-2 focus:border-2 px-2"
+              className="h-24 w-full border outline-none border-black rounded-lg mt-2 focus:border-2 px-2"
               typeof="text"
               {...register("bio")}
             />

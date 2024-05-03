@@ -1,6 +1,6 @@
 import {
-  ChevronLeftCircle,
-  ChevronRightCircle,
+  ChevronLeft,
+  ChevronRight,
   MoreVertical,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -96,8 +96,6 @@ const HighlightSliderComponent = ({
     const response: any = await DeleteHighlightFunction(data);
     if (response?.data?.status) {
       toast.success(response?.data?.message);
-    } else {
-      toast.error(response?.data?.message);
     }
     setDeleteHighlight(true);
     setOpenHighlight(-1);
@@ -105,7 +103,7 @@ const HighlightSliderComponent = ({
   };
 
   return (
-    <div className="flex justify-center w-full h-full mt-20 sm:mt-5 mb-36 relative">
+    <div className="flex justify-center w-full h-full mt-36 md:mt-10 sm:mt-5 mb-36 relative">
       <div className="flex justify-center w-full h-40 absolute top-2">
         {highlights[openHighlight]?.media.map((_: any, index: number) => (
           <div
@@ -162,18 +160,18 @@ const HighlightSliderComponent = ({
 
       {highlights[openHighlight]?.media?.length > 1 && (
         <button
-          className="fixed right-20 top-1/2 transform -translate-y-1/2"
+          className="fixed right-0 md:right-20 top-1/2 transform -translate-y-1/2"
           onClick={nextImage}
         >
-          <ChevronRightCircle size={30} className="text-white" />
+          <ChevronRight size={30} className="text-white" />
         </button>
       )}
       {highlights[openHighlight]?.media?.length > 1 && (
         <button
-          className="fixed left-20 top-1/2 transform -translate-y-1/2"
+          className="fixed left-0 md:left-20 top-1/2 transform -translate-y-1/2"
           onClick={prevImage}
         >
-          <ChevronLeftCircle size={30} className="text-white" />
+          <ChevronLeft size={30} className="text-white" />
         </button>
       )}
       {highlights[openHighlight]?.media.map((highlight: any, index: number) => (
@@ -182,7 +180,7 @@ const HighlightSliderComponent = ({
             key={index}
             src={`http://localhost:3003/story/${highlight}`}
             alt=""
-            className={`w-full h-[40%] sm:h-[70%] md:h-[80%] border-2 rounded-lg border-black ${
+            className={`h-[40%] sm:h-[70%] md:h-[80%] w-42 md:w-full border-2 rounded-lg border-black ${
               index === currentIndex ? "" : "hidden"
             }`}
           />

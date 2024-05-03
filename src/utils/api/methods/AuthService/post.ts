@@ -1,7 +1,7 @@
     import axios from "axios";
     import { UserData } from "../../../interface/userInterface";
     import {Login_Api,SignUp_Api,VerifyOtp_Api,LoginWithGoogle_Api,ForgotPassword_Api,ChangePassword_Api,LoginWithFacebook_Api, Logout_APi, GetUserData_Api, sendOtp_Api} from "../../endpoints/common";
-import { toast } from "sonner";
+import { axiosInstance } from "../../../../utils/costumHook/constumHook";
 
     export const LoginFuntion = async (data: any) => {
       try {
@@ -70,9 +70,7 @@ export const ForgotPasswordFunction = async (data: any) => {
   }
 };
 export const ChangePasswordFunction = async (data: any) => {
-  try {
-    console.log(data,"data");
-    
+  try {    
     return axios.create({ withCredentials: true }).post(ChangePassword_Api, data);
   } catch (error) {
     console.log(error,"err");
@@ -80,8 +78,7 @@ export const ChangePasswordFunction = async (data: any) => {
 };
 export const GetUserDataFunction = async (data: any) => {
   try {
-    toast.success(data+'daata')
-    return axios.create({ withCredentials: true }).post(GetUserData_Api, data);
+    return axiosInstance.post(GetUserData_Api, data);
   } catch (error) {
     console.log(error,"err");
   }

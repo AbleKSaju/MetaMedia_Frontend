@@ -1,8 +1,7 @@
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const ProtectedAuthRoute = ({ children }: { children: any }) => {
-    const token = useSelector((state: any) => state.persisted.token.token);
+  const token = localStorage.getItem('accesstoken')
     if (token) {
       return children
     }else{

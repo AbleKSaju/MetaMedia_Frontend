@@ -4,8 +4,8 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 
 const ProtectedRoute = ({ path, element }: any) => {
     console.log("I AM PROTECTED ROUTE");
-    const token = useSelector((state: any) => state.persisted.token.token);
-    const Navigate = useNavigate();
+    const token = localStorage.getItem('accesstoken')
+        const Navigate = useNavigate();
   
     return (
       <React.Fragment>

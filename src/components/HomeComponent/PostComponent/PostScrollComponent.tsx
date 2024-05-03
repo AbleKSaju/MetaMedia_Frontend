@@ -47,7 +47,7 @@ const PostScroll = () => {
               <Send  className="text-[#07312E]" />
             </div>
             <div className="lg:pl-64 sm:pl-[55%] md:pl-[62%] pl-28 " >
-              <Bookmark className="text-[#07312E]" />
+              <Bookmark  className="text-[#07312E]" />
             </div>
           </div>
 

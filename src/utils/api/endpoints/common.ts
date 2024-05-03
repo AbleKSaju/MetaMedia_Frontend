@@ -30,10 +30,7 @@ export const GetAllUsersData_Api=`${USER_URL}/getAllUsers`
 export const GetSearchUserData_Api=`${USER_URL}/getSearchUser`
 export const ChangeUserStatus_Api=`${USER_URL}/changeUserStatus`
 export const Suggetion_Api=`${USER_URL}/suggetions`
-
 export const BlockAndUnblockUser_Api=`${USER_URL}/BlockAndUnblockUser`
-
-
 export const GenarateVapIdKeys_Api=`${USER_URL}/vapidKeys`
 export const SubcribeUserToSNS_Api=`${USER_URL}/subscribe`
 
@@ -48,6 +45,7 @@ export const DeleteStory_Api=`${STORY_URL}/deleteStory`
 export const GetStories_Api=`${STORY_URL}/getStories`
 export const GetAllStories_Api=`${STORY_URL}/getAllStories`
 export const getMyAllStoriesForHighLightList_Api=`${STORY_URL}/getMyAllStoriesForHighLigh`
+export const getTheNumberOfStories_Api=`${STORY_URL}/getTheNumberOfStories`
 
         //Highlight
 

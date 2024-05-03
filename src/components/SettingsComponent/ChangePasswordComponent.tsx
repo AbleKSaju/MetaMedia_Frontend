@@ -4,7 +4,6 @@ import {
 } from "../../utils/formValidation/ChangePasswordValidation";
 import { ChangePasswordFunction } from "../../utils/api/methods/AuthService/post";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -13,16 +12,12 @@ const ChangePasswordComponent = ({ changePassword,setChangePassword }: any) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setConfirmShowPassword] = useState(false);
-  const Navigate = useNavigate();
   const wrapperRef: any = useRef(null);
   const userData=useSelector((state:any)=>state.persisted.user.userData)
-
   const { errors, handleSubmit, register } = useChangePasswordValidation();
   const formSubmit = async (Data: ChangePasswordFormData) => {
     const response: any = await ChangePasswordFunction({ ...Data,email:userData.email });
-    console.log(response, "resss");
     if (response.data.status) {
-      toast.success(response?.data?.message);
       setChangePassword(!changePassword)
     } else {
       toast.error(response?.data?.message);
@@ -147,12 +142,6 @@ const ChangePasswordComponent = ({ changePassword,setChangePassword }: any) => {
         </div>
       </div>
     </div>
-
-    //   <div className="relative flex justify-center md:items-center align-middle overflow-hidden bg-red-500 sm:h-[100vh]">
-    //     <div className="relative bg-amber-50 px-6 pt-10 pb-8 shadow-xl overflow-hidden flex justify-center ring-1 w-[100vw] h-[100vh] md:h-[80vh] ring-gray-900/5 rounded-3xl sm:max-w-lg sm:rounded-xl sm:px-10">
-
-    //     </div>
-    //   </div>
   );
 };
 

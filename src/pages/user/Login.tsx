@@ -82,7 +82,6 @@ const Login = () => {
           localStorage.setItem('accesstoken',response.data.accesstoken)
 
           if (response?.data?.newUser) {
-            toast.success(response?.data?.message);
             Navigate("/chooseinterest", { replace: true });
           } else {
             const userEmail = { email: response?.data?.user?.email };
@@ -112,7 +111,6 @@ const Login = () => {
             localStorage.setItem('accesstoken',response.data.accesstoken)
 
             // await SaveUserDataInRedux(userData)
-            toast.success(response?.data?.message);
             Navigate("/", { replace: true });
           }
         } else {
@@ -163,7 +161,6 @@ const Login = () => {
           dispatch(addToken(response.data.accesstoken));
           localStorage.setItem('accesstoken',response.data.accesstoken)
           if (response?.data?.newUser) {
-            toast.success(response?.data?.message);
             Navigate("/chooseinterest", { replace: true });
           } else {
             const userEmail = { email: response?.data?.user?.email };
@@ -192,7 +189,6 @@ const Login = () => {
             dispatch(addToken(response.data.accesstoken));
             localStorage.setItem('accesstoken',response.data.accesstoken)
             // await SaveUserDataInRedux(userData)
-            toast.success(response?.data?.message);
             Navigate("/", { replace: true });
           }
         } else {
@@ -228,7 +224,6 @@ const Login = () => {
         dispatch(clearAdmin());
         dispatch(addAdminData(adminData));
         dispatch(addAdminToken(userExist.data.accesstoken));
-        toast.success(response?.data?.data?.message);
         Navigate("/admin", { replace: true });
         localStorage.setItem('accesstoken',userExist.data.accesstoken)
       }else{
@@ -254,10 +249,8 @@ const Login = () => {
       dispatch(addUser(userData));
       dispatch(addToken(userExist.data.accesstoken));
       localStorage.setItem('accesstoken',userExist.data.accesstoken)
-      toast.success(response?.data?.data?.message);
       Navigate("/", { replace: true });
     }
-
     }
   };
 
@@ -345,7 +338,7 @@ const Login = () => {
                     alt=""
                   />
                   <p onClick={handleGoogle}
-                   className="text-sm pl-2">Sign in with google</p>
+                   className="text-sm pl-2">Google</p>
                 </div>
                 <div className="w-5/12 border h-10 rounded-md border-[#C1506D] items-center flex pl-2 justify-center">
                   <img
@@ -354,7 +347,7 @@ const Login = () => {
                     alt=""
                   />
                   <p onClick={SignInWithFacebook}
-                  className="text-sm pl-2">Sign in with Facebook</p>
+                  className="text-sm pl-2">Facebook</p>
                 </div>
               </div>
             </form>
