@@ -1,6 +1,5 @@
 import  { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import { showAllPostFuntion } from "../../utils/api/methods/PostService/get/showAllPost";
 import { ChangePostStatusFunction } from "../../utils/api/methods/AdminService/post";
 
@@ -109,7 +108,7 @@ const PostListComponents = () => {
                               className="object-cover w-full h-full rounded-sm"
                               src={
                                 data.mediaUrl[0]
-                                  ? `http://localhost:3002/img/${data?.mediaUrl[0]}`
+                                  ? `https://meta-media.in/api/post/img/${data?.mediaUrl[0]}`
                                   : ``
                               }
                               alt=""

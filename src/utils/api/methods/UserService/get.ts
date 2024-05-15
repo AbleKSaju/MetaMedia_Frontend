@@ -1,10 +1,5 @@
-import axios from "axios";
-
 import { GetAllUsers_Api, GetAllUsersData_Api, GetSearchUserData_Api ,Suggetion_Api} from "../../endpoints/common";
-import {axiosInstance} from "../../../../utils/costumHook/constumHook";
-
-
-
+import {axiosInstance} from "../../../costumHook/constumHook";
 
 export const getAllUsersFunction = async () => {
     try {

@@ -1,5 +1,5 @@
 import { ChangePostStatus_Api, ChangeUserStatus_Api } from "../../endpoints/common";
-import { axiosInstance } from "../../../../utils/costumHook/constumHook";
+import { axiosInstance } from "../../../costumHook/constumHook";
 
 export const ChangeUserStatusFunction = async (data:any) => {
   try {

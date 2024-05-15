@@ -1,6 +1,5 @@
-import axios from "axios";
 import { AddPost_Api } from "../../../endpoints/common";
-import { axiosFormDataInstance } from "../../../../../utils/costumHook/constumHook";
+import { axiosFormDataInstance } from "../../../../costumHook/constumHook";
 
 export const AddPostFuntion = async (data: any) => {
   try {

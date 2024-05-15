@@ -12,11 +12,10 @@ const axiosFormDataInstance = axios.create({
     'Content-Type': 'multipart/form-data',
   },
 });
+
 axiosInstance.interceptors.request.use(
   config => {
-    const accessToken = localStorage.getItem('accesstoken')
-    console.log(accessToken,"accessTokenaccessTokenReq");
-    
+    const accessToken = localStorage.getItem('accesstoken')    
   if (accessToken) {
     config.headers['Authorization'] = `Bearer ${accessToken}`;
   }
@@ -26,18 +25,7 @@ error => {
   return Promise.reject(error);
 }
 );
-axiosFormDataInstance.interceptors.request.use(
-  config => {
-    const accessToken = localStorage.getItem('accesstoken')
-  if (accessToken) {
-    config.headers['Authorization'] = `Bearer ${accessToken}`;
-  }
-  return config;
-},
-error => {
-  return Promise.reject(error);
-}
-);
+
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
@@ -50,9 +38,7 @@ axiosInstance.interceptors.response.use(
     if(error.response.status === 403 ){
       localStorage.removeItem('accesstoken')
     }
-    if (error.response.status === 401 && !originalRequest._retry) {
-      console.log("REGENERATING TOKEN");
-      
+    if (error.response.status === 401 && !originalRequest._retry) {      
       originalRequest._retry = true;
       try {
         const route:any = 'http://localhost:3001/api/auth/refresh'
@@ -73,6 +59,22 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+    // For Images
+
+axiosFormDataInstance.interceptors.request.use(
+  config => {
+    const accessToken = localStorage.getItem('accesstoken')
+  if (accessToken) {
+    config.headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+  return config;
+},
+error => {
+  return Promise.reject(error);
+}
+);
+
 axiosFormDataInstance.interceptors.response.use(
   (response) => {
     return response;
@@ -90,9 +92,7 @@ axiosFormDataInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosFormDataInstance(originalRequest);
       } catch (err) {
-        console.log(err);
-        console.log("handl");
-        
+        console.log(err);        
         // await handleLogout()
         console.error('Refresh token failed:', err);
       }

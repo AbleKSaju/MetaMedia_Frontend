@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   AddProfileImage_Api,
   AddProfile_Api,
@@ -11,7 +10,7 @@ import {
   getUsersByName_Api,
   getuserById_Api,
 } from "../../endpoints/common";
-import {axiosFormDataInstance, axiosInstance} from "../../../../utils/costumHook/constumHook";
+import {axiosFormDataInstance, axiosInstance} from "../../../costumHook/constumHook";
 
 export const EditProfileFunction = (data: any) => {
   try {
@@ -93,7 +92,6 @@ export const GenarateVapIdKeysFunction = async (data:any) => {
   try {
     const response = await axiosInstance
       .post(`${GenarateVapIdKeys_Api}`,data);
-
     return response.data;
   } catch (error) {
     return error;
@@ -104,7 +102,6 @@ export const SubcribeUserToSNSFunction = async (data:any) => {
   try {
     const response = await axiosInstance
       .post(`${SubcribeUserToSNS_Api}`,data);
-
     return response.data;
   } catch (error) {
     return error;

@@ -1,6 +1,8 @@
-import axios from "axios";
-import { AddNewHighlight_Api, DeleteHighlight_Api } from "../../../endpoints/common";
-import { axiosInstance } from "../../../../../utils/costumHook/constumHook";
+import {
+  AddNewHighlight_Api,
+  DeleteHighlight_Api,
+} from "../../../endpoints/common";
+import { axiosInstance } from "../../../../costumHook/constumHook";
 
 export const addNewHighlightFunction = (data: any) => {
   try {
@@ -17,4 +19,3 @@ export const DeleteHighlightFunction = (data: any) => {
     return error;
   }
 };
-

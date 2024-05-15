@@ -8,9 +8,7 @@ const UsersListComponent = () => {
   const [users, setUsers] = useState<any>([]);
   const [currentUsers, setCurrentUsers] = useState<any>();
   const [searchUser, setSearchUser] = useState<string>("");
-  const [blockUser,setBlockUser] = useState(false)
-  console.log();
-  
+  const [blockUser,setBlockUser] = useState(false)  
 
   useEffect(() => {
     (async () => {
@@ -50,12 +48,10 @@ const UsersListComponent = () => {
     }
     console.log(userId,"stats");
     const response:any = await ChangeUserStatusFunction(data)
-    console.log(response,"ChangeUserStatusFunctionChangeUserStatusFunction");
     if(response.data.status){
       setBlockUser(!blockUser)
     }
   }
-  
 
   return (
     <section className="container mx-auto p-6 pt-0 mt-10 font-mono overflow-auto scrollbar-hide cursor-pointer">
@@ -99,9 +95,7 @@ const UsersListComponent = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {currentUsers?.map((data: any) => {
-                console.log(data.blocked,"BBLL");
-                
+              {currentUsers?.map((data: any) => {                
                 return (
                   <tr className="text-black font-roboto" key={data.fullName}>
                     <>
